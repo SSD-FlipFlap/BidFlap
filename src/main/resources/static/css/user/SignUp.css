@@ -1,0 +1,142 @@
+/* SignUp.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    color: #215818;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 이메일, 비밀번호, 계좌번호 input 상자 스타일(네모 말고 밑줄) */
+.input-style {
+    width: calc(100% - 10px);
+    padding: 8px;
+    font-size: 16px;
+    border: none; /* 기본 테두리 제거 */
+    border-bottom: 1px solid #ddd; /* 밑줄 테두리 추가 */
+    box-sizing: border-box; /* 테두리 포함하여 크기 조정 */
+    margin-bottom: 10px; /* 하단 여백 추가 */
+    outline: none; /* 포커스 효과 제거 */
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="file"] {
+    width: calc(100% - 10px);
+    padding: 8px;
+    font-size: 16px;
+}
+
+form input[type="checkbox"] {
+    display: none;
+}
+
+/* 관심 카테고리 선택 박스 */
+form input[type="checkbox"] + label {
+    display: inline-block;
+    width: 80px; /*너비 통일*/
+    padding: 8px 15px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    border: 1px solid #A1A1A1; /* 테두리 */
+}
+
+form input[type="checkbox"]:checked + label {
+    background-color: #A1A1A1;  /* 카테고리 배경색 */
+    color: #ffffff; /* 카테고리 글자색 */
+}
+
+form button:hover {
+    background-color: #215818;
+}
+
+#expertInput {
+    display: none;
+}
+
+.radio-container label {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* 프로필 미리 보기 */
+#profilePreviewContainer {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 50%; /* 동그랗게 표시 */
+    margin-bottom: 10px;
+}
+
+#profilePreview {
+    width: 100%;
+    height: auto;
+}
+
+/* 계좌 정보 */
+.bank-container {
+    display: flex;
+    align-items: center;
+}
+
+.bank-container label {
+    margin-right: 10px;
+}
+
+.bank-container select {
+    flex: 3; /* 은행 선택란 너비 비율 */
+}
+
+.bank-container input[type="text"] {
+    flex: 7; /* 계좌 번호 입력란 너비 비율 */
+    width: calc(100% - 10px); /* 너비 조정 */
+    padding: 8px; /* 패딩 추가 */
+    font-size: 16px; /* 폰트 크기 조정 */
+    box-sizing: border-box; /* 테두리 포함하여 크기 조정 */
+    margin-left: 10px; /* 왼쪽 여백 추가 */
+}
+
+/* 가입하기 버튼 */
+form button {
+    padding: 13px 35px; /* 버튼 안의 여백 조정(위아래 좌우) */
+    background-color: #215818;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 20px;
+    display: block;
+    margin: 0 auto;
+}
