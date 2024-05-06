@@ -6,6 +6,8 @@
     <title>로그인</title>
 </head>
 <body>
+<%@ include file="../Header2.jsp" %>
+
 <div class="login-container">
     <h2>Bid Flap</h2><br/>
     <form action="/login" method="post">

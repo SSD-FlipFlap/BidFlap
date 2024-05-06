@@ -7,7 +7,7 @@
     <script>
         // as 전문가 등록 여부
         function toggleExpertInput() {
-            var expertInput = document.getElementById('expertInput');
+            const expertInput = document.getElementById('expertInput');
             if (document.getElementById('expert_yes').checked) {
                 expertInput.style.display = 'block';
             } else {
@@ -41,6 +41,8 @@
     </script>
 </head>
 <body>
+<%@ include file="../Header2.jsp" %>
+
 <h1>회원가입</h1>
 <form action="/register" method="post" enctype="multipart/form-data">
     <div>
