@@ -1,0 +1,66 @@
+.login-container {
+    position: absolute;
+    background-color: #ffffff;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    color: #215818;
+    font-size: 50px;
+    font-family: 'Archivo Black', sans-serif;
+    font-weight: bolder;
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    color: #000000;
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    margin-bottom: 5px; /* 아래쪽 여백 추가 */
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 400px;
+    height: 40px;
+    font-size: 15px;
+    padding: 3px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 5px; /* 위쪽 여백 추가 */
+}
+
+button {
+    width: 410px;
+    height: 50px;
+    font-size: 20px;
+    background-color: #215818;
+    color: #ffffff;
+    padding: 3px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.link-container {
+    margin-top: 20px;
+}
+
+.link {
+    color: #636363;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    margin-right: 20px;
+    text-decoration: none;
+}
