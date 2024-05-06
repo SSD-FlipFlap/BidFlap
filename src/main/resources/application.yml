@@ -1,0 +1,28 @@
+spring:
+#  datasource:         # Oracle dataSource
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+#    url: ${DB_URL}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    hikari:          # HikariCP settings
+#      maximumPoolSize: 3
+#      connectionTimeout: 3000
+
+#  jpa:
+#    database: oracle
+#    database-platform: org.hibernate.dialect.Oracle10gDialect
+#    show-sql: true
+#    generate-ddl: false
+#    hibernate:
+#      ddl-auto: create
+
+  mvc:  # jsp 설정
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+    static-path-pattern: /resources/**
+  thymeleaf:  # thymeleaf 설정
+    cache: false
+    prefix: classpath:/templates/    # Thymeleaf html 파일이 위치할 기본 위치 설정
+    suffix: .html       # Thymeleaf html 확장자 설정
+    view-names: thyme/*    # Thymeleaf 에 연결될 viewname 범위 설정
