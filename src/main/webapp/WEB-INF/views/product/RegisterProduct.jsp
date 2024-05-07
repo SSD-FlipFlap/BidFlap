@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1>상품정보</h1>
-<form action="/register" method="post">
+<form action="" method="post">
     <div class="product-pic"><br/>
         <div class="camera">
             <img id="cameraImg" src="/resources/img/CameraImg.svg">
@@ -18,13 +18,10 @@
         <input type="text" id="productName" name="productName" class="input-style">
     </div>
 
-<%--    <!-- 카테고리 -->--%>
     <div class="category">카테고리
     </div>
 
-<%--    <!-- 관심있는 카테고리 -->--%>
-    <div class="interest-category">
-    <div class="category-list">
+    <div class="product-category">
         <input type="checkbox" id="mobile" name="category" value="휴대폰">
         <label for="mobile">휴대폰</label>
 
@@ -51,7 +48,6 @@
         <label for="etc">기타</label>
     </div>
     <br/>
-    </div>
 
     <div class="line">    </div>
 
@@ -75,7 +71,6 @@
         </textarea>
     </div>
 
-    <!-- 등록 버튼 -->
     <div>
         <button type="submit">등록</button>
     </div>
