@@ -101,6 +101,7 @@
         <label for="interest" class="title">관심 전자제품 카테고리</label>
         <input type="hidden" id="interest" name="interest">
     </div>
+
     <div class="category-list">
         <input type="checkbox" id="mobile" name="category" value="휴대폰">
         <label for="mobile">휴대폰</label>

@@ -1,0 +1,195 @@
+h1 {
+    position: absolute;
+    width: 350px;
+    height: 107px;
+    left: 235px;
+    top: 266px;
+    font-size: 70px;
+    font-weight: bold;
+    text-align: center;
+    color: #215818;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 상품 이미지 회색 박스 */
+.product-pic {
+    box-sizing: border-box;
+    position: absolute; /* 부모 요소로부터 상대적 위치 설정 */
+    width: 191px;
+    height: 168px;
+    left: 255px;
+    top: 421px;
+    background: rgba(245, 245, 245, 0.8);
+    border-radius: 20px;
+    display: flex;
+}
+
+/* 카메라 이미지 중간 정렬 */
+.camera {
+    position: absolute;
+    width: 89px;
+    height: 80px;
+    left: 50%; /* 왼쪽 기준으로 가운데로 이동 */
+    top: 50%; /* 위쪽 기준으로 가운데로 이동 */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+}
+
+/* 상품명 입력 필드 스타일 */
+.product-name {
+    position: absolute;
+    width: 335px;
+    height: 23px;
+    left: 255px;
+    top: 627px;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    color: #636363;
+}
+
+/* 입력 필드 공통 스타일 */
+.input-style {
+    width: 1427px;
+    padding: 8px;
+    font-size: 20px;
+    border: none;
+    border-bottom: 2px solid #A1A1A1;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.line{
+    position: absolute;
+    width: 1427px;
+    height: 0px;
+    left: 255px;
+    top: 875px; /* 카테고리 아래에 위치하도록 조정 */
+    border-bottom: 2px solid #A1A1A1;
+    box-sizing: border-box;
+
+}
+
+/*!* 카테고리 스타일 *!*/
+.category {
+    position: absolute;
+    width: 335px;
+    height: 23px;
+    left: 255px;
+    top: 711px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    color: #636363;
+}
+
+/*!*  카테고리 스타일 *!*/
+.interest-category {
+    position: absolute;
+    width: 600px;
+    height: 123px;
+    left: 255px;
+    top: 755px;
+}
+form input[type="checkbox"] {
+    display: none;
+}
+
+/* 카테고리 선택 */
+form input[type="checkbox"] + label {
+    display: inline-block;
+    width: 80px; /*너비 통일*/
+    padding: 8px 15px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    border: 1px solid #A1A1A1; /* 테두리 */
+}
+
+form input[type="checkbox"]:checked + label {
+    background-color: #A1A1A1;  /* 카테고리 배경색 */
+    color: #ffffff; /* 카테고리 글자색 */
+}
+
+form button:hover {
+    background-color: #215818;
+}
+
+.radio-container label {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+
+/* 가격 입력 필드 스타일 */
+.price {
+    position: absolute;
+    width: 335px;
+    height: 23px;
+    left: 255px;
+    top: 915px;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    color: #636363;
+}
+
+/* 설명 스타일 */
+.description {
+    position: absolute;
+    width: 335px;
+    height: 23px;
+    left: 255px;
+    top: 1025px;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    color: #636363;
+}
+
+/* Rectangle 180 스타일 */
+.rectangle-180 {
+    box-sizing: border-box;
+    position: absolute;
+    width: 1427px;
+    height: 199px;
+    left: 255px;
+    top: 1075px;
+    background: #F7F7F7;
+    border-radius: 20px;
+}
+
+.rectangle-180 .description-text {
+    width: 90%; /* 입력 영역의 너비를 조정 */
+    height: 80%; /* 입력 영역의 높이를 조정 */
+    padding: 10px; /* 내부 여백 추가 */
+    font-size: 25px;
+    font-weight: bold;
+    resize: none; /* 사용자 크기 조정 비활성화 */
+    border: none; /* 테두리 제거 */
+    outline: none; /* 포커스 효과 제거 */
+    background: transparent; /* 배경 투명으로 설정 */
+}
+/* 등록 버튼 스타일 */
+form button {
+    position: absolute;
+    width: 1427px;
+    height: 105px;
+    left: 255px;/*300px*/
+    top: 1358px;
+    background: #215818;
+    border-radius: 20px;
+    color: #FFFFFF;
+    font-size: 35px;
+    font-weight: bold;
+}
