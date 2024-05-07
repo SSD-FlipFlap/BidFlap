@@ -9,7 +9,6 @@ h1 {
     text-align: center;
     color: #215818;
 }
-
 form {
     max-width: 600px;
     margin: 0 auto;
@@ -19,7 +18,7 @@ form {
 /* 상품 이미지 회색 박스 */
 .product-pic {
     box-sizing: border-box;
-    position: absolute; /* 부모 요소로부터 상대적 위치 설정 */
+    position: absolute;
     width: 191px;
     height: 168px;
     left: 255px;
@@ -69,13 +68,13 @@ form {
     width: 1427px;
     height: 0px;
     left: 255px;
-    top: 875px; /* 카테고리 아래에 위치하도록 조정 */
+    top: 875px;
     border-bottom: 2px solid #A1A1A1;
     box-sizing: border-box;
 
 }
 
-/*!* 카테고리 스타일 *!*/
+/*카테고리 스타일*/
 .category {
     position: absolute;
     width: 335px;
@@ -88,15 +87,15 @@ form {
     line-height: 29px;
     color: #636363;
 }
-
-/*!*  카테고리 스타일 *!*/
-.interest-category {
+/*상품의 카테고리, SignUp css 참고*/
+.product-category {
     position: absolute;
     width: 600px;
     height: 123px;
     left: 255px;
     top: 755px;
 }
+
 form input[type="checkbox"] {
     display: none;
 }
@@ -130,8 +129,7 @@ form button:hover {
     margin-bottom: 10px;
 }
 
-
-/* 가격 입력 필드 스타일 */
+/*가격*/
 .price {
     position: absolute;
     width: 335px;
@@ -144,7 +142,7 @@ form button:hover {
     color: #636363;
 }
 
-/* 설명 스타일 */
+/*설명*/
 .description {
     position: absolute;
     width: 335px;
@@ -157,7 +155,7 @@ form button:hover {
     color: #636363;
 }
 
-/* Rectangle 180 스타일 */
+/*설명 입력*/
 .rectangle-180 {
     box-sizing: border-box;
     position: absolute;
@@ -180,7 +178,8 @@ form button:hover {
     outline: none; /* 포커스 효과 제거 */
     background: transparent; /* 배경 투명으로 설정 */
 }
-/* 등록 버튼 스타일 */
+
+/* 등록 버튼  */
 form button {
     position: absolute;
     width: 1427px;
