@@ -7,7 +7,7 @@
     <script>
         // as 전문가 등록 여부
         function toggleExpertInput() {
-            var expertInput = document.getElementById('expertInput');
+            const expertInput = document.getElementById('expertInput');
             if (document.getElementById('expert_yes').checked) {
                 expertInput.style.display = 'block';
             } else {
@@ -41,6 +41,8 @@
     </script>
 </head>
 <body>
+<%@ include file="../Header2.jsp" %>
+
 <h1>회원가입</h1>
 <form action="/register" method="post" enctype="multipart/form-data">
     <div>
@@ -101,6 +103,7 @@
         <label for="interest" class="title">관심 전자제품 카테고리</label>
         <input type="hidden" id="interest" name="interest">
     </div>
+
     <div class="category-list">
         <input type="checkbox" id="mobile" name="category" value="휴대폰">
         <label for="mobile">휴대폰</label>
