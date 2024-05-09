@@ -16,10 +16,11 @@
    width: 100%;
    margin-bottom: 10px;
 }
-.info-container img {
+.info-container {
    margin-right: 10px;
    vertical-align: top;
 }
+
 .info-container button{
    margin-top: auto;
    margin-left: auto;
@@ -40,23 +41,32 @@
 
 .imgForm {
    background-color: #F5F5F5;
-   width: 200px;
-   height: 220px;
+   width: 214px;
+   height: 241px;
    align-items: center;
    justify-content: center;
     display: flex;
     border-radius: 10px;
+   position: relative;
+   z-index: 1;
 }
-.imgForm img {
-   width: 160px;
-   height: 160px;
+
+.imgForm .heartIcon {
+	position: absolute;
+	z-index: 2;
+	margin-left: 150px;
+	margin-top: 100px;
+}
+
+.imgForm div#product {
+   width: 180px;
+   height: 180px;
    object-fit: cover;
-   margin: auto;
    border-radius: 10px;
 }
 .imgForm b {
    font-size: 18px;
-   margin-bottom: auto;
+   margin-top: 5px;
 }
 
 hr {
