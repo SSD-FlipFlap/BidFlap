@@ -1,0 +1,80 @@
+.main-container {
+    position: relative;
+}
+
+.main-frame {
+    position: relative;
+    width: 1920px;
+    height: 298px;
+    background: #323232;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.recommendations-container,
+.recommendations-category {
+    text-align: left;
+    margin-left: 50px;
+    margin-bottom: 20px;
+}
+
+.product_images {
+    width: calc(100% - 370px); /* 선택 창과 오른쪽 여백의 너비를 제외한 공간을 사용합니다. */
+    overflow: hidden;
+}
+
+.image_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px; /* 이미지 사이의 간격을 조정합니다. */
+    margin-bottom: 30px;
+}
+
+.image_container {
+    width: calc(20% - 10px); /* 크기를 줄입니다. */
+    padding-top: calc(20% - 10px); /* 이미지를 더 작게 만듭니다. */
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    margin-bottom: 30px;
+    margin-left: 5%; /* 왼쪽 여백을 추가합니다. */
+}
+
+
+.image_container img {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+.image_container p {
+    text-align: center;
+}
+
+.selection-box {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 200px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.empty_space {
+    width: 20px;
+}
