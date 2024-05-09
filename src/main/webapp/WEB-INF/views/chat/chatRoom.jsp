@@ -12,8 +12,21 @@
    <%@ include file="../Header2.jsp" %>
       <div class="chat-container">
          <div class="info-container">
-            <div class="info imgForm">
+            <div id="product" class="info imgForm">
                <img src="/resources/img/productImg.png">
+               <div class="heartIcon">
+               		<img id="heart" src="">
+               		<script>
+               			document.getElementById('heart').src=heart_info();
+               			
+               			function heart_info() {
+                            var img_src = '/resources/img/heartIcon.png';
+                            
+                            //if(좋아요 클릭한 상품이면) img_src = /resources/img/heartIcon_Fill.png;
+                            return img_src;
+                        }
+               		</script>
+               </div>
                <b>000,000원</b>
             </div>
             <div class="info">
@@ -117,8 +130,6 @@
          document.getElementById('sendMessage').addEventListener('click', function() {
               document.getElementById('sendBtn').click();
           });
-         
-         
          
           function sendMessage() {
         	  const messageInput = document.getElementById("message").value;
