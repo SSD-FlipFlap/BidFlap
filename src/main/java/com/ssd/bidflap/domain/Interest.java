@@ -1,5 +1,6 @@
 package com.ssd.bidflap.domain;
 
+import com.ssd.bidflap.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,9 +15,10 @@ public class Interest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

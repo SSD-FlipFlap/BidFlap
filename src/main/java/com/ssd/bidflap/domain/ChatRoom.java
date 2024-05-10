@@ -22,9 +22,9 @@ public class ChatRoom {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "as_id")
-    private As as;
+    @JoinColumn(name = "after_service_id")
+    private AfterService afterService;
 
-    @OneToMany(mappedBy = "chat_room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 }

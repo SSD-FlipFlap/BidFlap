@@ -27,14 +27,14 @@ public class Purchase extends BaseEntity {
     private String deliveryMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "as_id")
-    private As as;
+    @JoinColumn(name = "after_service_id")
+    private AfterService afterService;
 }
