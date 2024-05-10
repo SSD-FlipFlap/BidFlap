@@ -8,7 +8,8 @@ public enum Category {
     WEARABLE("wearable"),
     PC_NOTEBOOK("pc_notebook"),
     ACCESSORY("accessory"),
-    ETC("etc");
+    ETC("etc"),
+    ALL("all");
 
     private final String value;
 
