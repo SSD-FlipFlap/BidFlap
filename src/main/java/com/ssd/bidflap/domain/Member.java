@@ -1,6 +1,6 @@
 package com.ssd.bidflap.domain;
 
-import com.ssd.bidflap.domain.enums.Role;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class User {
     private String account; // 계좌 번호
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private MemberRole memberRole;
 
     private String profile;
 }

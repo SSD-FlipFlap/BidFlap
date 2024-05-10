@@ -1,20 +1,20 @@
 spring:
-#  datasource:         # Oracle dataSource
-#    driver-class-name: oracle.jdbc.driver.OracleDriver
-#    url: ${DB_URL}
-#    username: ${DB_USERNAME}
-#    password: ${DB_PASSWORD}
+  datasource:         # Oracle dataSource
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 #    hikari:          # HikariCP settings
 #      maximumPoolSize: 3
 #      connectionTimeout: 3000
 
-#  jpa:
-#    database: oracle
+  jpa:
+    database: oracle
 #    database-platform: org.hibernate.dialect.Oracle10gDialect
-#    show-sql: true
-#    generate-ddl: false
-#    hibernate:
-#      ddl-auto: create
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
 
   mvc:  # jsp 설정
     view:
