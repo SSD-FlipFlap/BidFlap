@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="IdeaProjects\Bidflap\src\main\resources\static\css\main\main.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/main/main.css">
     <title>메인페이지-로그인</title>
 </head>
 <body>
@@ -9,10 +9,10 @@
 
 <div class="main-container">
     <div class="main-frame">
-        <img src=IdeaProjects\Bidflap\src\main\resources\static\img\main_frame.png" alt="Product 1">
+        <img src="resources/img/main_frame.png" alt="Product 1">
     </div>
     <div class="search-container">
-        <img src="IdeaProjects\Bidflap\src\main\resources\static\img\searchbar.png" alt="Product 1">
+        <img src="resources/img/searchbar.png" alt="Product 1">
     </div>
     <div class="recommendations-container">ㅇㅇㅇ님을 위한 추천 상품</div>
     <div class="recommendations-category">카메라 | 핸드폰</div>
@@ -22,7 +22,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -31,7 +31,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -40,7 +40,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -49,7 +49,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -62,7 +62,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -71,7 +71,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -80,7 +80,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
@@ -89,7 +89,7 @@
             <div class="image_container">
                 <div class="image_and_heart_container">
                     <div class="image_placeholder"></div>
-                    <img src="C:\Users\daynn\IdeaProjects\Bidflap\src\main\resources\static\img\product_example.png" alt="Product 1">
+                    <img src="resources/img/product_example.png" alt="Product 1">
                     <div class="heart"></div>
                 </div>
                 <p>100,000원</p>
