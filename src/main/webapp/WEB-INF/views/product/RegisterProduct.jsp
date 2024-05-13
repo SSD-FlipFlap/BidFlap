@@ -22,29 +22,29 @@
     </div>
 
     <div class="product-category">
-        <input type="checkbox" id="mobile" name="category" value="휴대폰">
+        <input type="checkbox" id="mobile" name="category" value="mobile">
         <label for="mobile">휴대폰</label>
 
-        <input type="checkbox" id="tablet" name="category" value="태블릿">
+        <input type="checkbox" id="tablet" name="category" value="tablet">
         <label for="tablet">태블릿</label>
 
-        <input type="checkbox" id="camera" name="category" value="카메라">
+        <input type="checkbox" id="camera" name="category" value="camera">
         <label for="camera">카메라</label>
 
-        <input type="checkbox" id="pcParts" name="category" value="PC 부품">
-        <label for="pcParts">PC 부품</label>
+        <input type="checkbox" id="pc_parts" name="category" value="pc_parts">
+        <label for="pc_parts">PC 부품</label>
 
         <br/>
         <input type="checkbox" id="wearable" name="category" value="웨어러블">
         <label for="wearable">웨어러블</label>
 
-        <input type="checkbox" id="pcNotebook" name="category" value="PC/노트북">
-        <label for="pcNotebook">PC/노트북</label>
+        <input type="checkbox" id="pc_notebook" name="category" value="pc_notebook">
+        <label for="pc_notebook">PC/노트북</label>
 
-        <input type="checkbox" id="accessory" name="category" value="악세사리">
+        <input type="checkbox" id="accessory" name="category" value="accessory">
         <label for="accessory">악세사리</label>
 
-        <input type="checkbox" id="etc" name="category" value="기타">
+        <input type="checkbox" id="etc" name="category" value="etc">
         <label for="etc">기타</label>
     </div>
     <br/>
