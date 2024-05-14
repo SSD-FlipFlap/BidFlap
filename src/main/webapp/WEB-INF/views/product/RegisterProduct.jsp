@@ -18,8 +18,7 @@
         <input type="text" id="productName" name="productName" class="input-style">
     </div>
 
-    <div class="category">카테고리
-    </div>
+    <div class="category">카테고리</div>
 
     <div class="product-category">
         <input type="checkbox" id="mobile" name="category" value="mobile">
