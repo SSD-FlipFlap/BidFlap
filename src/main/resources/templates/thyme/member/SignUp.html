@@ -1,10 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" type="text/css" href="/resources/css/user/SignUp.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/user/SignUp.css}">
     <title>회원가입</title>
-    <script>
+    <script th:inline="javascript">
         // as 전문가 등록 여부
         function toggleExpertInput() {
             const expertInput = document.getElementById('expertInput');
@@ -40,23 +39,23 @@
     </script>
 </head>
 <body>
-<%@ include file="../Header2.jsp" %>
+<div th:include="thyme/HeaderWithoutCategory"></div>
 
 <h1>회원가입</h1>
-<form action="/register" method="post" enctype="multipart/form-data">
+<form th:action="@{/members/register}" method="post" enctype="multipart/form-data">
     <div>
         <label for="email" class="title">이메일 주소*</label>
-        <input type="email" id="email" name="email" required placeholder="예: bidflap@bidflap.co.kr" class="input-style">
+        <input type="email" id="email" name="email" placeholder="예: bidflap@bidflap.co.kr" class="input-style">
     </div>
 
     <div><br/>
         <label for="password" class="title">비밀번호*</label>
-        <input type="password" id="password" name="password" required placeholder="영문, 숫자, 특수문자 포함 8자 이상" class="input-style">
+        <input type="password" id="password" name="password" placeholder="영문, 숫자, 특수문자 포함 8자 이상" class="input-style">
     </div>
 
     <div><br/>
         <label for="nickname" class="title">닉네임*</label>
-        <input type="text" id="nickname" name="nickname" required placeholder="닉네임을 입력하세요" class="input-style">
+        <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" class="input-style">
     </div>
 
     <div><br/>
@@ -68,8 +67,11 @@
             <label for="expertNo">미등록</label>
         </div>
     </div>
-    <div id="expertInput" style="display: none;">
-        <textarea id="expertInfo" name="expertInfo" required placeholder="as 전문 분야 및 자기 소개를 입력하세요" class="input-style"></textarea>
+    <div id="expertInput" class="sub-container" style="display: none;">
+        <label for="expertInfo" class="sub-title">소개</label>
+        <textarea id="expertInfo" name="expertInfo" required placeholder="AS 전문 분야 및 자기 소개를 입력하세요" class="input-style"></textarea>
+        <label for="asPrice" class="sub-title">가격</label>
+        <input type="text" id="asPrice" name="asPrice" placeholder="AS 가격을 입력하세요" class="input-style">
     </div>
 
     <div><br/>
