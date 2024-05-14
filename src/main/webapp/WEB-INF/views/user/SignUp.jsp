@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/resources/css/user/SignUp.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/auth/SignUp.css">
     <title>회원가입</title>
     <script>
         // as 전문가 등록 여부

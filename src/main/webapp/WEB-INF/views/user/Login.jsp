@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/resources/css/user/Login.css">
+    <link rel="stylesheet" type="text/css" href="/resources/css/auth/Login.css">
     <title>로그인</title>
 </head>
 <body>
