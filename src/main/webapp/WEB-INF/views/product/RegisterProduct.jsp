@@ -6,6 +6,7 @@
     <title>상품 정보</title>
 </head>
 <body>
+<%@ include file="../Header2.jsp"%>
 <h1>상품정보</h1>
 <form action="" method="post">
     <div class="product-pic"><br/>
