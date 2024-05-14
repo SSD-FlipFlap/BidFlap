@@ -168,3 +168,9 @@ div#chat-scroll {
    border-bottom: 1px solid #000000;
    margin-bottom: 20px;
 }
+
+.chat-profile {
+    width: 55px;
+    height: 55px;
+    border-radius: 55px;
+}

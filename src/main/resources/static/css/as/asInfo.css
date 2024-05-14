@@ -38,6 +38,7 @@
     display: flex;
     width: 900px;
     margin-bottom: 20px;
+	align-items: flex-start;
 }
 
 .name {
@@ -61,16 +62,15 @@ img#profile {
 }
 
 button {
-	width: 900px;
-	height: 126px;
+	width: 800px;
+	height: 100px;
 	color: #FFFFFF;
-	font-size: 50px;
+	font-size: 40px;
 	font-weight: bolder;
 	background-color: #215818;
 	border-radius: 10px;
 	border: none;
-   margin-top: auto;
-	
+	margin-top: 180px;
 }
 
 p {
