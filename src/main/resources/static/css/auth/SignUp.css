@@ -32,6 +32,18 @@ form label {
     font-weight: bold;
 }
 
+/* 전문가 등록 세부 사항 */
+.sub-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.sub-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
 /* 이메일, 비밀번호, 계좌번호 input 상자 스타일(네모 말고 밑줄) */
 .input-style {
     width: calc(100% - 10px);
@@ -108,10 +120,6 @@ form button:hover {
 .bank-container {
     display: flex;
     align-items: center;
-}
-
-.bank-container label {
-    margin-right: 10px;
 }
 
 .bank-container select {
