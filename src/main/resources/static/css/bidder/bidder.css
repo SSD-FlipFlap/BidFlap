@@ -1,0 +1,156 @@
+.bidder-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.image-placeholder {
+    width: 500px;
+    height: 500px;
+    background: #F5F5F3;
+    border-radius: 10px;
+}
+
+.left-container, .right-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.image-frame {
+    width: 500px;
+    height: 500px;
+    background: #F5F5F5;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 400px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.product-image img {
+    width: auto;
+    height: 100%;
+}
+
+.rotate-image {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.rotate-image img {
+    width: 31.82px;
+    height: 31.82px;
+    transform: rotate(-45deg);
+    border: 2px black solid;
+}
+
+.profile-image {
+    width: 110px;
+    height: 110px;
+    border-radius: 20px;
+}
+
+.profile-info {
+    width: 384px;
+    height: 139px;
+}
+
+.profile-name {
+    color: #636363;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 400;
+}
+
+.profile-start-time {
+    color: #636363;
+    font-size: 20px;
+    font-family: Inter;
+    font-weight: 400;
+}
+
+.hashtag {
+    width: 163px;
+    height: 26px;
+    text-align: center;
+    color: black;
+    font-size: 25px;
+    font-family: Inter;
+    font-weight: 600;
+    letter-spacing: 1.25px;
+    word-wrap: break-word;
+}
+
+.product-name {
+    font-size: 40px;
+    font-family: Inter;
+    font-weight: 600;
+    color: black;
+    word-wrap: break-word;
+}
+
+.product-price {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.price-value {
+    width: 473px;
+    height: 78px;
+    text-align: center;
+    color: black;
+    font-size: 45px;
+    font-family: Inter;
+    font-weight: 600;
+    word-wrap: break-word;
+}
+
+.product-description {
+    color: black;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.unavailable, .like-unavailable {
+    width: 452px;
+    height: 91px;
+    background: #F5F5F5;
+    border-radius: 20px;
+    font-size: 35px;
+    font-family: Inter;
+    font-weight: 600;
+    word-wrap: break-word;
+}
+
+.participate {
+    background: #215818;
+    color: white;
+}
+
+.like-unavailable {
+    color: #B5B5B5;
+}
+
+.auction-info {
+    width: 293px;
+    height: 25px;
+    color: black;
+    font-size: 20px;
+    font-family: Inter;
+    font-weight: 400;
+    word-wrap: break-word;
+}
