@@ -3,6 +3,7 @@ package com.ssd.bidflap.service;
 import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
+import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.domain.enums.MemberRole;
@@ -24,7 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void registerMember(SignUpDto signUpDto) {
+    public void signUp(SignUpDto signUpDto) {
 
         // 이메일 중복 검증
         validateEmail(signUpDto.getEmail());
@@ -91,4 +92,18 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public String login(LoginDto loginDto) {
+        String email = loginDto.getEmail();
+        String password = loginDto.getPassword();
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("로그인 정보가 일치하지 않습니다."));
+
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("로그인 정보가 일치하지 않습니다.");
+        }
+
+        return member.getNickname();
+    }
 }
