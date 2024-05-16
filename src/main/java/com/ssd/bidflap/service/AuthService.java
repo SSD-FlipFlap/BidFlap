@@ -25,7 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void registerMember(SignUpDto signUpDto) {
+    public void signUp(SignUpDto signUpDto) {
 
         // 이메일 중복 검증
         validateEmail(signUpDto.getEmail());
