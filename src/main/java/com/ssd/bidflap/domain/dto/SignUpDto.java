@@ -24,7 +24,7 @@ public class SignUpDto {
     private String nickname;
 
     @NotEmpty
-    private String expert;
+    private String expert = "no";
 
     @Nullable
     private String expertInfo = null;
