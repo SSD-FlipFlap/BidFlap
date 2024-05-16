@@ -1,20 +1,33 @@
 .bidder-container {
     display: flex;
     justify-content: space-between;
+    margin-top: 100px; /* 헤더와의 간격을 확보하기 위해 상단 마진 추가 */
+    position: relative; /* 가상 요소 위치를 위해 relative 설정 */
 }
 
-.image-placeholder {
-    width: 500px;
-    height: 500px;
-    background: #F5F5F3;
-    border-radius: 10px;
+.bidder-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 40%;
+    width: 1px; /* 세로선의 두께 */
+    background-color: #F5F5F5; /* 세로선의 색상 */
 }
 
-.left-container, .right-container {
-    width: 50%;
+.left-container {
+    width: 40%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.right-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+    padding-left: 20px; /* 전체적인 왼쪽 간격 */
 }
 
 .image-frame {
@@ -56,15 +69,26 @@
     border: 2px black solid;
 }
 
+.profile-container {
+    display: flex;
+    align-items: flex-start; /* 상단 정렬 */
+    margin-top: 20px;
+
+}
+
 .profile-image {
+    margin-top:30px;
+    margin-left:10px;
     width: 110px;
     height: 110px;
     border-radius: 20px;
+    margin-right:30px;
 }
 
-.profile-info {
-    width: 384px;
-    height: 139px;
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
 }
 
 .profile-name {
@@ -79,18 +103,21 @@
     font-size: 20px;
     font-family: Inter;
     font-weight: 400;
+    margin-top: 10px;
 }
 
 .hashtag {
     width: 163px;
     height: 26px;
-    text-align: center;
+    text-align: left;
     color: black;
     font-size: 25px;
     font-family: Inter;
     font-weight: 600;
     letter-spacing: 1.25px;
     word-wrap: break-word;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .product-name {
@@ -99,22 +126,26 @@
     font-weight: 600;
     color: black;
     word-wrap: break-word;
+    margin-left: 20px;
+    margin-bottom: 15px;
 }
 
 .product-price {
     margin-top: 10px;
     margin-bottom: 20px;
+    margin-left: 30px;
 }
 
 .price-value {
     width: 473px;
     height: 78px;
-    text-align: center;
+    text-align: left;
     color: black;
     font-size: 45px;
     font-family: Inter;
     font-weight: 600;
     word-wrap: break-word;
+    margin-left: 20px; /* 왼쪽 간격 */
 }
 
 .product-description {
@@ -123,25 +154,65 @@
     font-family: Inter;
     font-weight: 400;
     word-wrap: break-word;
+    text-align: center;
+    margin-left: 50px;
+    margin-bottom: 30px;
 }
 
-.unavailable, .like-unavailable {
-    width: 452px;
-    height: 91px;
+.unavailable {
+    width: 350px; /* 버튼 너비 조정 */
+    height: 70px; /* 버튼 높이 조정 */
     background: #F5F5F5;
     border-radius: 20px;
-    font-size: 35px;
+    font-size: 30px; /* 폰트 크기 조정 */
     font-family: Inter;
     font-weight: 600;
     word-wrap: break-word;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.participate {
+.participate-button {
+    width: 350px; /* 버튼 너비 조정 */
+    height: 70px; /* 버튼 높이 조정 */
+    background: #F5F5F5;
+    border-radius: 20px;
+    font-size: 30px; /* 폰트 크기 조정 */
+    font-family: Inter;
+    font-weight: 600;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: #215818;
     color: white;
+    margin-left: 50px;
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 }
 
+.participate-button:hover {
+    background-color: #1a4312; /* 마우스를 올렸을 때의 배경색 */
+}
+
+
 .like-unavailable {
+    width: 770px; /* 버튼 너비 조정 */
+    height: 70px; /* 버튼 높이 조정 */
+    background: #F5F5F5;
+    border-radius: 20px;
+    font-size: 30px; /* 폰트 크기 조정 */
+    font-family: Inter;
+    font-weight: 600;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #B5B5B5;
+    margin-top: 20px;
+}
+
+.unavailable {
     color: #B5B5B5;
 }
 
@@ -149,8 +220,30 @@
     width: 293px;
     height: 25px;
     color: black;
-    font-size: 20px;
+    font-size: 10px;
     font-family: Inter;
     font-weight: 400;
     word-wrap: break-word;
+    text-align: right;
+    margin-top: 20px;
+    align-self: flex-end; /* 오른쪽 정렬 */
+    margin-right: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 730px;
+}
+
+.button-left, .button-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.button-left .unavailable,
+.button-right .participate {
+    margin-bottom: 10px; /* 버튼 사이에 여유 공간 추가 */
 }
