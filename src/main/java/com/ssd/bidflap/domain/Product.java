@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Data
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,6 +21,8 @@ public class Product extends BaseEntity {
 
     private String description;
 
+//    private String product_filepath;
+    
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
 
