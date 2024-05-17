@@ -4,6 +4,15 @@
 <head>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/main/main.css}">
     <title>메인페이지-로그인</title>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            let loginSuccess = [[${loginSuccess}]];
+            if (loginSuccess) {
+                const memberNickname = [[${session.loggedInMember}]];
+                alert(memberNickname + '님, 로그인 되었습니다.');
+            }
+        });
+    </script>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
