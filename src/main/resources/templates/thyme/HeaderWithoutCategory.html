@@ -15,6 +15,16 @@
     <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
     <link th:href="@{/resources/css/Header.css}" rel="stylesheet" />
     <title>Document</title>
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // 폼 전송 막기
+            const logoutConfirmed = confirm("로그아웃 하시겠습니까?");
+            if (logoutConfirmed) {
+                // 사용자가 확인을 누른 경우, 로그아웃 폼을 제출
+                document.getElementById("logoutForm").submit();
+            }
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -31,8 +41,9 @@
                 <li th:unless="${session.loggedInMember != null}"><a href="#" th:href="@{/auth/login}">로그인</a></li>
 
                 <li th:if="${session.loggedInMember != null}">
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit">로그아웃</button>
+                    <!-- confirmLogout 함수를 호출하는 onclick 이벤트 -->
+                    <form th:action="@{/logout}" method="post" id="logoutForm" onsubmit="confirmLogout(event)">
+                        <button type="submit" class="logout">로그아웃</button>
                     </form>
                 </li>
                 <li th:if="${session.loggedInMember != null}">|</li>

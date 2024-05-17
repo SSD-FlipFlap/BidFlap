@@ -17,6 +17,12 @@
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 
+<div th:if="${logoutSuccess}">
+    <script th:inline="javascript">
+        alert("로그아웃 되었습니다.");
+    </script>
+</div>
+
 <div class="main-container">
     <div class="main-frame">
         <img src="resources/img/main_frame.png" alt="Product 1">
