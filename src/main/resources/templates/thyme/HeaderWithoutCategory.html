@@ -15,27 +15,6 @@
     <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
     <link th:href="@{/resources/css/Header.css}" rel="stylesheet" />
     <title>Document</title>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var isLoggedIn = /*[[${isLoggedIn}]]*/ false; // 서버에서 로그인 상태 받아오기
-
-        if (isLoggedIn) {
-            document.querySelectorAll('.logged-in').forEach(function(item) {
-                item.style.display = 'inline'; // 로그인 시 보여짐
-            });
-            document.querySelectorAll('.logged-out').forEach(function(item) {
-                item.style.display = 'none'; // 로그인 시 숨김
-            });
-        } else {
-            document.querySelectorAll('.logged-in').forEach(function(item) {
-                item.style.display = 'none'; // 로그아웃 시 숨김
-            });
-            document.querySelectorAll('.logged-out').forEach(function(item) {
-                item.style.display = 'inline'; // 로그아웃 시 보여짐
-            });
-        }
-        /*]]>*/
-    </script>
 </head>
 <body>
 <header>
@@ -47,12 +26,19 @@
         </div>
         <div class="menu">
             <ul>
-                <li class="logged-out"><a href="#" th:href="@{/auth/signup}">회원가입</a></li>
-                <li class="logged-in" style="display:none;"><a href="#">마이페이지</a></li>
-                <li class="logged-in" style="display:none;">|</li>
-                <li class="logged-in" style="display:none;"><a href="#">알림</a></li>
-                <li class="logged-out"><a href="#" th:href="@{/auth/login}">로그인</a></li>
-                <li class="logged-in" style="display:none;"><a href="#">로그아웃</a></li>
+                <li th:unless="${session.loggedInMember != null}"><a href="#" th:href="@{/auth/signup}">회원가입</a></li>
+                <li th:unless="${session.loggedInMember != null}">|</li>
+                <li th:unless="${session.loggedInMember != null}"><a href="#" th:href="@{/auth/login}">로그인</a></li>
+
+                <li th:if="${session.loggedInMember != null}">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit">로그아웃</button>
+                    </form>
+                </li>
+                <li th:if="${session.loggedInMember != null}">|</li>
+                <li th:if="${session.loggedInMember != null}"><a href="#">마이페이지</a></li>
+                <li th:if="${session.loggedInMember != null}">|</li>
+                <li th:if="${session.loggedInMember != null}"><a href="#">알림</a></li>
             </ul>
         </div>
     </div>

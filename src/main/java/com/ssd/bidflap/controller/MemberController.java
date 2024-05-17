@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,8 @@ public class MemberController {
     }
 
     @PostMapping("/auth/login")
-    public String login(@Valid @ModelAttribute LoginDto loginDto, BindingResult bindingResult, HttpSession session, Model model) {
+    public String login(@Valid @ModelAttribute LoginDto loginDto, BindingResult bindingResult,
+                        HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "thyme/auth/Login";
         }
@@ -77,6 +79,7 @@ public class MemberController {
         try {
             String nickname = authService.login(loginDto);
             session.setAttribute("loggedInMember", nickname);
+            redirectAttributes.addFlashAttribute("loginSuccess", true); // 리다이렉트 후 한번만 사용되는 데이터
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             model.addAttribute("loginError", e.getMessage());
