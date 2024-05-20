@@ -155,7 +155,7 @@ form input[type="checkbox"]:checked + label {
 }
 
 /* 가입하기 버튼 */
-form button {
+.main-section form button {
     padding: 10px 30px; /* 버튼 안의 여백 조정(위아래 좌우) */
     background-color: #215818;
     border: none;
