@@ -1,0 +1,217 @@
+.container {
+    align-items: center;
+}
+
+main {
+    display: flex;
+    width: 100%;
+    margin-top: 30px;
+    justify-content: center; /* 수평 가운데 정렬 */
+}
+
+aside {
+    width: 170px;
+    margin-right: 60px;
+}
+
+.side-nav {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F5;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative; /* 자식 요소를 위치시키기 위해 relative 추가 */
+}
+
+.side-nav span {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.profile-management {
+    flex: 1;
+}
+
+.profile-management h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 2px solid #a0a0a0; /* 테두리 색상 */
+    border-radius: 10px; /* 테두리 둥글게 */
+    padding: 15px 25px; /* 내부 여백 */
+    position: relative; /* 자식 요소를 위치시키기 위해 relative 추가 */
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-details .username {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.profile-details .email {
+    margin-bottom: 10px;
+}
+
+.profile-edit {
+    display: inline-block;
+    padding: 10px 20px; /* 내부 여백 */
+    border: 2px solid #a0a0a0; /* 테두리 색상 */
+    border-radius: 10px; /* 테두리 둥글게 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+    position: absolute; /* 절대 위치 */
+    right: 30px; /* 오른쪽 끝에서 20px 떨어지게 */
+    top: 50%; /* 세로 중앙에 위치하게 */
+    transform: translateY(-50%); /* 세로 중앙 정렬을 위한 변환 */
+}
+
+.section {
+    margin: 40px 0;
+}
+
+.main-section {
+    width: 60%;
+    margin-bottom: 30px;
+}
+
+.section h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-header h3 {
+    margin: 0;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 35px 0;
+    background-color: #e6f4e6;
+    border-radius: 10px;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+    position: relative; /* 구분선을 위한 상대적 위치 */
+}
+
+.stat-item span {
+    display: block;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 13px;
+}
+
+.stats .stat-item span a {
+    text-decoration: underline;
+    font-style: italic;
+    color: #215818;
+}
+
+.stat-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    height: calc(100% + 20px); /* 구분선 높이를 전체 높이보다 20px 더 길게 */
+    border-right: 1px solid #a0a0a0; /* 구분선 색상 */
+}
+
+.item-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.item {
+    background-color: #f1f1f1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 3px;
+    width: 150px;
+}
+
+.item img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    margin-bottom: 10px;
+}
+
+.item span {
+    display: block;
+    font-size: 14px;
+}
+
+.more-link {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    font-size: 14px;
+    color: #929292;
+}
+
+/* 판매글 컨테이너*/
+.image_row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* 요소들을 왼쪽부터 차례로 배치 */
+    gap: 37px;
+    margin-bottom: 1px;
+}
+
+.image_container {
+    width: 210px;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+    padding: 5px 0;
+}
+.heart_icon {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 20px;
+    height: auto;
+}
+.product_img {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.image_container span {
+    font-weight: bold;
+}

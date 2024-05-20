@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myPage.css}">
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+<div class="container">
+    <main>
+        <aside>
+            <nav class="side-nav">
+                <span><h3><a href="#">마이 페이지</a></h3></span>
+                <span><a href="#">판매 내역</a></span>
+                <span><a href="#">구매 내역</a></span>
+                <span><a href="#">경매 내역</a></span>
+                <span><a href="#">좋아요한 글</a></span>
+                <span><a href="#">채팅 내역</a></span>
+            </nav>
+        </aside>
+        <section class="main-section">
+            <div class="profile-info">
+                <div>
+                    <img class="profile-pic" th:src="@{/resources/img/Profile.png}" alt="Profile Img">
+                </div>
+                <div class="profile-details">
+<!--                    <span class="username" th:text="${username}">유저 닉네임</span>-->
+                    <span class="username">유저 닉네임</span>
+<!--                    <span class="email" th:text="${userEmail}">user@naver.com</span>-->
+                    <span class="email">user@naver.com</span>
+                    <a href="#" class="profile-edit">프로필 관리</a>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>판매 내역</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span>전체</span>
+                        <span><a href="#">4</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>판매중</span>
+                        <span><a href="#">2</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>경매중</span>
+                        <span><a href="#">1</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>판매완료</span>
+                        <span><a href="#">1</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>구매 내역</h3>
+                    <a href="#" class="more-link">더보기 ></a>
+                </div>
+<!--                <div class="item-list">-->
+<!--                    <div class="item" th:each="item : ${purchaseHistory}">-->
+<!--                        <img th:src="@{/images/item1.png}" alt="Item Image"/>-->
+<!--                        <span th:text="${item.title}">판매글 제목</span>-->
+<!--                        <span th:text="${item.price}">100,000원</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <div class="product_images">
+                    <div class="image_row">
+                        <!-- 이미지 1 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                        <!-- 이미지 2 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                        <!-- 이미지 3 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                        <!-- 이미지 4 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>경매 내역</h3>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span>전체</span>
+                        <span><a href="#">2</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>경매중</span>
+                        <span><a href="#">0</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>경매종료</span>
+                        <span><a href="#">1</a></span>
+                    </div>
+                    <div class="stat-item">
+                        <span>낙찰</span>
+                        <span><a href="#">1</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h3>좋아요한 글</h3>
+                    <a href="#" class="more-link">더보기 ></a>
+                </div>
+                <div class="product_images">
+                    <div class="image_row">
+                        <!-- 이미지 1 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                        <!-- 이미지 2 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+                        <!-- 이미지 3 -->
+                        <div class="image_container">
+                            <div class="image_and_heart_container">
+                                <div class="image_placeholder"></div>
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                                <div class="heart"></div>
+                            </div>
+                            <span>에어팟 맥스</span>
+                            <span>100,000원</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

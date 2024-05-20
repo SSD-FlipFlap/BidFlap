@@ -31,16 +31,16 @@
                 <li th:unless="${session.loggedInMember != null}">|</li>
                 <li th:unless="${session.loggedInMember != null}"><a href="#" th:href="@{/auth/login}">로그인</a></li>
 
+                <li th:if="${session.loggedInMember != null}"><a href="#" th:href="@{/members/my-page}">마이페이지</a></li>
+                <li th:if="${session.loggedInMember != null}">|</li>
+                <li th:if="${session.loggedInMember != null}"><a href="#">알림</a></li>
+                <li th:if="${session.loggedInMember != null}">|</li>
                 <li th:if="${session.loggedInMember != null}">
                     <!-- confirmLogout 함수를 호출하는 onclick 이벤트 -->
                     <form th:action="@{/logout}" method="post" id="logoutForm" onsubmit="confirmLogout(event)">
                         <button type="submit" class="logout">로그아웃</button>
                     </form>
                 </li>
-                <li th:if="${session.loggedInMember != null}">|</li>
-                <li th:if="${session.loggedInMember != null}"><a href="#">마이페이지</a></li>
-                <li th:if="${session.loggedInMember != null}">|</li>
-                <li th:if="${session.loggedInMember != null}"><a href="#">알림</a></li>
             </ul>
         </div>
     </div>
