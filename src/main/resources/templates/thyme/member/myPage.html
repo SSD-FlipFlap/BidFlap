@@ -13,7 +13,7 @@
     <main>
         <aside>
             <nav class="side-nav">
-                <span><h3><a href="#">마이 페이지</a></h3></span>
+                <span><h3><a href="#" th:href="@{/members/my-page}">마이 페이지</a></h3></span>
                 <span><a href="#">판매 내역</a></span>
                 <span><a href="#">구매 내역</a></span>
                 <span><a href="#">경매 내역</a></span>
@@ -31,7 +31,7 @@
                     <span class="username">유저 닉네임</span>
 <!--                    <span class="email" th:text="${userEmail}">user@naver.com</span>-->
                     <span class="email">user@naver.com</span>
-                    <a href="#" class="profile-edit">프로필 관리</a>
+                    <a href="#" th:href="@{/members/edit-profile}" class="profile-edit">프로필 관리</a>
                 </div>
             </div>
 
