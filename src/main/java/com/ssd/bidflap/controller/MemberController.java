@@ -2,7 +2,9 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
+import com.ssd.bidflap.domain.dto.UserDto;
 import com.ssd.bidflap.service.AuthService;
+import com.ssd.bidflap.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.List;
 public class MemberController {
 
     private final AuthService authService;
+    private final MemberService memberService;
 
     // 회원가입
     @GetMapping("/auth/signup")
@@ -94,4 +97,50 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("logoutSuccess", "true");
         return "redirect:/";
     }
+
+    // 프로필 관리
+    @GetMapping("/members/edit-profile")
+    public String editProfile(HttpSession session, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        model.addAttribute("changePasswordDto", new UserDto.ChangePasswordDto());
+        return "thyme/member/editProfile";
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/members/change-password")
+    public String changePassword(@Valid @ModelAttribute UserDto.ChangePasswordDto changePasswordDto,
+                                 BindingResult result, HttpSession session, // bindingResilt는 @ModelAttribute 다음에 위치해야 한다.
+                                 Model model, RedirectAttributes redirectAttributes) {
+        // 로그인한 회원의 닉네임(세션에 저장된 값)
+        String nickname = (String) session.getAttribute("loggedInMember");
+
+        if (nickname == null) {
+            return "redirect:/auth/login";  // 로그인 요청
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("changePasswordDto", changePasswordDto);
+            return "thyme/member/editProfile";
+        }
+
+        try {
+            memberService.changePassword(nickname, changePasswordDto);
+            redirectAttributes.addFlashAttribute("updateSuccess", true);
+            return "redirect:/members/edit-profile";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("passwordError", e.getMessage());
+            return "thyme/member/editProfile";
+        } catch (IllegalStateException e) {
+            model.addAttribute("newPasswordError", e.getMessage());
+            return "thyme/member/editProfile";
+        }
+    }
+
+    // 회원 정보 수정
+
+    // 프로필 사진 변경
 }
