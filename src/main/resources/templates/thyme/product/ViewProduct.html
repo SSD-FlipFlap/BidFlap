@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="/resources/css/product/ViewProduct.css">
+    <title>상품 상세 페이지</title>
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+<div class="image-gray-box"></div>
+<div class="line"></div>
+<div class="image-13057052"></div>
+<div class="heart"></div>
+<div class="purchase-button">
+    <div class="btn">
+        <button type="submit">구매하기</button>
+    </div>
+</div>
+
+<div class="bid-button">
+    <div class="btn">
+        <button type="submit">경매 불가능</button>
+    </div>
+</div>
+
+<div class="like-check">
+    <div class="like-check-text">
+        좋아요 n
+    </div>
+</div>
+
+<div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
+<div class="writer-profile">가을이 님 2024년 4월 11일 9시 경매 시작하셨습니다.</div>
+<div class="profile-picture"></div>
+<div class="price" th:text="${product.price}"></div>
+<div class="product-title" th:text="${product.title}"></div>
+<div class="product-description" th:text="${product.description}"></div>
+<div class="product-category" th:text="${product.category}"></div>
+<div class="writer-price">판매자 제시가</div>
+</body>
+</html>

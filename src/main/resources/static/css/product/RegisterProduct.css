@@ -16,7 +16,7 @@ form {
     padding: 20px;
 }
 
-#productContainer {
+#productContainer {/*회색 박스*/
     box-sizing: border-box;
     position: absolute;
     width: 191px;
@@ -26,9 +26,11 @@ form {
     background: rgba(245, 245, 245, 0.8);
     border-radius: 20px;
     display: flex;
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
 }
 
-#productPreviewContainer {
+#profilePreviewContainer {
     width: 70px;
     height: 70px;
     overflow: hidden;
@@ -36,10 +38,11 @@ form {
     margin-bottom: 10px;
 }
 
-#productPreview {
+#profilePreview {
     width: 100%;
     height: auto;
 }
+
 
 .product-name {
     position: absolute;

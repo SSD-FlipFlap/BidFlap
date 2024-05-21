@@ -1,0 +1,304 @@
+/* 공통 스타일 */
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    background: #FFFFFF;
+    height:1000px;
+}
+.position-absolute {
+    position: absolute;
+}
+.width-500 {
+    width: 500px;
+}
+.height-500 {
+    height: 500px;
+}
+.left-156 {
+    left: 156px;
+}
+.top-275 {
+    top: 275px;
+}
+.background-f5f5f5 {
+    background: #F5F5F5;
+}
+.border-radius-10 {
+    border-radius: 10px;
+}
+
+.image-gray-box {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: 140px;
+    top: 275px;
+    background: #F5F5F5;
+    border-radius: 10px;
+}
+/* Image */
+.image-13057052 {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    left: calc(140px + 40px); /* (500px - 420px) / 2 = 40px */
+    top: calc(275px + 40px);  /* (500px - 420px) / 2 = 40px */
+    border-radius: 10px;
+    background-color: #323232;
+}
+.line {
+    position: absolute;
+    width: 700px;
+    height: 0;
+    left: 350px;
+    top: 600px;
+    border: 1px solid #989292;
+    transform: rotate(-90deg);
+}
+
+/* Heart */
+.heart {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    left: 562px;
+    top: 674px;
+}
+
+/* 구매버튼 */
+.purchase-button {
+    position: absolute;
+    width: 452px;
+    height: 91px;
+    left: 772px;
+    top: 700px;
+    background: #215818;
+    border-radius: 20px;
+    display: flex; /* 버튼을 가운데 정렬하기 위해 플렉스 박스 사용 */
+    align-items: center;
+    justify-content: center;
+}
+
+.btn button{
+    background: none; /* 배경색 제거 */
+    border: none; /* 테두리 제거 */
+    font-family: 'Inter', sans-serif; /* 폰트 패밀리 설정 */
+    font-weight: 600; /* 폰트 굵기 설정 */
+    font-size: 35px; /* 폰트 크기 설정 */
+    line-height: 42px; /* 라인 높이 설정 */
+    color: #FFFFFF; /* 텍스트 색상 설정 */
+    cursor: pointer; /* 커서 포인터로 변경 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+.bid-button {
+    position: absolute;
+    width: 452px;
+    height: 91px;
+    left: 1260px;
+    top: 700px;
+    background: #F5F5F5;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.like-check {
+    position: absolute;
+    width: 940px;
+    height: 86px;
+    left: 772px;
+    top: 820px;
+    background: #F5F5F5;
+    border-radius: 20px;
+    display: flex; /* Add this line */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.like-check-text {
+    font-family: 'Inter', sans-serif; /* 폰트 패밀리 설정 */
+    font-weight: 600; /* 폰트 굵기 설정 */
+    font-size: 35px; /* 폰트 크기 설정 */
+    line-height: 42px; /* 라인 높이 설정 */
+    color: #000000; /* 텍스트 색상 설정 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+}
+
+
+/* Text Styles */
+.text-white {
+    color: #FFFFFF;
+}
+.text-black {
+    color: #000000;
+}
+.font-bold {
+    font-weight: 600;
+}
+.font-regular {
+    font-weight: 400;
+}
+.font-light {
+    font-weight: 300;
+}
+.font-size-35 {
+    font-size: 35px;
+}
+.font-size-30 {
+    font-size: 30px;
+}
+.font-size-25 {
+    font-size: 25px;
+}
+.font-size-20 {
+    font-size: 20px;
+}
+.line-height-42 {
+    line-height: 42px;
+}
+.line-height-36 {
+    line-height: 36px;
+}
+.line-height-30 {
+    line-height: 30px;
+}
+.text-center {
+    text-align: center;
+}
+
+/* 좋아요 불가능 */
+.like-count {
+    position: absolute;
+    width: 341px;
+    height: 55px;
+    left: 1084px;
+    top: 863px;
+    font-family: 'Inter';
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 42px;
+    color: #FFFFFF;
+}
+
+/* 경매 시작 가능 | 10명 이상 좋아요 */
+.auction-notice {
+    position: absolute;
+    width: 400px;
+    height: 30px;
+    left: 1400px;
+    top: 920px;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    color: #000000;
+}
+
+/*  작성자 이름, 작성 시간 */
+.writer-profile {
+    position: absolute;
+    width: 384px;
+    height: 139px;
+    left: 140px;
+    top: 818px;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+    color: #636363;
+}
+
+/* 작성자 프로필 사진 */
+.profile-picture {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    left: 156px;
+    top: 818px;
+    /*background: url(가을이.jpg);*/
+    border-radius: 20px;
+}
+
+/* 상품 가격 */
+.price {
+    position: absolute;
+    width: 473px;
+    height: 78px;
+    left: 770px;
+    top: 416px;
+    font-family: 'Inter';
+    font-weight: 600;
+    font-size: 45px;
+    line-height: 54px;
+    /*text-align: center;*/
+    color: #000000;
+}
+
+/* 상품 이름 */
+.product-title {
+    position: absolute;
+    width: 494px;
+    height: 46px;
+    left: 770px;
+    top: 311px;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 48px;
+    /*text-align: center;*/
+    color: #000000;
+}
+
+/* 상품 설명*/
+.product-description {
+    position: absolute;
+    width: 900px;
+    height: 160px;
+    left: 777px;
+    top: 500px;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 36px;
+    text-align: center;
+    color: #000000;
+}
+
+/* 카테고리 */
+.product-category {
+    position: absolute;
+    width: 163px;
+    height: 26px;
+    left: 770px;
+    top: 259px;
+    font-family: 'Inter';
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 30px;
+    /*text-align: center;*/
+    letter-spacing: 0.05em;
+    color: #000000;
+}
+
+/* 판매자 제시가 */
+.writer-price {
+    position: absolute;
+    width: 322px;
+    height: 34px;
+    left: 770px;
+    top: 392px;
+    font-family: 'Inter';
+    font-weight: 300;
+    font-size: 25px;
+    line-height: 30px;
+    /*text-align: center;*/
+    letter-spacing: 0.05em;
+    color: #000000;
+}

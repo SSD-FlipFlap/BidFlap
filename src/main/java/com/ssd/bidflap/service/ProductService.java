@@ -17,7 +17,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void registerProduct(Product product/*, MultipartFile product_filepath*/)throws Exception{
+    public void registerProduct(Product product/*, MultipartFile product_filepath*/)throws Exception {
 //        String productImgPath= System.getProperty("user.dir")+ "\\src\\main\\resources\\static\\productImg";
 //
 //        UUID uuid = UUID.randomUUID();
@@ -30,5 +30,10 @@ public class ProductService {
 
 //        product.setCategory(Category.valueOf(product.getCategory()));
         productRepository.save(product);
+    }
+
+    public Product productView(Long id){
+
+        return productRepository.findById(id).get();
     }
 }
