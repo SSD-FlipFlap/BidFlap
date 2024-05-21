@@ -65,6 +65,12 @@
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 
+<div th:if="${updateSuccess}">
+    <script th:inline="javascript">
+        alert("비밀번호가 변경되었습니다.");
+    </script>
+</div>
+
 <div class="container">
     <main>
         <aside>
@@ -94,13 +100,20 @@
             </div>
             <br/>
 
-            <form method="post">
+            <form th:action="@{/members/change-password}" th:object="${changePasswordDto}" method="post">
                 <div class="input-container"><br/>
                     <label for="password" class="title">비밀번호</label>
                     <div>
                         <input type="password" id="password" name="password" placeholder="현재 비밀번호"><br/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
+                        <div class="error-msg" th:if="${passwordError}" th:text="${passwordError}"></div>
                         <input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호"><br/>
-                        <input type="password" id="checkPassword" name="checkPassword" placeholder="새 비밀번호 확인">
+                        <div class="error-msg" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인">
+                        <div class="error-msg" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                        <div class="error-msg" th:if="${newPasswordError}" th:text="${newPasswordError}"></div>
                     </div>
                 </div>
                 <div>

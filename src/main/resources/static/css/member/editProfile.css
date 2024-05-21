@@ -172,3 +172,7 @@ form input[type="checkbox"]:checked + label {
 .category-list {
     margin-left: 80px;
 }
+
+.error-msg {
+    color: red;
+}

@@ -29,4 +29,8 @@ public class Member {
     private MemberRole memberRole;
 
     private String profile;
+
+    public void changePassword(String newEncodedPassword) {
+        this.password = newEncodedPassword;
+    }
 }
