@@ -116,7 +116,7 @@ public class MemberController {
 
     // 비밀번호 변경
     @PostMapping("/members/change-password")
-    public String changePassword(@Valid @ModelAttribute MemberDto.ChangePasswordDto changePasswordDto,
+    public String changePassword(@Valid @ModelAttribute("changePasswordDto") MemberDto.ChangePasswordDto changePasswordDto,
                                  BindingResult result, HttpSession session, // bindingResilt는 @ModelAttribute 다음에 위치해야 한다.
                                  Model model, RedirectAttributes redirectAttributes) {
         // 로그인한 회원의 닉네임(세션에 저장된 값)
@@ -127,6 +127,8 @@ public class MemberController {
         }
 
         if (result.hasErrors()) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("changePasswordDto", changePasswordDto);
             return "thyme/member/editProfile";
         }
@@ -136,9 +138,13 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("updateSuccess", true);
             return "redirect:/members/edit-profile";
         } catch (IllegalArgumentException e) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("passwordError", e.getMessage());
             return "thyme/member/editProfile";
         } catch (IllegalStateException e) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("newPasswordError", e.getMessage());
             return "thyme/member/editProfile";
         }
@@ -146,7 +152,7 @@ public class MemberController {
 
     // 회원 정보 수정
     @PostMapping("/members/update-member")
-    public String updateMember(@Valid @ModelAttribute MemberDto.UpdateMemberDto updateMemberDto,
+    public String updateMember(@Valid @ModelAttribute("updateMemberDto") MemberDto.UpdateMemberDto updateMemberDto,
                                  BindingResult result, HttpSession session,
                                  Model model, RedirectAttributes redirectAttributes) {
         // 로그인한 회원의 닉네임(세션에 저장된 값)
@@ -157,6 +163,7 @@ public class MemberController {
         }
 
         if (result.hasErrors()) {
+            model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
             model.addAttribute("updateMemberDto", updateMemberDto);
             return "thyme/member/editProfile";
         }
@@ -167,11 +174,9 @@ public class MemberController {
 
             redirectAttributes.addFlashAttribute("updateMemberSuccess", true);
             return "redirect:/members/edit-profile";
-        } catch (IllegalArgumentException e) {
-            //model.addAttribute("passwordError", e.getMessage());
-            return "thyme/member/editProfile";
         } catch (IllegalStateException e) {
-            //model.addAttribute("newPasswordError", e.getMessage());
+            model.addAttribute("duplicatedError", e.getMessage());
+            model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
             return "thyme/member/editProfile";
         }
     }
