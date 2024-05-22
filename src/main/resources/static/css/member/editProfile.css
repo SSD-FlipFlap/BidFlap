@@ -175,4 +175,20 @@ form input[type="checkbox"]:checked + label {
 
 .error-msg {
     color: red;
+    margin-left: 15px;
+}
+
+.error-msg1 {
+    color: red;
+    margin-left: 250px;
+}
+
+.error-msg2 {
+    color: red;
+    margin-left: 200px;
+}
+
+.error-msg2 {
+    color: red;
+    margin-left: 80px;
 }

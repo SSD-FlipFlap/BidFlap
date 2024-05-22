@@ -58,7 +58,7 @@
 
     <div><br/>
         <label for="password" class="title">비밀번호*</label>
-        <input type="password" id="password" name="password" placeholder="영문, 숫자, 특수문자 포함 8자 이상" class="input-style">
+        <input type="password" id="password" name="password" placeholder="영문, 숫자, 특수문자 포함 8자 이상" class="input-style" th:value="*{password}">
         <div class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
     </div>
 
@@ -81,8 +81,10 @@
     <div id="expertInput" class="sub-container" style="display: none;">
         <label for="expertInfo" class="sub-title">소개</label>
         <textarea id="expertInfo" name="expertInfo" placeholder="AS 전문 분야 및 자기 소개를 입력하세요" th:text="*{expertInfo}" class="input-style"></textarea>
+        <span class="error-msg" th:if="${asInfoError}" th:text="${asInfoError}"></span>
         <label for="asPrice" class="sub-title">가격</label>
         <input type="text" id="asPrice" name="asPrice" placeholder="AS 가격을 입력하세요" class="input-style" th:value="*{asPrice}">
+        <span class="error-msg" th:if="${asPriceError}" th:text="${asPriceError}"></span>
     </div>
 
     <div><br/>

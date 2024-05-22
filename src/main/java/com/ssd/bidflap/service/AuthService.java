@@ -7,6 +7,7 @@ import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.domain.enums.MemberRole;
+import com.ssd.bidflap.exception.MemberException;
 import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.InterestRepository;
 import com.ssd.bidflap.repository.MemberRepository;
@@ -26,6 +27,11 @@ public class AuthService {
 
     @Transactional
     public void signUp(SignUpDto signUpDto) {
+
+        // as 세부 정보 입력값 검증
+        if (signUpDto.getExpert().equals("yes")) {
+            validAsInput(signUpDto.getExpertInfo(), signUpDto.getAsPrice());
+        }
 
         // 이메일 중복 검증
         validateEmail(signUpDto.getEmail());
@@ -82,15 +88,25 @@ public class AuthService {
 
     protected void validateEmail(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
-            throw new IllegalStateException("이미 등록된 이메일입니다.");
+            throw new MemberException.EmailDuplicatedException("이미 등록된 이메일입니다.");
         }
     }
 
     protected void validateNickname(String nickname) {
         if (memberRepository.findByNickname(nickname).isPresent()) {
-            throw new IllegalStateException("이미 등록된 닉네임입니다.");
+            throw new MemberException.NicknameDuplicatedException("이미 등록된 닉네임입니다.");
         }
     }
+
+    protected void validAsInput(String asDescription, String asPrice) {
+        if (asDescription == null || asDescription.trim().isEmpty()) {
+            throw new MemberException.AsDescInputException("소개를 입력해주세요.");
+        }
+        if (asPrice == null || asPrice.trim().isEmpty()) {
+            throw new MemberException.AsPriceInputException("가격을 입력해주세요");
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public String login(LoginDto loginDto) {
