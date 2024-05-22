@@ -63,11 +63,16 @@
     </script>
 </head>
 <body>
-<div th:include="thyme/HeaderWithCategory"></div>
+<div th:insert="~{thyme/HeaderWithCategory}"></div>
 
 <div th:if="${updateSuccess}">
     <script th:inline="javascript">
         alert("비밀번호가 변경되었습니다.");
+    </script>
+</div>
+<div th:if="${updateMemberSuccess}">
+    <script th:inline="javascript">
+        alert("회원 정보가 변경되었습니다.");
     </script>
 </div>
 
@@ -90,17 +95,15 @@
                     <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
                 </div>
                 <div class="profile-details">
-                    <!--                    <span class="username" th:text="${username}">유저 닉네임</span>-->
-                    <span class="username">유저 닉네임</span>
-                    <!--                    <span class="email" th:text="${userEmail}">user@naver.com</span>-->
-                    <span class="email">user@naver.com</span>
+                    <span class="username" th:value="${updateMemberDto.nickname}">유저 닉네임</span>
+                    <span class="email" th:value="${updateMemberDto.email}">user@naver.com</span>
                     <button type="submit" class="profile-delete" onclick="deleteProfile()">프로필 삭제</button>
                     <button type="submit" class="profile-edit">프로필 저장</button>
                 </div>
             </div>
             <br/>
 
-            <form th:action="@{/members/change-password}" th:object="${changePasswordDto}" method="post">
+            <form action="#" th:action="@{/members/change-password}" th:object="${changePasswordDto}" method="post">
                 <div class="input-container"><br/>
                     <label for="password" class="title">비밀번호</label>
                     <div>
@@ -121,44 +124,50 @@
                 </div>
             </form>
 
-            <form method="post">
+            <form action="#" th:action="@{/members/update-member}" th:object="${updateMemberDto}" method="post">
                 <div class="input-container">
                     <label for="email" class="title">이메일&nbsp;</label>
-                    <input type="email" id="email" name="email">
+                    <input type="email" id="email" name="email" th:value="*{email}">
                 </div>
+                <div class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                <div class="error-msg" th:if="${duplicatedError}" th:text="${duplicatedError}"></div>
 
                 <div class="input-container"><br/>
                     <label for="nickname" class="title">닉네임&nbsp;</label>
-                    <input type="text" id="nickname" name="nickname">
+                    <input type="text" id="nickname" name="nickname" th:value="*{nickname}">
                 </div>
+                <div class="error-msg" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
+                <div class="error-msg" th:if="${duplicatedError}" th:text="${duplicatedError}"></div>
 
                 <div><br/>
                     <label class="title">as 전문가 등록</label>
                     <div class="radio-container">
-                        <input type="radio" id="expertYes" name="expert" value="yes" onclick="toggleExpertInput()">
+                        <input type="radio" id="expertYes" name="expert" value="yes" th:field="*{expert}" onclick="toggleExpertInput()">
                         <label for="expertYes">등록</label>
-                        <input type="radio" id="expertNo" name="expert" value="no" onclick="toggleExpertInput()">
+                        <input type="radio" id="expertNo" name="expert" value="no" th:field="*{expert}" onclick="toggleExpertInput()">
                         <label for="expertNo">미등록</label>
                     </div>
                 </div>
                 <div id="expertInput" class="sub-container">
                     <label for="expertInfo" class="sub-title">소개</label>
-                    <textarea id="expertInfo" name="expertInfo" placeholder="AS 전문 분야 및 자기 소개를 입력하세요" class="expert-style"></textarea>
+                    <textarea id="expertInfo" name="expertInfo" placeholder="AS 전문 분야 및 자기 소개를 입력하세요" th:text="*{expertInfo}" class="expert-style"></textarea>
                     <br/><br/>
                     <label for="asPrice" class="sub-title">가격</label>
-                    <input type="text" id="asPrice" name="asPrice" placeholder="AS 가격을 입력하세요" class="expert-style"> 원
+                    <input type="text" id="asPrice" name="asPrice" placeholder="AS 가격을 입력하세요" class="expert-style" th:value="*{asPrice}"> 원
                 </div>
 
                 <div><br/>
                     <label for="accountNumber" class="title">계좌 정보</label>
                     <div class="bank-container">
-                        <select>
+                        <select th:field="*{bank}">
                             <option value="">은행을 선택하세요</option>
                             <option th:each="bank : ${bankList}" th:value="${bank}"
                                     th:text="${bank}">은행</option>
                         </select>
-                        <input type="text" id="accountNumber" name="accountNumber" placeholder="계좌 번호를 입력하세요">
+                        <input type="text" id="accountNumber" name="accountNumber" placeholder="계좌 번호를 입력하세요" th:value="*{accountNumber}">
                     </div>
+                    <span class="error-msg" th:if="${#fields.hasErrors('bank')}" th:errors="*{bank}"></span>
+                    <span class="error-msg" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></span>
                 </div>
 
                 <div><br/>
@@ -167,29 +176,29 @@
                 </div>
 
                 <div class="category-list">
-                    <input type="checkbox" id="mobile" name="category" value="mobile">
+                    <input type="checkbox" id="mobile" name="category" value="mobile" th:checked="${updateMemberDto.category.contains('mobile')}">
                     <label for="mobile">휴대폰</label>
 
-                    <input type="checkbox" id="tablet" name="category" value="tablet">
+                    <input type="checkbox" id="tablet" name="category" value="tablet" th:checked="${updateMemberDto.category.contains('tablet')}">
                     <label for="tablet">태블릿</label>
 
-                    <input type="checkbox" id="camera" name="category" value="camera">
+                    <input type="checkbox" id="camera" name="category" value="camera" th:checked="${updateMemberDto.category.contains('camera')}">
                     <label for="camera">카메라</label>
 
-                    <input type="checkbox" id="pc_parts" name="category" value="pc_parts">
+                    <input type="checkbox" id="pc_parts" name="category" value="pc_parts" th:checked="${updateMemberDto.category.contains('pc_parts')}">
                     <label for="pc_parts">PC 부품</label>
 
                     <br/>
-                    <input type="checkbox" id="wearable" name="category" value="wearable">
+                    <input type="checkbox" id="wearable" name="category" value="wearable" th:checked="${updateMemberDto.category.contains('wearable')}">
                     <label for="wearable">웨어러블</label>
 
-                    <input type="checkbox" id="pc_notebook" name="category" value="pc_notebook">
+                    <input type="checkbox" id="pc_notebook" name="category" value="pc_notebook" th:checked="${updateMemberDto.category.contains('pc_notebook')}">
                     <label for="pc_notebook">PC/노트북</label>
 
-                    <input type="checkbox" id="accessory" name="category" value="accessory">
+                    <input type="checkbox" id="accessory" name="category" value="accessory" th:checked="${updateMemberDto.category.contains('accessory')}">
                     <label for="accessory">악세사리</label>
 
-                    <input type="checkbox" id="etc" name="category" value="etc">
+                    <input type="checkbox" id="etc" name="category" value="etc" th:checked="${updateMemberDto.category.contains('etc')}">
                     <label for="etc">기타</label>
                 </div>
                 <br/>
@@ -197,7 +206,6 @@
                     <button type="submit">저장하기</button>
                 </div>
             </form>
-
         </section>
     </main>
 </div>

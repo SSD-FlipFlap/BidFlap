@@ -1,14 +1,22 @@
 package com.ssd.bidflap.service;
 
+import com.ssd.bidflap.domain.AfterService;
+import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
-import com.ssd.bidflap.domain.dto.UserDto;
+import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.domain.enums.Category;
+import com.ssd.bidflap.repository.AfterServiceRepository;
+import com.ssd.bidflap.repository.InterestRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +24,12 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
+    private final AfterServiceRepository afterServiceRepository;
+    private final InterestRepository interestRepository;
 
-    public void changePassword(String nickname, UserDto.ChangePasswordDto changePasswordDto) {
+    @Transactional
+    public void changePassword(String nickname, MemberDto.ChangePasswordDto changePasswordDto) {
         Optional<Member> member = memberRepository.findByNickname(nickname);
         if (member.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
@@ -40,4 +52,106 @@ public class MemberService {
         memberRepository.save(member.get());
     }
 
+    @Transactional
+    public String updateMember(String nickname, MemberDto.UpdateMemberDto updateMemberDto) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        // 이메일 중복 검사
+        if (!updateMemberDto.getEmail().equals(member.getEmail())) {
+            authService.validateEmail(updateMemberDto.getEmail());
+        }
+        // 닉네임 중복 검사
+        if (!updateMemberDto.getNickname().equals(member.getNickname())) {
+            authService.validateNickname(updateMemberDto.getNickname());
+        }
+
+        // 회원 정보 저장
+        member.updateMember(updateMemberDto.getEmail(), updateMemberDto.getNickname(), updateMemberDto.getBank(), updateMemberDto.getAccountNumber());
+        Member updatedMember = memberRepository.save(member);
+
+        // as 전문가 정보 수정
+        Optional<AfterService> optionalAfterService = afterServiceRepository.findByMember(updatedMember);
+
+        if (optionalAfterService.isPresent()) {     // 정보 존재 o
+            AfterService afterService = optionalAfterService.get();
+            if (updateMemberDto.getExpert().equalsIgnoreCase("yes")) {
+                // 갱신(자기 소개, 가격)
+                afterService.updateAfterService(updateMemberDto.getExpertInfo(), updateMemberDto.getAsPrice());
+                afterServiceRepository.save(afterService);
+            } else {
+                // 삭제
+                afterServiceRepository.delete(optionalAfterService.get());
+            }
+        } else {    // 정보 존재x
+            if (updateMemberDto.getExpert().equalsIgnoreCase("yes")) {
+                // 생성
+                AfterService afterService = AfterService.builder()
+                        .member(updatedMember)
+                        .description(updateMemberDto.getExpertInfo())
+                        .price(Integer.valueOf(updateMemberDto.getAsPrice()))
+                        .build();
+                afterServiceRepository.save(afterService);
+            }
+        }
+
+
+        // 관심 분야 삭제 후 새로 저장
+        interestRepository.deleteByMember(updatedMember);
+
+        List<String> categories = updateMemberDto.getCategory();
+        if (categories != null && !categories.isEmpty()) {
+            for (String category : categories) {
+                Interest interest = Interest.builder()
+                        .member(updatedMember)
+                        .category(Category.valueOf(category.trim().toUpperCase()))
+                        .build();
+                interestRepository.save(interest);
+            }
+        }
+
+        return updatedMember.getNickname();
+    }
+
+    @Transactional
+    public MemberDto.UpdateMemberDto getMemberInfoByNickname(String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        Member member = optionalMember.get();
+
+        String expert = "no";
+        String expertInfo = "";
+        String asPrice = "";
+
+        Optional<AfterService> asInfo = afterServiceRepository.findByMember(member);
+        if (asInfo.isPresent()) {
+            expert = "yes";
+            expertInfo = asInfo.get().getDescription();
+            asPrice = String.valueOf(asInfo.get().getPrice());
+        }
+
+        // interest 객체 리스트를 String 리스트로 변환
+        List<String> categories = member.getInterests().stream()
+                .map(interest -> interest.getCategory().name().toLowerCase())
+                .collect(Collectors.toList());
+
+        MemberDto.UpdateMemberDto memberDto = MemberDto.UpdateMemberDto.builder()
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .expert(expert)
+                .expertInfo(expertInfo)
+                .asPrice(asPrice)
+                .bank(member.getBank())
+                .accountNumber(member.getAccount())
+                .category(categories)
+                .build();
+
+        return memberDto;
+    }
 }

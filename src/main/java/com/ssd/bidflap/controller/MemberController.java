@@ -2,7 +2,7 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
-import com.ssd.bidflap.domain.dto.UserDto;
+import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.service.AuthService;
 import com.ssd.bidflap.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -106,13 +106,17 @@ public class MemberController {
             return "redirect:/auth/login";
         }
 
-        model.addAttribute("changePasswordDto", new UserDto.ChangePasswordDto());
+        // 기존 회원 정보 가져오기
+        MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+
+        model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
+        model.addAttribute("updateMemberDto", memberInfo);
         return "thyme/member/editProfile";
     }
 
     // 비밀번호 변경
     @PostMapping("/members/change-password")
-    public String changePassword(@Valid @ModelAttribute UserDto.ChangePasswordDto changePasswordDto,
+    public String changePassword(@Valid @ModelAttribute("changePasswordDto") MemberDto.ChangePasswordDto changePasswordDto,
                                  BindingResult result, HttpSession session, // bindingResilt는 @ModelAttribute 다음에 위치해야 한다.
                                  Model model, RedirectAttributes redirectAttributes) {
         // 로그인한 회원의 닉네임(세션에 저장된 값)
@@ -123,6 +127,8 @@ public class MemberController {
         }
 
         if (result.hasErrors()) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("changePasswordDto", changePasswordDto);
             return "thyme/member/editProfile";
         }
@@ -132,15 +138,49 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("updateSuccess", true);
             return "redirect:/members/edit-profile";
         } catch (IllegalArgumentException e) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("passwordError", e.getMessage());
             return "thyme/member/editProfile";
         } catch (IllegalStateException e) {
+            MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
+            model.addAttribute("updateMemberDto", memberInfo);
             model.addAttribute("newPasswordError", e.getMessage());
             return "thyme/member/editProfile";
         }
     }
 
     // 회원 정보 수정
+    @PostMapping("/members/update-member")
+    public String updateMember(@Valid @ModelAttribute("updateMemberDto") MemberDto.UpdateMemberDto updateMemberDto,
+                                 BindingResult result, HttpSession session,
+                                 Model model, RedirectAttributes redirectAttributes) {
+        // 로그인한 회원의 닉네임(세션에 저장된 값)
+        String nickname = (String) session.getAttribute("loggedInMember");
+
+        if (nickname == null) {
+            return "redirect:/auth/login";  // 로그인 요청
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
+            model.addAttribute("updateMemberDto", updateMemberDto);
+            return "thyme/member/editProfile";
+        }
+        try {
+            // 세션의 닉네임 갱신
+            String newNickname = memberService.updateMember(nickname, updateMemberDto);
+            session.setAttribute("loggedInMember", newNickname);
+
+            redirectAttributes.addFlashAttribute("updateMemberSuccess", true);
+            return "redirect:/members/edit-profile";
+        } catch (IllegalStateException e) {
+            model.addAttribute("duplicatedError", e.getMessage());
+            model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
+            return "thyme/member/editProfile";
+        }
+    }
 
     // 프로필 사진 변경
+
 }
