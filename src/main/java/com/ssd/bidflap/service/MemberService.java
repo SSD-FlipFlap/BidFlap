@@ -61,6 +61,11 @@ public class MemberService {
 
         Member member = optionalMember.get();
 
+        // as 세부 정보 입력값 검증
+        if (updateMemberDto.getExpert().equals("yes")) {
+            authService.validAsInput(updateMemberDto.getExpertInfo(), updateMemberDto.getAsPrice());
+        }
+
         // 이메일 중복 검사
         if (!updateMemberDto.getEmail().equals(member.getEmail())) {
             authService.validateEmail(updateMemberDto.getEmail());
@@ -99,7 +104,6 @@ public class MemberService {
             }
         }
 
-
         // 관심 분야 삭제 후 새로 저장
         interestRepository.deleteByMember(updatedMember);
 
@@ -117,7 +121,7 @@ public class MemberService {
         return updatedMember.getNickname();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberDto.UpdateMemberDto getMemberInfoByNickname(String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if (optionalMember.isEmpty()) {
@@ -150,6 +154,22 @@ public class MemberService {
                 .bank(member.getBank())
                 .accountNumber(member.getAccount())
                 .category(categories)
+                .build();
+
+        return memberDto;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDto.SimpleInfoResponseDto getSimpleInfoByNickname(String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        Member member = optionalMember.get();
+
+        MemberDto.SimpleInfoResponseDto memberDto = MemberDto.SimpleInfoResponseDto.builder()
+                .email(member.getEmail())
+                .nickname(member.getNickname())
                 .build();
 
         return memberDto;

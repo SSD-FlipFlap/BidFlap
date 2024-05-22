@@ -27,10 +27,8 @@
                     <img class="profile-pic" th:src="@{/resources/img/Profile.png}" alt="Profile Img">
                 </div>
                 <div class="profile-details">
-<!--                    <span class="username" th:text="${username}">유저 닉네임</span>-->
-                    <span class="username">유저 닉네임</span>
-<!--                    <span class="email" th:text="${userEmail}">user@naver.com</span>-->
-                    <span class="email">user@naver.com</span>
+                    <span class="username" th:text="${memberInfo.nickname}">유저 닉네임</span>
+                    <span class="email" th:text="${memberInfo.email}">bidflap@bidflap.co.kr</span>
                     <a href="#" th:href="@{/members/edit-profile}" class="profile-edit">프로필 관리</a>
                 </div>
             </div>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/product/ProductViewList.css}">
+    <title>상품전체 목록</title>
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+
+<div class="main-container">
+    <br/>
+    <br/>
+    <div class="search-container">
+        <form action="/product/list" method="get">
+            <input type="text" name="keyword" class="search-input" placeholder="원하는 제품을 검색해보세요">
+            <button type="submit">검색</button>
+        </form>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="product_images">
+        <div class="image_row"> <!-- 새로운 행 시작 -->
+            <div th:each="product, iterStat : ${products}">
+                <!-- 상품 이미지와 정보 -->
+                <div class="image_container">
+                    <!--                    <a th:href="@{'/product/view/' + ${product.id}}">-->  <!--상품 아이디로 디테일 들어가게..-->
+                    <div class="image_and_heart_container">
+                        <div class="image_placeholder"></div>
+                        <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
+                        <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                        <div class="heart"></div>
+                    </div>
+                    <p th:text="${product.price} + '원'"></p>
+                    <!--                    </a>-->
+                </div>
+                <!-- 행 종료 -->
+                <div th:if="${iterStat.count % 4 == 0}"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 빈 공간 -->
+    <div class="empty_space"></div>
+    <!-- 선택 창 -->
+    <div class="selection-box">
+        <a href=""> 내 경매</a><br/><br/><br/>
+        <a href=""> 좋아요한 목록</a><br/><br/><br/>
+        <a href=""> AS 서비스</a><br/><br/><br/>
+        <a href=""> 판매글 목록</a><br/><br/><br/>
+    </div>
+</div>
+
+</body>
+</html>
