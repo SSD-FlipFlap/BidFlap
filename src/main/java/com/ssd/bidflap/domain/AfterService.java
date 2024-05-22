@@ -21,4 +21,10 @@ public class AfterService {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void updateAfterService(String description, String price) {
+        this.description = description;
+        this.price = Integer.valueOf(price);
+    }
+
 }

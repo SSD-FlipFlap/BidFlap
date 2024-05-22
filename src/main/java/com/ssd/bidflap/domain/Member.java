@@ -4,6 +4,9 @@ import com.ssd.bidflap.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -30,7 +33,18 @@ public class Member {
 
     private String profile;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Interest> interests = new ArrayList<>();
+
     public void changePassword(String newEncodedPassword) {
         this.password = newEncodedPassword;
     }
+
+    public void updateMember(String email, String nickname, String bank, String account) {
+        this.email = email;
+        this.nickname = nickname;
+        this.bank = bank;
+        this.account = account;
+    }
+
 }

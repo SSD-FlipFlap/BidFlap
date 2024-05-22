@@ -80,13 +80,13 @@ public class AuthService {
 
     }
 
-    private void validateEmail(String email) {
+    protected void validateEmail(String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new IllegalStateException("이미 등록된 이메일입니다.");
         }
     }
 
-    private void validateNickname(String nickname) {
+    protected void validateNickname(String nickname) {
         if (memberRepository.findByNickname(nickname).isPresent()) {
             throw new IllegalStateException("이미 등록된 닉네임입니다.");
         }
