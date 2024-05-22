@@ -3,6 +3,7 @@ package com.ssd.bidflap.controller;
 import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.exception.MemberException;
 import com.ssd.bidflap.service.AuthService;
 import com.ssd.bidflap.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -40,14 +41,16 @@ public class MemberController {
         try {
             authService.signUp(signUpDto);
             return "redirect:/auth/login";
-        } catch (IllegalStateException e) {  // 서버 에러
-            if (e.getMessage().contains("이메일")) {
-                model.addAttribute("emailError", e.getMessage());
-            } else if (e.getMessage().contains("닉네임")) {
-                model.addAttribute("nicknameError", e.getMessage());
-            }
-            return "thyme/auth/SignUp";
+        } catch (MemberException.EmailDuplicatedException e) {  // 서버 에러
+            model.addAttribute("emailError", e.getMessage());
+        } catch (MemberException.NicknameDuplicatedException e) {
+            model.addAttribute("nicknameError", e.getMessage());
+        } catch (MemberException.AsDescInputException e) {
+            model.addAttribute("asInfoError", e.getMessage());
+        } catch (MemberException.AsPriceInputException e) {
+            model.addAttribute("asPriceError", e.getMessage());
         }
+        return "thyme/auth/SignUp";
     }
 
     // 뷰에 은행 목록을 전달(drop-down list)
@@ -167,6 +170,9 @@ public class MemberController {
             model.addAttribute("updateMemberDto", updateMemberDto);
             return "thyme/member/editProfile";
         }
+
+        model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
+
         try {
             // 세션의 닉네임 갱신
             String newNickname = memberService.updateMember(nickname, updateMemberDto);
@@ -174,11 +180,16 @@ public class MemberController {
 
             redirectAttributes.addFlashAttribute("updateMemberSuccess", true);
             return "redirect:/members/edit-profile";
-        } catch (IllegalStateException e) {
-            model.addAttribute("duplicatedError", e.getMessage());
-            model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
-            return "thyme/member/editProfile";
+        } catch (MemberException.EmailDuplicatedException e) {
+            model.addAttribute("emailError", e.getMessage());
+        } catch (MemberException.NicknameDuplicatedException e) {
+            model.addAttribute("nicknameError", e.getMessage());
+        } catch (MemberException.AsDescInputException e) {
+            model.addAttribute("asInfoError", e.getMessage());
+        } catch (MemberException.AsPriceInputException e) {
+            model.addAttribute("asPriceError", e.getMessage());
         }
+        return "thyme/member/editProfile";
     }
 
     // 프로필 사진 변경

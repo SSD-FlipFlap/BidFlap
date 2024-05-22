@@ -60,6 +60,13 @@ public class MemberDto {
         private List<String> category = new ArrayList<>();
     }
 
+    @Builder
+    @Getter
+    public static class SimpleInfoResponseDto {
+        private String nickname;
+        private String email;
+    }
+
     public static class ChangeProfileDto {
         private MultipartFile profile;
     }

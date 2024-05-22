@@ -1,9 +1,8 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" type="text/css" href="/resources/css/bidder/bidder.css">
-    <title>경매페이지-로그인</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/bidder/bidder.css}">
+    <title>경매페이지</title>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const participateButton = document.querySelector(".participate-button");
@@ -27,8 +26,7 @@
 
 </head>
 <body>
-<%@ include file="../Header.jsp" %>
-
+<div th:include="thyme/HeaderWithCategory"></div>
 <div class="bidder-container">
     <div class="image-placeholder"></div>
     <div class="left-container">

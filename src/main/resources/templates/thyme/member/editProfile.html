@@ -95,8 +95,8 @@
                     <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
                 </div>
                 <div class="profile-details">
-                    <span class="username" th:value="${updateMemberDto.nickname}">유저 닉네임</span>
-                    <span class="email" th:value="${updateMemberDto.email}">user@naver.com</span>
+                    <span class="username" th:text="${updateMemberDto.nickname}">유저 닉네임</span>
+                    <span class="email" th:text="${updateMemberDto.email}">bidflap@bidflap.co.kr</span>
                     <button type="submit" class="profile-delete" onclick="deleteProfile()">프로필 삭제</button>
                     <button type="submit" class="profile-edit">프로필 저장</button>
                 </div>
@@ -107,14 +107,14 @@
                 <div class="input-container"><br/>
                     <label for="password" class="title">비밀번호</label>
                     <div>
-                        <input type="password" id="password" name="password" placeholder="현재 비밀번호"><br/>
+                        <input type="password" id="password" name="password" placeholder="현재 비밀번호" th:value="*{password}"><br/>
                         <div class="error-msg" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-
                         <div class="error-msg" th:if="${passwordError}" th:text="${passwordError}"></div>
-                        <input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호"><br/>
+
+                        <input type="password" id="newPassword" name="newPassword" placeholder="새 비밀번호" th:value="*{newPassword}"><br/>
                         <div class="error-msg" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
 
-                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 확인" th:value="*{confirmPassword}">
                         <div class="error-msg" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
                         <div class="error-msg" th:if="${newPasswordError}" th:text="${newPasswordError}"></div>
                     </div>
@@ -129,15 +129,15 @@
                     <label for="email" class="title">이메일&nbsp;</label>
                     <input type="email" id="email" name="email" th:value="*{email}">
                 </div>
-                <div class="error-msg" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-                <div class="error-msg" th:if="${duplicatedError}" th:text="${duplicatedError}"></div>
+                <div class="error-msg1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                <div class="error-msg1" th:if="${emailError}" th:text="${emailError}"></div>
 
                 <div class="input-container"><br/>
                     <label for="nickname" class="title">닉네임&nbsp;</label>
                     <input type="text" id="nickname" name="nickname" th:value="*{nickname}">
                 </div>
-                <div class="error-msg" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
-                <div class="error-msg" th:if="${duplicatedError}" th:text="${duplicatedError}"></div>
+                <div class="error-msg1" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
+                <div class="error-msg1" th:if="${nicknameError}" th:text="${nicknameError}"></div>
 
                 <div><br/>
                     <label class="title">as 전문가 등록</label>
@@ -151,9 +151,11 @@
                 <div id="expertInput" class="sub-container">
                     <label for="expertInfo" class="sub-title">소개</label>
                     <textarea id="expertInfo" name="expertInfo" placeholder="AS 전문 분야 및 자기 소개를 입력하세요" th:text="*{expertInfo}" class="expert-style"></textarea>
+                    <div class="error-msg2" th:if="${asInfoError}" th:text="${asInfoError}"></div>
                     <br/><br/>
                     <label for="asPrice" class="sub-title">가격</label>
                     <input type="text" id="asPrice" name="asPrice" placeholder="AS 가격을 입력하세요" class="expert-style" th:value="*{asPrice}"> 원
+                    <div class="error-msg2" th:if="${asPriceError}" th:text="${asPriceError}"></div>
                 </div>
 
                 <div><br/>
@@ -166,8 +168,8 @@
                         </select>
                         <input type="text" id="accountNumber" name="accountNumber" placeholder="계좌 번호를 입력하세요" th:value="*{accountNumber}">
                     </div>
-                    <span class="error-msg" th:if="${#fields.hasErrors('bank')}" th:errors="*{bank}"></span>
-                    <span class="error-msg" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></span>
+                    <span class="error-msg3" th:if="${#fields.hasErrors('bank')}" th:errors="*{bank}"></span>
+                    <span class="error-msg3" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></span>
                 </div>
 
                 <div><br/>
