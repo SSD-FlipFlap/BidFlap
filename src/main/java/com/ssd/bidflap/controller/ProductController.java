@@ -33,4 +33,12 @@ public class ProductController {
         model.addAttribute("product", productService.productView(id));
         return "thyme/product/ViewProduct";
     }
+
+    @GetMapping("/product/delete")
+    public String productDelete(Long id){
+
+        productService.productDelete(id);
+
+        return "redirect:/";
+    }
 }
