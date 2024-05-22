@@ -27,7 +27,9 @@
         좋아요 n
     </div>
 </div>
-
+<form th:action="@{/product/delete(id=${product.id})}" method="post">
+    <button id="delete-button" type="submit">글 삭제</button>
+</form>
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
 <div class="writer-profile">가을이 님 2024년 4월 11일 9시 경매 시작하셨습니다.</div>
 <div class="profile-picture"></div>
