@@ -44,7 +44,6 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
                 .message(message)
                 .build();
     }
-
     @Override
     public int compareTo(ChatMessage o) {
         return this.getCreatedAt().compareTo(o.getCreatedAt());

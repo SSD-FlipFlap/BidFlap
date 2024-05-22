@@ -33,6 +33,7 @@ public class ChatController {
         modelAndView.setViewName("chat/chatRoomList");
         return modelAndView;
     }
+    /*
     //채팅방리스트 - 물건에 대한..이거 필요없는듯??
     @GetMapping("/chatRooms/{productId}")
     public ModelAndView getChatRoomListByProductId(@PathVariable long productId) {
@@ -44,6 +45,7 @@ public class ChatController {
         modelAndView.setViewName("chat/chatRoomList");
         return modelAndView;
     }
+    */
     //입장
     @GetMapping("/chatRoom/{chatRoomId}")
     public ModelAndView getChatRoomById(@PathVariable long chatRoomId) {
@@ -58,6 +60,7 @@ public class ChatController {
 
         return modelAndView;
     }
+
     //생성
     @PostMapping("/createChatRoom")
     public ModelAndView createChatRoom(@ModelAttribute ChatRoom chatRoom) {
@@ -68,6 +71,7 @@ public class ChatController {
 
         return modelAndView;
     }
+
     //채팅방 삭제
     @PostMapping("/deleteChatRoom/{chatRoomId}")
     public ModelAndView deleteChatRoom(@PathVariable long chatRoomId) {

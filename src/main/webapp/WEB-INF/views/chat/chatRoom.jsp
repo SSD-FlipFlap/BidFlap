@@ -26,7 +26,6 @@
 
 					function heart_info() {
 						var img_src = '/resources/img/heartIcon.png';
-
 						//if(좋아요 클릭) img_src = /resources/img/heartIcon_Fill.png;
 						return img_src;
 					}

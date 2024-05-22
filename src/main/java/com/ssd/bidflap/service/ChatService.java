@@ -24,4 +24,5 @@ public interface ChatService {
     ChatMessage createMessage(Long roomId, Member member, String message);
 
     //void deleteMessages(int chatRoomId);
+
 }

@@ -69,4 +69,5 @@ public class ChatServiceImpl implements ChatService {
         chatMessageRepository.deleteByChatRoomId(chatRoomId);
     }
     */
+
 }

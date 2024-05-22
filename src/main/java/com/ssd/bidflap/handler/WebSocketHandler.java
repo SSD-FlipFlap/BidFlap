@@ -14,8 +14,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private static List<WebSocketSession> list = new ArrayList<>();
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String payload = message.getPayload();
-        //페이로드란 전송되는 데이터를 의미한다.
+        String payload = message.getPayload(); //전송되는 데이터
         for(WebSocketSession sess: list) {
             sess.sendMessage(message);
         }
@@ -25,8 +24,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         list.add(session);
     }
-    /* Client가 접속 해제 시 호출되는 메서드드 */
-
+    /* Client가 접속 해제 시 호출되는 메서드 */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         list.remove(session);
