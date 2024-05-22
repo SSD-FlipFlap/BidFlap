@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 @Transactional
@@ -40,4 +41,13 @@ public class ProductService {
     public void productDelete(Long id){
         productRepository.deleteById(id);
     }
+
+    public List<Product> searchByTitle(String title) {
+        return productRepository.findByTitleContaining(title);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
 }
