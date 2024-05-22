@@ -10,3 +10,5 @@ public class MainController {
         return "thyme/main/main";
     }
 }
+
+//search -검색기능
