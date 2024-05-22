@@ -25,6 +25,7 @@
             <div th:each="product, iterStat : ${products}">
                 <!-- 상품 이미지와 정보 -->
                 <div class="image_container">
+                    <!--                    <a th:href="@{'/product/view/' + ${product.id}}">-->  <!--상품 아이디로 디테일 들어가게..-->
                     <div class="image_and_heart_container">
                         <div class="image_placeholder"></div>
                         <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
@@ -32,6 +33,7 @@
                         <div class="heart"></div>
                     </div>
                     <p th:text="${product.price} + '원'"></p>
+                    <!--                    </a>-->
                 </div>
                 <!-- 행 종료 -->
                 <div th:if="${iterStat.count % 4 == 0}"></div>
