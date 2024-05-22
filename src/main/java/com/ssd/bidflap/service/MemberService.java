@@ -61,6 +61,11 @@ public class MemberService {
 
         Member member = optionalMember.get();
 
+        // as 세부 정보 입력값 검증
+        if (updateMemberDto.getExpert().equals("yes")) {
+            authService.validAsInput(updateMemberDto.getExpertInfo(), updateMemberDto.getAsPrice());
+        }
+
         // 이메일 중복 검사
         if (!updateMemberDto.getEmail().equals(member.getEmail())) {
             authService.validateEmail(updateMemberDto.getEmail());
