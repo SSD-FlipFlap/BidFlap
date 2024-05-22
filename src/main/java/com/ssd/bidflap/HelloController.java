@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HelloController {
     @GetMapping()
     public String hello() {
-        return "/Bidder/Bidder";
+        return "/chat/chatRoom";
+        //return "/Bidder/Bidder";
     }
 }
