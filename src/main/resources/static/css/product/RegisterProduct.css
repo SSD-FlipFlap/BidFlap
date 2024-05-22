@@ -185,6 +185,7 @@ form button {
     background: #215818;
     border-radius: 20px;
     color: #FFFFFF;
+    cursor: pointer;
     font-size: 35px;
     font-weight: bold;
 }

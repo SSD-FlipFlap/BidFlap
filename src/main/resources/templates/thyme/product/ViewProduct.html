@@ -35,12 +35,12 @@
 </a>
 
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
-<div class="writer-profile">가을이 님 2024년 4월 11일 9시 경매 시작하셨습니다.</div>
+<div class="writer-profile">가을이 님 2024년 4월 11일에 작성하셨습니다.</div>
 <div class="profile-picture"></div>
-<div class="price" th:text="${product.price}"></div>
+<div class="price" th:text="${product.price != null ? product.price + '원' : ''}"></div>
 <div class="product-title" th:text="${product.title}"></div>
 <div class="product-description" th:text="${product.description}"></div>
-<div class="product-category" th:text="${product.category}"></div>
+<div class="product-category" th:text="${product.category != null ? '#'+product.category : ''}"></div>
 <div class="writer-price">판매자 제시가</div>
 </body>
 </html>
