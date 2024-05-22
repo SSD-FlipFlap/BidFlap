@@ -3,6 +3,9 @@ package com.ssd.bidflap.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -22,11 +25,6 @@ public class ChatRoom {
     @JoinColumn(name = "after_service_id")
     private AfterService afterService;
 
-    //@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-    //private List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
-
-    public static ChatRoom createRoom() {
-        return ChatRoom.builder()
-                .build();
-    }
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessageList = new ArrayList<>();
 }
