@@ -208,6 +208,28 @@ body {
     justify-content: center; /* 텍스트 중앙 정렬 */
     align-items: center; /* 텍스트 중앙 정렬 */
 }
+#modify-button {
+    position: absolute;
+    width: 100px;
+    height: 30px;
+    left: 902px;
+    top: 920px;
+    font-family: 'Inter';
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    color: white;
+    background-color: #636363;
+    border: none;
+    padding: 0; /* padding 제거, height와 겹침 방지 */
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center; /* 텍스트 중앙 정렬 */
+    display: flex; /* 텍스트 중앙 정렬을 위해 flexbox 사용 */
+    justify-content: center; /* 텍스트 중앙 정렬 */
+    align-items: center; /* 텍스트 중앙 정렬 */
+}
 /* 경매 시작 가능 | 10명 이상 좋아요 */
 .auction-notice {
     position: absolute;

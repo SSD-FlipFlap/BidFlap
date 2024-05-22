@@ -17,7 +17,7 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void registerProduct(Product product/*, MultipartFile product_filepath*/)throws Exception {
+    public void registerProduct(Product product/*, MultipartFile product_filepath*/) {
 //        String productImgPath= System.getProperty("user.dir")+ "\\src\\main\\resources\\static\\productImg";
 //
 //        UUID uuid = UUID.randomUUID();
@@ -30,6 +30,12 @@ public class ProductService {
 
 //        product.setCategory(Category.valueOf(product.getCategory()));
         productRepository.save(product);
+    }
+    
+    /*글 등록 후 id를 통해서 바로 글 상세페이지를 보기 위한*/
+    public Long getProductId(Product product) {
+        Product savedProduct= productRepository.save(product);
+        return savedProduct.getId();
     }
 
     public Product productView(Long id){
