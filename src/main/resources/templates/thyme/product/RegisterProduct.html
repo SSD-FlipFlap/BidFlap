@@ -22,29 +22,29 @@
   <div class="product-category">카테고리</div>
 
   <div class="product-category2">
-    <input type="checkbox" id="mobile" name="category" value="MOBILE">
+    <input type="radio" id="mobile" name="category" value="MOBILE">
     <label for="mobile">휴대폰</label>
 
-    <input type="checkbox" id="tablet" name="category" value="TABLET">
+    <input type="radio" id="tablet" name="category" value="TABLET">
     <label for="tablet">태블릿</label>
 
-    <input type="checkbox" id="camera" name="category" value="CAMERA">
+    <input type="radio" id="camera" name="category" value="CAMERA">
     <label for="camera">카메라</label>
 
-    <input type="checkbox" id="pc_parts" name="category" value="PC_PARTS">
+    <input type="radio" id="pc_parts" name="category" value="PC_PARTS">
     <label for="pc_parts">PC 부품</label>
 
     <br/>
-    <input type="checkbox" id="wearable" name="category" value="WEARABLE">
+    <input type="radio" id="wearable" name="category" value="WEARABLE">
     <label for="wearable">웨어러블</label>
 
-    <input type="checkbox" id="pc_notebook" name="category" value="PC_NOTEBOOK">
+    <input type="radio" id="pc_notebook" name="category" value="PC_NOTEBOOK">
     <label for="pc_notebook">PC/노트북</label>
 
-    <input type="checkbox" id="accessory" name="category" value="ACCESSORY">
+    <input type="radio" id="accessory" name="category" value="ACCESSORY">
     <label for="accessory">악세사리</label>
 
-    <input type="checkbox" id="etc" name="category" value="ETC">
+    <input type="radio" id="etc" name="category" value="ETC">
     <label for="etc">기타</label>
   </div>
   <br/>
@@ -56,11 +56,11 @@
     <input type="text" id="price" name="price" class="input-style">
   </div>
 
-  <!-- 설명 -->
+  <!-- 설명 글자-->
   <div class="description">설명</div>
 
-  <!-- 설명 칸-->
-  <div class="rectangle-180">
+  <!-- 설명 입력-->
+  <div class="rectangle">
     <textarea class="description-text" name="description" rows="4" cols="50" th:text="${param.description}"></textarea>
   </div>
 

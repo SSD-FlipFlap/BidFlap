@@ -97,11 +97,11 @@ form {
     top: 755px;
 }
 
-form input[type="checkbox"] {
+form input[type="radio"] {
     display: none;
 }
 
-form input[type="checkbox"] + label {
+form input[type="radio"] + label {
     display: inline-block;
     width: 80px;
     padding: 8px 15px;
@@ -114,7 +114,7 @@ form input[type="checkbox"] + label {
     border: 1px solid #A1A1A1;
 }
 
-form input[type="checkbox"]:checked + label {
+form input[type="radio"]:checked + label {
     background-color: #A1A1A1;
     color: #ffffff;
 }
@@ -153,7 +153,7 @@ form button:hover {
     color: #636363;
 }
 
-.rectangle-180 {
+.rectangle {
     box-sizing: border-box;
     position: absolute;
     width: 1427px;
@@ -164,7 +164,7 @@ form button:hover {
     border-radius: 20px;
 }
 
-.rectangle-180 .description-text {
+.rectangle .description-text {
     width: 90%;
     height: 80%;
     padding: 10px;

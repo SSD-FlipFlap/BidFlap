@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -25,9 +27,6 @@ public class ProductController {
 
     @PostMapping("/product/register")
     public String productRegisterPro (Product product, RedirectAttributes redirectAttributes) throws Exception{
-//        LocalDateTime currentTime = LocalDateTime.now();
-
-//        product.setCreatedAt(currentTime);
         Long productId= productService.getProductId(product);
         redirectAttributes.addAttribute("id", productId);
         return "redirect:/product/view";
@@ -39,7 +38,7 @@ public class ProductController {
         return "thyme/product/ViewProduct";
     }
 
-    @GetMapping("/product/delete/{id}")
+    @PostMapping("/product/delete/{id}")
     public String productDelete(@PathVariable Long id){
 
         productService.productDelete(id);

@@ -1,7 +1,6 @@
 package com.ssd.bidflap.service;
 
 import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,6 @@ public class ProductService {
     }
 
     public Product productView(Long id){
-
         return productRepository.findById(id).get();
     }
 
