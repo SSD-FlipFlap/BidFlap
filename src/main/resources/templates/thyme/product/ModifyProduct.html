@@ -3,11 +3,18 @@
 <head>
     <link rel="stylesheet" type="text/css"  href="/resources/css/product/RegisterProduct.css">
     <title>상품 정보</title>
+    <script>
+        function confirmModify(){
+            if(confirm("수정하시겠습니까?")){
+                document.getElementById('modify-form').submit()
+            }
+        }
+    </script>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 <h1>상품정보</h1>
-<form th:action="@{/product/update/{id}(id=${product.id})}" method="post" enctype="multipart/form-data">
+<form id= "modify-form" th:action="@{/product/update/{id}(id=${product.id})}" method="post" enctype="multipart/form-data">
     <div id="productContainer"><br/>
         <div id="productPreviewContainer">
             <img id="productPreview" src="/resources/img/CameraImg.svg">
@@ -22,29 +29,29 @@
     <div class="product-category">카테고리</div>
 
     <div class="product-category2">
-        <input type="checkbox" id="mobile" name="category" value="MOBILE" th:checked="${product.category.name() == 'MOBILE'}">
+        <input type="radio" id="mobile" name="category" value="MOBILE" th:checked="${product.category.name() == 'MOBILE'}">
         <label for="mobile">휴대폰</label>
 
-        <input type="checkbox" id="tablet" name="category" value="TABLET" th:checked="${product.category.name() == 'TABLET'}">
+        <input type="radio" id="tablet" name="category" value="TABLET" th:checked="${product.category.name() == 'TABLET'}">
         <label for="tablet">태블릿</label>
 
-        <input type="checkbox" id="camera" name="category" value="CAMERA" th:checked="${product.category.name() == 'CAMERA'}">
+        <input type="radio" id="camera" name="category" value="CAMERA" th:checked="${product.category.name() == 'CAMERA'}">
         <label for="camera">카메라</label>
 
-        <input type="checkbox" id="pc_parts" name="category" value="PC_PARTS" th:checked="${product.category.name() == 'PC_PARTS'}">
+        <input type="radio" id="pc_parts" name="category" value="PC_PARTS" th:checked="${product.category.name() == 'PC_PARTS'}">
         <label for="pc_parts">PC 부품</label>
 
         <br/>
-        <input type="checkbox" id="wearable" name="category" value="WEARABLE" th:checked="${product.category.name() == 'WEARABLE'}">
+        <input type="radio" id="wearable" name="category" value="WEARABLE" th:checked="${product.category.name() == 'WEARABLE'}">
         <label for="wearable">웨어러블</label>
 
-        <input type="checkbox" id="pc_notebook" name="category" value="PC_NOTEBOOK" th:checked="${product.category.name() == 'NOTEBOOK'}">
+        <input type="radio" id="pc_notebook" name="category" value="PC_NOTEBOOK" th:checked="${product.category.name() == 'NOTEBOOK'}">
         <label for="pc_notebook">PC/노트북</label>
 
-        <input type="checkbox" id="accessory" name="category" value="ACCESSORY" th:checked="${product.category.name() == 'ACCESSORY'}">
+        <input type="radio" id="accessory" name="category" value="ACCESSORY" th:checked="${product.category.name() == 'ACCESSORY'}">
         <label for="accessory">악세사리</label>
 
-        <input type="checkbox" id="etc" name="category" value="ETC" th:checked="${product.category.name() == 'ETC'}">
+        <input type="radio" id="etc" name="category" value="ETC" th:checked="${product.category.name() == 'ETC'}">
         <label for="etc">기타</label>
     </div>
     <br/>
@@ -60,12 +67,12 @@
     <div class="description">설명</div>
 
     <!-- 설명 칸-->
-    <div class="rectangle-180">
+    <div class="rectangle">
         <textarea class="description-text" name="description" rows="4" cols="50" th:text="${product.description}"></textarea>
     </div>
 
     <div>
-        <button type="submit">수정</button>
+        <button type="submit" onclick="confirmModify()">수정하기</button>
     </div>
 </form>
 </body>

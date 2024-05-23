@@ -3,6 +3,13 @@
 <head>
     <link rel="stylesheet" type="text/css" href="/resources/css/product/ViewProduct.css">
     <title>상품 상세 페이지</title>
+    <script>
+        function confirmDelete(){
+            if(confirm("정말로 삭제하시겠습니까?")){
+                document.getElementById('delete-form').submit()
+            }
+        }
+    </script>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
@@ -27,15 +34,21 @@
         좋아요 n
     </div>
 </div>
-<a th:href="@{/product/delete/{id}(id=${product.id})}">
-    <button id="delete-button" type="button">글 삭제</button>
-</a>
+<form id="delete-form" th:action="@{/product/delete/{id}(id=${product.id})}" method="post">
+    <input type="hidden" name="_method" value="DELETE"/>
+    <button type="button" id="delete-button" onclick="confirmDelete()">글 삭제</button>
+</form>
+
 <a th:href="@{/product/modify/{id}(id=${product.id})}">
     <button id="modify-button" type="button">글 수정</button>
 </a>
 
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
-<div class="writer-profile">가을이 님 2024년 4월 11일에 작성하셨습니다.</div>
+
+<div class="writer-profile">가을이 님
+    <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')+'에 작성하셨습니다.'}"></span>
+</div>
+
 <div class="profile-picture"></div>
 <div class="price" th:text="${product.price != null ? product.price + '원' : ''}"></div>
 <div class="product-title" th:text="${product.title}"></div>
