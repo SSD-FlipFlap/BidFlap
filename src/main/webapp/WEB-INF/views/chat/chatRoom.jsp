@@ -35,7 +35,7 @@
 		</div>
 		<div class="info">
 			<h1>무선이어폰</h1>
-			<p>판매자 거래내역 ${5}회</p>
+			<p>판매자 거래내역 ${5}회dddddd</p>
 		</div>
 		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 	</div>
