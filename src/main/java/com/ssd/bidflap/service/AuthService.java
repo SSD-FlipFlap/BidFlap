@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -89,8 +90,8 @@ public class AuthService {
         }
 
         // 관심 분야 저장
-        String[] categories = signUpDto.getCategory();
-        if (categories != null && categories.length > 0) {
+        List<String> categories = signUpDto.getCategory();
+        if (categories != null && !categories.isEmpty()) {
             for (String category : categories) {
                 Interest interest = Interest.builder()
                         .member(savedMember)

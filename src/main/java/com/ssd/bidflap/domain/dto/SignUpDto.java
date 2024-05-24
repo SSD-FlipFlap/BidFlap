@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter @Setter
 public class SignUpDto {
 
@@ -42,5 +45,5 @@ public class SignUpDto {
     private MultipartFile profile;
 
     @Nullable
-    private String[] category;
+    private List<String> category = new ArrayList<>();
 }
