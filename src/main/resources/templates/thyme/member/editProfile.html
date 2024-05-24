@@ -24,6 +24,17 @@
             toggleExpertInput();
         });
 
+        // 프로필 style
+        window.onload = function() {
+            const profileImg = document.getElementById('profilePreview');
+            // 이미지 src가 기본 이미지 경로와 같거나, 'null' 문자열을 포함하고 있다면 기본 스타일 적용
+            if (profileImg.getAttribute('src') === '/resources/img/ProfileEdit.png' || profileImg.getAttribute('src').includes('null')) {
+                profileImg.style.borderRadius = '0%'; // 기본 이미지일 때의 스타일
+            } else {
+                profileImg.style.borderRadius = '50%'; // 사용자 이미지일 때의 스타일
+            }
+        }
+
         // 프로필 미리 보기
         function previewProfile(event) {
             const input = event.target;
@@ -91,7 +102,7 @@
         <section class="main-section">
             <div class="profile-info">
                 <div id="profilePreviewContainer">
-                    <img id="profilePreview" class="profile-pic" th:src="@{/resources/img/ProfileEdit.png}" alt="Profile Img">
+                    <img id="profilePreview" class="profile-pic" th:src="${updateMemberDto.profile == null ? '/resources/img/ProfileEdit.png' : updateMemberDto.profile}" alt="Profile Img">
                     <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
                 </div>
                 <div class="profile-details">

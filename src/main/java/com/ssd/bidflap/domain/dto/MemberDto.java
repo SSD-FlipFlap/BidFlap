@@ -58,6 +58,8 @@ public class MemberDto {
         private String accountNumber;
 
         private List<String> category = new ArrayList<>();
+
+        private String profile;
     }
 
     @Builder
@@ -65,6 +67,7 @@ public class MemberDto {
     public static class SimpleInfoResponseDto {
         private String nickname;
         private String email;
+        private String profile;
     }
 
     public static class ChangeProfileDto {

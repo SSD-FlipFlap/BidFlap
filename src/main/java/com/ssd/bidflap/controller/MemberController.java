@@ -6,6 +6,7 @@ import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.exception.MemberException;
 import com.ssd.bidflap.service.AuthService;
 import com.ssd.bidflap.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,14 +34,16 @@ public class MemberController {
         return "thyme/auth/SignUp";
     }
 
-    @PostMapping("/auth/signup")
-    public String signUp(@Valid @ModelAttribute("signUpDto") SignUpDto signUpDto, BindingResult bindingResult, Model model) {
+    @PostMapping(value = "/auth/signup", consumes = {"multipart/form-data"})
+    public String signUp(@Valid @ModelAttribute("signUpDto") SignUpDto signUpDto, BindingResult bindingResult,
+                         Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) throws IOException {
         if (bindingResult.hasErrors()) {    // valid 바인딩 에러
             return "thyme/auth/SignUp";
         }
 
         try {
             authService.signUp(signUpDto);
+            redirectAttributes.addFlashAttribute("signupSuccess", true);
             return "redirect:/auth/login";
         } catch (MemberException.EmailDuplicatedException e) {  // 서버 에러
             model.addAttribute("emailError", e.getMessage());

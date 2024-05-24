@@ -1,8 +1,10 @@
 package com.ssd.bidflap.service;
 
+import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
+import com.ssd.bidflap.domain.Uuid;
 import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.enums.Category;
@@ -11,10 +13,13 @@ import com.ssd.bidflap.exception.MemberException;
 import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.InterestRepository;
 import com.ssd.bidflap.repository.MemberRepository;
+import com.ssd.bidflap.repository.UuidRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,8 @@ public class AuthService {
     private final InterestRepository interestRepository;
     private final AfterServiceRepository afterServiceRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
     @Transactional
     public void signUp(SignUpDto signUpDto) {
@@ -42,6 +49,15 @@ public class AuthService {
         // 비밀번호 암호화
         String encryptedPassword = passwordEncoder.encode(signUpDto.getPassword());
 
+        // 이미지 업로드
+        String profileUrl = null;
+        if (signUpDto.getProfile() != null){
+            String uuid = UUID.randomUUID().toString();
+            Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                    .uuid(uuid).build());
+            profileUrl = s3Manager.uploadFile(s3Manager.generateProfileKeyName(savedUuid), signUpDto.getProfile());
+        }
+
         // 회원 정보 저장
         Member newMember = Member.builder()
                 .email(signUpDto.getEmail())
@@ -49,7 +65,7 @@ public class AuthService {
                 .nickname(signUpDto.getNickname())
                 .bank(signUpDto.getBank())
                 .account(signUpDto.getAccountNumber())
-                .profile("")    // TODO 프로필 저장 로직 구현
+                .profile(profileUrl)    // TODO 프로필 저장 로직 구현
                 .memberRole(MemberRole.USER)
                 .build();
 

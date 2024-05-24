@@ -7,6 +7,12 @@
 <body>
 <div th:include="thyme/HeaderWithoutCategory"></div>
 
+<div th:if="${signupSuccess}">
+    <script th:inline="javascript">
+        alert("회원가입 되었습니다.");
+    </script>
+</div>
+
 <div class="login-container">
     <h2>Bid Flap</h2><br/>
     <form th:action="@{/auth/login}" th:object="${loginDto}" method="post">

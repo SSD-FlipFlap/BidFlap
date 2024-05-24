@@ -154,6 +154,7 @@ public class MemberService {
                 .bank(member.getBank())
                 .accountNumber(member.getAccount())
                 .category(categories)
+                .profile(member.getProfile())
                 .build();
 
         return memberDto;
@@ -170,6 +171,7 @@ public class MemberService {
         MemberDto.SimpleInfoResponseDto memberDto = MemberDto.SimpleInfoResponseDto.builder()
                 .email(member.getEmail())
                 .nickname(member.getNickname())
+                .profile(member.getProfile())
                 .build();
 
         return memberDto;
