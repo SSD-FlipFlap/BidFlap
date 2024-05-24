@@ -24,7 +24,7 @@
         <section class="main-section">
             <div class="profile-info">
                 <div>
-                    <img class="profile-pic" th:src="@{/resources/img/Profile.png}" alt="Profile Img">
+                    <img class="profile-pic" th:src="${memberInfo.profile == null ? '/resources/img/Profile.png' : memberInfo.profile}" alt="Profile Img">
                 </div>
                 <div class="profile-details">
                     <span class="username" th:text="${memberInfo.nickname}">유저 닉네임</span>

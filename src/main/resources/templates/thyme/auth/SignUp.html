@@ -47,8 +47,7 @@
 <div th:include="thyme/HeaderWithoutCategory"></div>
 
 <h1>회원가입</h1>
-<!--<form th:action="@{/auth/signup}" method="post" enctype="multipart/form-data">-->
-<form th:action="@{/auth/signup}" th:object="${signUpDto}" method="post">
+<form th:action="@{/auth/signup}" th:object="${signUpDto}" method="post" enctype="multipart/form-data">
     <div>
         <label for="email" class="title">이메일 주소*</label>
         <input type="email" id="email" name="email" placeholder="예: bidflap@bidflap.co.kr" class="input-style" th:value="*{email}">
@@ -101,7 +100,6 @@
         <span class="error-msg" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></span>
     </div>
 
-    <!--
     <div id="profileContainer"><br/>
         <label for="profile" class="title">프로필 사진</label>
         <div id="profilePreviewContainer">
@@ -109,7 +107,6 @@
         </div>
         <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
     </div>
--->
 
     <div><br/>
         <label for="interest" class="title">관심 전자제품 카테고리</label>
