@@ -114,29 +114,29 @@
     </div>
 
     <div class="category-list">
-        <input type="checkbox" id="mobile" name="category" value="mobile">
+        <input type="checkbox" id="mobile" name="category" value="mobile" th:checked="${signUpDto.category.contains('mobile')}">
         <label for="mobile">휴대폰</label>
 
-        <input type="checkbox" id="tablet" name="category" value="tablet">
+        <input type="checkbox" id="tablet" name="category" value="tablet" th:checked="${signUpDto.category.contains('tablet')}">
         <label for="tablet">태블릿</label>
 
-        <input type="checkbox" id="camera" name="category" value="camera">
+        <input type="checkbox" id="camera" name="category" value="camera" th:checked="${signUpDto.category.contains('camera')}">
         <label for="camera">카메라</label>
 
-        <input type="checkbox" id="pc_parts" name="category" value="pc_parts">
+        <input type="checkbox" id="pc_parts" name="category" value="pc_parts" th:checked="${signUpDto.category.contains('pc_parts')}">
         <label for="pc_parts">PC 부품</label>
 
         <br/>
-        <input type="checkbox" id="wearable" name="category" value="wearable">
+        <input type="checkbox" id="wearable" name="category" value="wearable" th:checked="${signUpDto.category.contains('wearable')}">
         <label for="wearable">웨어러블</label>
 
-        <input type="checkbox" id="pc_notebook" name="category" value="pc_notebook">
+        <input type="checkbox" id="pc_notebook" name="category" value="pc_notebook" th:checked="${signUpDto.category.contains('pc_notebook')}">
         <label for="pc_notebook">PC/노트북</label>
 
-        <input type="checkbox" id="accessory" name="category" value="accessory">
+        <input type="checkbox" id="accessory" name="category" value="accessory" th:checked="${signUpDto.category.contains('accessory')}">
         <label for="accessory">악세사리</label>
 
-        <input type="checkbox" id="etc" name="category" value="etc">
+        <input type="checkbox" id="etc" name="category" value="etc" th:checked="${signUpDto.category.contains('etc')}">
         <label for="etc">기타</label>
     </div>
     <br/>
