@@ -26,3 +26,19 @@ spring:
     prefix: classpath:/templates/    # Thymeleaf html 파일이 위치할 기본 위치 설정
     suffix: .html       # Thymeleaf html 확장자 설정
     view-names: thyme/*    # Thymeleaf 에 연결될 viewname 범위 설정
+
+cloud:
+  aws:
+    s3:
+      bucket: ssd-bidflap
+      path:
+        product: product
+        profile: profile
+        chat: chat
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
