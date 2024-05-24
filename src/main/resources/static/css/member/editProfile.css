@@ -169,6 +169,9 @@ form input[type="checkbox"]:checked + label {
     margin-bottom: 50px;
 }
 
+#profilePreview {
+    cursor: pointer;
+}
 .category-list {
     margin-left: 80px;
 }

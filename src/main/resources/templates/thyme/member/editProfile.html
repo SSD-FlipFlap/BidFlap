@@ -60,6 +60,9 @@
             document.getElementById('profilePreview').src = '/resources/img/ProfileEdit.png';
             document.getElementById('profilePreview').style.border = 'none'; // 테두리 제거
             document.getElementById('profilePreview').style.borderRadius = '0'; // 이미지 모양 제거
+
+            // 파일 입력을 초기화
+            document.getElementById('profile').value = '';
         }
 
         // 페이지 로드 시 이미지 클릭 이벤트 리스너 등록
@@ -71,6 +74,24 @@
                 deleteProfile();
             });
         });
+
+        function saveProfile() {
+            const form = document.getElementById('profileForm');
+            const formData = new FormData(form);
+
+            fetch('/members/change-profile', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if(response.ok) {
+                    alert('프로필이 변경되었습니다.');
+                } else {
+                    alert('프로필 변경에 실패했습니다.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </head>
 <body>
@@ -101,15 +122,17 @@
         </aside>
         <section class="main-section">
             <div class="profile-info">
-                <div id="profilePreviewContainer">
-                    <img id="profilePreview" class="profile-pic" th:src="${updateMemberDto.profile == null ? '/resources/img/ProfileEdit.png' : updateMemberDto.profile}" alt="Profile Img">
-                    <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
-                </div>
+                <form id="profileForm" method="post" enctype="multipart/form-data">
+                    <div id="profilePreviewContainer">
+                        <img id="profilePreview" class="profile-pic" th:src="${updateMemberDto.profile == null ? '/resources/img/ProfileEdit.png' : updateMemberDto.profile}" alt="Profile Img">
+                        <input type="file" id="profile" name="profile" accept="image/*" onchange="previewProfile(event)">
+                    </div>
+                </form>
                 <div class="profile-details">
                     <span class="username" th:text="${updateMemberDto.nickname}">유저 닉네임</span>
                     <span class="email" th:text="${updateMemberDto.email}">bidflap@bidflap.co.kr</span>
-                    <button type="submit" class="profile-delete" onclick="deleteProfile()">프로필 삭제</button>
-                    <button type="submit" class="profile-edit">프로필 저장</button>
+                    <button type="button" class="profile-delete" onclick="deleteProfile()">프로필 삭제</button>
+                    <button type="button" class="profile-edit" onclick="saveProfile()">프로필 저장</button>
                 </div>
             </div>
             <br/>
