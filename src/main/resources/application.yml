@@ -32,8 +32,9 @@ cloud:
     s3:
       bucket: ssd-bidflap
       path:
-        post: post
+        product: product
         profile: profile
+        chat: chat
     region:
       static: ap-northeast-2
     stack:
