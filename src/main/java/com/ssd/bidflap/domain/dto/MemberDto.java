@@ -1,5 +1,6 @@
 package com.ssd.bidflap.domain.dto;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -59,6 +60,7 @@ public class MemberDto {
 
         private List<String> category = new ArrayList<>();
 
+        @Nullable
         private String profile;
     }
 
@@ -70,7 +72,4 @@ public class MemberDto {
         private String profile;
     }
 
-    public static class ChangeProfileDto {
-        private MultipartFile profile;
-    }
 }

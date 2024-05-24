@@ -47,4 +47,7 @@ public class Member {
         this.account = account;
     }
 
+    public void changeProfile(String profile) {
+        this.profile = profile;
+    }
 }

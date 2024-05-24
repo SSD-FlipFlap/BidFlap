@@ -1,21 +1,26 @@
 package com.ssd.bidflap.service;
 
+import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
+import com.ssd.bidflap.domain.Uuid;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.InterestRepository;
 import com.ssd.bidflap.repository.MemberRepository;
+import com.ssd.bidflap.repository.UuidRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +32,8 @@ public class MemberService {
     private final AuthService authService;
     private final AfterServiceRepository afterServiceRepository;
     private final InterestRepository interestRepository;
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
     @Transactional
     public void changePassword(String nickname, MemberDto.ChangePasswordDto changePasswordDto) {
@@ -119,6 +126,46 @@ public class MemberService {
         }
 
         return updatedMember.getNickname();
+    }
+
+    @Transactional
+    public void changeProfile(String nickname, MultipartFile profile) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        String newProfileUrl = null;
+        String oldProfileUrl = member.getProfile();
+
+        // 프로필 사진이 존재하지 않는데 삭제하는 경우
+        if (oldProfileUrl == null && (profile == null || profile.isEmpty())) {
+            return;
+        }
+
+        // 사용자가 파일을 선택하지 않은 경우(프로필 사진 삭제)
+        if (profile == null || profile.isEmpty()) {
+            s3Manager.deleteFile(oldProfileUrl);
+            member.changeProfile(newProfileUrl);
+            memberRepository.save(member);
+            return;
+        }
+
+        // 프로필 사진이 존재하는 경우 기존 사진 삭제
+        if (oldProfileUrl != null){
+            s3Manager.deleteFile(oldProfileUrl);
+        }
+
+        // 저장
+        String uuid = UUID.randomUUID().toString();
+        Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                .uuid(uuid).build());
+        newProfileUrl = s3Manager.uploadFile(s3Manager.generateProfileKeyName(savedUuid), profile);
+
+        member.changeProfile(newProfileUrl);
+        memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
