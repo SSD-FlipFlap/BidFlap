@@ -52,7 +52,7 @@ public class AuthService {
 
         // 이미지 업로드
         String profileUrl = null;
-        if (signUpDto.getProfile() != null){
+        if (signUpDto.getProfile() != null && !signUpDto.getProfile().isEmpty()) {
             String uuid = UUID.randomUUID().toString();
             Uuid savedUuid = uuidRepository.save(Uuid.builder()
                     .uuid(uuid).build());
@@ -66,7 +66,7 @@ public class AuthService {
                 .nickname(signUpDto.getNickname())
                 .bank(signUpDto.getBank())
                 .account(signUpDto.getAccountNumber())
-                .profile(profileUrl)    // TODO 프로필 저장 로직 구현
+                .profile(profileUrl)
                 .memberRole(MemberRole.USER)
                 .build();
 
