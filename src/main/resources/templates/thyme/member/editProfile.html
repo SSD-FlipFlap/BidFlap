@@ -157,7 +157,7 @@
                     <button type="submit">비밀번호 변경</button>
                 </div>
             </form>
-
+            <br/>
             <form action="#" th:action="@{/members/update-member}" th:object="${updateMemberDto}" method="post">
                 <div class="input-container">
                     <label for="email" class="title">이메일&nbsp;</label>
@@ -237,11 +237,14 @@
                     <input type="checkbox" id="etc" name="category" value="etc" th:checked="${updateMemberDto.category.contains('etc')}">
                     <label for="etc">기타</label>
                 </div>
-                <br/>
                 <div>
                     <button type="submit">저장하기</button>
                 </div>
             </form>
+            <br/>
+            <div class="input-container">
+                <a class="delete-page" th:href="@{/members/delete}">회원 탈퇴</a>
+            </div>
         </section>
     </main>
 </div>

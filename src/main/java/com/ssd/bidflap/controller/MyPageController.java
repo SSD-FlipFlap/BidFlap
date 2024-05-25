@@ -29,4 +29,14 @@ public class MyPageController {
         return "thyme/member/myPage";
     }
 
+    @GetMapping("/delete")
+    public String showDeletePage(HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        return "thyme/member/deleteAccount";
+    }
+
 }
