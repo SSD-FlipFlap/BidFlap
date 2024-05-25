@@ -154,7 +154,6 @@ form input[type="checkbox"]:checked + label {
     outline: none; /* 포커스 효과 제거 */
 }
 
-/* 가입하기 버튼 */
 .main-section form button {
     padding: 10px 30px; /* 버튼 안의 여백 조정(위아래 좌우) */
     background-color: #215818;
@@ -174,6 +173,29 @@ form input[type="checkbox"]:checked + label {
 }
 .category-list {
     margin-left: 80px;
+    margin-bottom: 40px;
+}
+
+.delete-button {
+    padding: 10px 30px;
+    background-color: #A1A1A1;
+    border: none;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 10px;
+    display: block;
+    margin: 40px auto;
+}
+
+.delete-page {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 60px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    cursor:pointer;
 }
 
 .error-msg {
@@ -191,7 +213,12 @@ form input[type="checkbox"]:checked + label {
     margin-left: 200px;
 }
 
-.error-msg2 {
+.error-msg3 {
     color: red;
     margin-left: 80px;
+}
+
+.delete-notice {
+    margin-left: 80px;
+    font-size: 18px;
 }
