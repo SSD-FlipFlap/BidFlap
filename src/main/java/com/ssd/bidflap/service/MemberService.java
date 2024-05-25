@@ -223,4 +223,14 @@ public class MemberService {
 
         return memberDto;
     }
+
+    @Transactional(readOnly = true)
+    public Member getMemberInfo(String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        return optionalMember.get();
+    }
+
 }
