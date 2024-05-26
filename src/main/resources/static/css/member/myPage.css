@@ -216,3 +216,15 @@ aside {
 .image_container span {
     font-weight: bold;
 }
+
+/* myProduct.html */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: inline-block;
+    margin-right: 10px;
+}
