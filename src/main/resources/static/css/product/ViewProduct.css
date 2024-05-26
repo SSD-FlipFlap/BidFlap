@@ -70,33 +70,59 @@ body {
 }
 
 /* 구매버튼 */
-.purchase-button {
+.purchase-available  {
     position: absolute;
     width: 452px;
     height: 91px;
     left: 772px;
     top: 700px;
-    background: #215818;
+    background-color: #215818;
     border-radius: 20px;
-    display: flex; /* 버튼을 가운데 정렬하기 위해 플렉스 박스 사용 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+}
+.purchase-unavailable {
+    position: absolute;
+    width: 452px;
+    height: 91px;
+    left: 772px;
+    top: 700px;
+    background-color: #F5F5F5;
+    border-radius: 20px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .btn button{
-    background: none; /* 배경색 제거 */
-    border: none; /* 테두리 제거 */
-    font-family: 'Inter', sans-serif; /* 폰트 패밀리 설정 */
-    font-weight: 600; /* 폰트 굵기 설정 */
-    font-size: 35px; /* 폰트 크기 설정 */
-    line-height: 42px; /* 라인 높이 설정 */
-    color: #FFFFFF; /* 텍스트 색상 설정 */
-    cursor: pointer; /* 커서 포인터로 변경 */
-    padding: 0; /* 기본 패딩 제거 */
-    margin: 0; /* 기본 마진 제거 */
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 42px;
+    color: #FFFFFF;
+    padding: 0;
+    margin: 0;
 }
 
-.bid-button {
+.bid-available {
+    position: absolute;
+    width: 452px;
+    height: 91px;
+    left: 1260px;
+    top: 700px;
+    background-color: #215818;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.bid-unavailable {
     position: absolute;
     width: 452px;
     height: 91px;
@@ -116,16 +142,16 @@ body {
     top: 820px;
     background-color: #F5F5F5;
     border: none;
-    display: flex; /* Add this line */
-    align-items: center; /* Center vertically */
-    justify-content: center; /* Center horizontally */
-    font-family: 'Inter', sans-serif; /* 폰트 패밀리 설정 */
-    font-weight: 600; /* 폰트 굵기 설정 */
-    font-size: 35px; /* 폰트 크기 설정 */
-    line-height: 42px; /* 라인 높이 설정 */
-    color: #000000; /* 텍스트 색상 설정 */
-    padding: 0; /* 기본 패딩 제거 */
-    margin: 0; /* 기본 마진 제거 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 42px;
+    color: #000000;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
 }
 .like-check-text {
@@ -200,14 +226,14 @@ body {
     color: white;
     background-color: #ff4d4d;
     border: none;
-    padding: 0; /* padding 제거, height와 겹침 방지 */
+    padding: 0;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-    text-align: center; /* 텍스트 중앙 정렬 */
-    display: flex; /* 텍스트 중앙 정렬을 위해 flexbox 사용 */
-    justify-content: center; /* 텍스트 중앙 정렬 */
-    align-items: center; /* 텍스트 중앙 정렬 */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #modify-button {
     position: absolute;
@@ -222,14 +248,14 @@ body {
     color: white;
     background-color: #636363;
     border: none;
-    padding: 0; /* padding 제거, height와 겹침 방지 */
+    padding: 0;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
-    text-align: center; /* 텍스트 중앙 정렬 */
-    display: flex; /* 텍스트 중앙 정렬을 위해 flexbox 사용 */
-    justify-content: center; /* 텍스트 중앙 정렬 */
-    align-items: center; /* 텍스트 중앙 정렬 */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 /* 경매 시작 가능 | 10명 이상 좋아요 */
 .auction-notice {
@@ -281,7 +307,6 @@ body {
     font-weight: 600;
     font-size: 45px;
     line-height: 54px;
-    /*text-align: center;*/
     color: #000000;
 }
 
