@@ -18,12 +18,12 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     private ChatMessageRepository chatMessageRepository;
     @Autowired private ChatRoomRepository chatRoomRepository;
-
+    /*
     @Override
     public List<ChatRoom> getChatRoomList(long productId) {
         return chatRoomRepository.getChatRoomListByProductId(productId);
     }
-
+    */
     @Override
     public ChatRoom getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -53,14 +53,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatRoom> getChatRoomListByMemberId(long memberId) {
-        return chatRoomRepository.getChatRoomListByMemberId(memberId);
+    public List<ChatRoom> getChatRoomListByNickname(String nickname) {
+        return chatRoomRepository.getChatRoomListByNickname(nickname);
     }
 
     @Override
     public ChatMessage createMessage(Long roomId, Member member, String message) {
         ChatRoom room = getChatRoomById(roomId);
         ChatMessage mm = new ChatMessage(room, member, message);
+        mm.getCreatedAt();
         return chatMessageRepository.save(mm);
     }
     /*

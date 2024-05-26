@@ -3,7 +3,7 @@
 		 pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
-	String loggedInMemberId = (String) session.getAttribute("loggedInMemberId");
+	String loggedInMemberNickname = (String) session.getAttribute("loggedInMember");
 %>
 <!DOCTYPE html>
 <html>
@@ -18,47 +18,36 @@
 <div class="chat-container">
 	<div class="info-container">
 		<div id="product" class="info imgForm">
-			<img src="/resources/img/productImg.png">
-			<div class="heartIcon">
-				<img id="heart" src="">
-				<script>
-					document.getElementById('heart').src = heart_info();
-
-					function heart_info() {
-						var img_src = '/resources/img/heartIcon.png';
-						//if(좋아요 클릭) img_src = /resources/img/heartIcon_Fill.png;
-						return img_src;
-					}
-				</script>
-			</div>
+			<img src="/resources/img/productImg.png"/>
 			<b>000,000원</b>
 		</div>
 		<div class="info">
 			<h1>무선이어폰</h1>
-			<p>판매자 거래내역 ${5}회dddddd</p>
+			<p>판매자 거래내역 ${5}회</p>
 		</div>
 		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 	</div>
 	<div id="chat-scroll">
 		<div id="chat-history"></div>
 	</div>
-	<form id="sendNewChat" action="/chat/chatRoom/4" method="get">
-		<div class="send-container">
-			<img src="/resources/img/fileIcon.png" id="imageUpload">
+	<div class="send-container">
+		<img src="/resources/img/fileIcon.png" id="imageUpload">
 
-			<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
-			<input type="file" id="attachment" style="display: none;">
-			<input type="text" id="message" placeholder="Type your message...">
-			<img src="/resources/img/sendIcon.png" id="sendIcon">
-			<button type="submit">버튼</button>
-		</div>
-	</form>
+		<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
+		<input type="file" id="attachment" style="display: none;">
+		<input type="text" id="message" placeholder="Type your message...">
+		<img src="/resources/img/sendIcon.png" id="sendIcon">
+	</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
 	var stompClient = null;
-	var loggedInMemberId = <%= loggedInMemberId != null ? loggedInMemberId : 61 %>;
+	var loggedInMemberNickname = <%= loggedInMemberNickname %>;
+	if(loggedInMemberNickname == null)
+		loggedInMemberNickname = "rkfka";
+	console.log(loggedInMemberNickname);
+
 	var roomId = ${chatRoom.id} != null ? ${chatRoom.id} : 4;
 
 	var chatHistory = [
@@ -66,7 +55,7 @@
 		{
 			message: "<c:out value="${chatMessage.message}"/>",
 			date: "<c:out value="${chatMessage.createdAt}"/>",
-			type: "<c:out value="${chatMessage.member.id eq loggedInMemberId ? 'sender' : 'receiver'}"/>"
+			type: "<c:out value="${chatMessage.member.nickname != loggedInMemberNickname ? 'receiver' : 'sender'}"/>"
 		},
 		</c:forEach>
 	];
@@ -108,7 +97,7 @@
 
 	function makeProfileDiv(parent, type) {
 		const profileImage = document.createElement('img');
-		if(type==='sender')
+		if(type==='receiver')
 			profileImage.src = "/resources/img/Profile.png";
 		else
 			profileImage.src = "/resources/img/Profile.png";
@@ -149,12 +138,12 @@
 				currentDate = messageDate;
 			}
 
-			if (type === "receiver")
+			if (type === "sender")
 				makeProfileDiv(messageSet, type);
 
 			makeMessageDiv(messageSet, message, type);
 
-			if (type === "sender")
+			if (type === "receiver")
 				makeProfileDiv(messageSet, type);
 
 			messageSet.classList.add(type);
@@ -176,7 +165,7 @@
 	});
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
-		//getMember(loggedInMemberId);
+		//${receiver} - 멤버 객체를 model에 추가 필요
 		var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
 		var message = document.getElementById('message').value;
 
@@ -191,9 +180,9 @@
 		const chatHistoryDiv = document.getElementById('chat-history');
 		const messageSet = document.createElement('div');
 		messageSet.classList.add('messageSet');
-		makeMessageDiv(messageSet, messageInput, "sender");
-		makeProfileDiv(messageSet, "sender");
-		messageSet.classList.add("sender");
+		makeMessageDiv(messageSet, messageInput, "receiver");
+		makeProfileDiv(messageSet, "receiver");
+		messageSet.classList.add("receiver");
 		chatHistoryDiv.appendChild(messageSet);
 		document.getElementById("message").value = "";
 
