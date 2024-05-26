@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>MyPage</title>
@@ -14,11 +14,11 @@
         <aside>
             <nav class="side-nav">
                 <span><h3><a href="#" th:href="@{/members/my-page}">마이 페이지</a></h3></span>
-                <span><a href="#">판매 내역</a></span>
-                <span><a href="#">구매 내역</a></span>
-                <span><a href="#">경매 내역</a></span>
-                <span><a href="#">좋아요한 글</a></span>
-                <span><a href="#" th:href="@{/chat/chatRooms}">채팅 내역</a></span>
+                <span><a href="#" th:href="@{/members/my-page/product}">판매 내역</a></span>
+                <span><a href="#" th:href="@{/members/my-page/purchase}">구매 내역</a></span>
+                <span><a href="#" th:href="@{/members/my-page/auction}">경매 내역</a></span>
+                <span><a href="#" th:href="@{/members/my-page/like}">좋아요한 글</a></span>
+                <span><a href="#" th:href="@{/members/my-page/chat}">채팅 내역</a></span>
             </nav>
         </aside>
         <section class="main-section">
@@ -58,7 +58,7 @@
             <div class="section">
                 <div class="section-header">
                     <h3>구매 내역</h3>
-                    <a href="#" class="more-link">더보기 ></a>
+                    <a href="#" th:href="@{/members/my-page/purchase}" class="more-link">더보기 ></a>
                 </div>
 <!--                <div class="item-list">-->
 <!--                    <div class="item" th:each="item : ${purchaseHistory}">-->
@@ -142,7 +142,7 @@
             <div class="section">
                 <div class="section-header">
                     <h3>좋아요한 글</h3>
-                    <a href="#" class="more-link">더보기 ></a>
+                    <a href="#" th:href="@{/members/my-page/like}" class="more-link">더보기 ></a>
                 </div>
                 <div class="product_images">
                     <div class="image_row">
