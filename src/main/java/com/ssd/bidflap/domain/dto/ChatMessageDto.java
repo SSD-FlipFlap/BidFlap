@@ -1,5 +1,6 @@
 package com.ssd.bidflap.domain.dto;
 
+import com.ssd.bidflap.domain.BaseEntity;
 import com.ssd.bidflap.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,5 +15,4 @@ public class ChatMessageDto {
     private Long roomId;
     private Member member;
     private String message;
-
 }

@@ -51,13 +51,6 @@
    z-index: 1;
 }
 
-.imgForm .heartIcon {
-	position: absolute;
-	z-index: 2;
-	margin-left: 150px;
-	margin-top: 100px;
-}
-
 .imgForm div#product {
    width: 180px;
    height: 180px;
@@ -151,12 +144,12 @@ div#chat-scroll {
 	min-width: 15px;
 	border-radius: 5px;
 }
-.sender {
+.receiver {
     margin-left: auto;
     margin-right: 5px;
 }
 
-.receiver {
+.sender {
     margin-right: auto;
     margin-left: 5px;
 }

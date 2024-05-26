@@ -25,38 +25,26 @@ public class ChatController {
     public ModelAndView getChatRoomList(HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
 
-        long memberId = (Long) session.getAttribute("memberId");
+        String nickname = (String) session.getAttribute("loggedInMember");
 
-        List<ChatRoom> chatRooms = chatService.getChatRoomListByMemberId(memberId);
+        List<ChatRoom> chatRooms = chatService.getChatRoomListByNickname(nickname);
         modelAndView.addObject("chatRooms", chatRooms);
 
         modelAndView.setViewName("chat/chatRoomList");
         return modelAndView;
     }
-    /*
-    //채팅방리스트 - 물건에 대한..이거 필요없는듯??
-    @GetMapping("/chatRooms/{productId}")
-    public ModelAndView getChatRoomListByProductId(@PathVariable long productId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        List<ChatRoom> chatRooms = chatService.getChatRoomList(productId);
-        modelAndView.addObject("chatRooms", chatRooms);
-
-        modelAndView.setViewName("chat/chatRoomList");
-        return modelAndView;
-    }
-    */
     //입장
     @GetMapping("/chatRoom/{chatRoomId}")
     public ModelAndView getChatRoomById(@PathVariable long chatRoomId) {
-        System.out.println("입장");
         ModelAndView modelAndView = new ModelAndView();
+        //chatRoom, chatRoomMessages, sender
         ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
         modelAndView.addObject("chatRoom", chatRoom);
 
         List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(chatRoomId);
         modelAndView.addObject("chatMessages", chatMessages);
         modelAndView.setViewName("chat/chatRoom");
+        //modelAndView.setViewName("thyme/chat/chatRoom");
 
         return modelAndView;
     }

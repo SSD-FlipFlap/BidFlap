@@ -7,8 +7,6 @@ import com.ssd.bidflap.domain.Member;
 import java.util.List;
 
 public interface ChatService {
-    List<ChatRoom> getChatRoomList(long productId);
-
     ChatRoom getChatRoomById(long chatRoomId);
 
     List<ChatMessage> getChatMessagesByChatRoomId(long chatRoomId);
@@ -19,7 +17,7 @@ public interface ChatService {
 
     ChatMessage insertMessage(ChatMessage message);
 
-    List<ChatRoom> getChatRoomListByMemberId(long memberId);
+    List<ChatRoom> getChatRoomListByNickname(String nickname);
 
     ChatMessage createMessage(Long roomId, Member member, String message);
 

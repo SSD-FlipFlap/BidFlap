@@ -17,7 +17,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     public List<ChatRoom> getChatRoomListByProductId(long productId);
 
-    @Query("SELECT DISTINCT cm.chatRoom FROM ChatMessage cm WHERE cm.member.id = :memberId")
-    public List<ChatRoom> getChatRoomListByMemberId(long memberId);
+    @Query("SELECT DISTINCT cm.chatRoom FROM ChatMessage cm WHERE cm.member.nickname = :nickname")
+    public List<ChatRoom> getChatRoomListByNickname(String nickname);
 
 }
