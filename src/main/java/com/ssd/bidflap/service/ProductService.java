@@ -66,15 +66,19 @@ public class ProductService {
         Product product = optionalProduct.get();
 
         Optional<ProductLike> optionalProductLike = productLikeRepository.findByMemberAndProduct(member, product);
+
         if (optionalProductLike.isPresent()) {
             productLikeRepository.delete(optionalProductLike.get());
+            product.setLikeCount(product.getLikeCount() - 1); // 좋아요 개수 감소
         } else {
             ProductLike productLike = ProductLike.builder()
                     .member(member)
                     .product(product)
                     .build();
             productLikeRepository.save(productLike);
+            product.setLikeCount(product.getLikeCount() != null ? product.getLikeCount() + 1 : 1); // 좋아요 개수 증가
         }
+        productRepository.save(product);
     }
 
     public boolean isProductLikedByMember(Long productId, String nickname) {

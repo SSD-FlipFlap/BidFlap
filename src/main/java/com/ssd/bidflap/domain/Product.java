@@ -22,7 +22,7 @@ public class Product extends BaseEntity {
     private String description;
 
 //    private String product_filepath;
-    
+
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
 
@@ -39,4 +39,8 @@ public class Product extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id")
     private Auction auction;
+
+    @Column(name = "like_count", nullable = false)
+    private Integer likeCount = 0;
+
 }
