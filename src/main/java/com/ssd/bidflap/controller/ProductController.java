@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDateTime;
@@ -51,10 +48,17 @@ public class ProductController {
     }
 
     @GetMapping("/product/view")
-    public String productView(Model model, Long id){
-        model.addAttribute("product", productService.productView(id));
+    public String productView(Model model, Long id, HttpSession session) {
+        Product product = productService.productView(id);
+        model.addAttribute("product",  product);
+
+        String nickname = (String) session.getAttribute("loggedInMember");
+        Boolean isProductLiked = (nickname != null) && productService.isProductLikedByMember(id, nickname);
+        model.addAttribute("isProductLiked", isProductLiked);
+
         return "thyme/product/ViewProduct";
     }
+
 
     @PostMapping("/product/delete/{id}")
     public String productDelete(@PathVariable Long id){
@@ -86,6 +90,19 @@ public class ProductController {
 
         return "redirect:/product/view?id=" + id;
     }
+
+    @PostMapping("/product/like")
+    public String likeProduct(@RequestParam("productId") Long productId, HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로
+        }
+
+        productService.toggleLike(productId, nickname);
+
+        return "redirect:/product/view?id=" + productId;
+    }
+
     @GetMapping("/product/list")
     public String productList(Model model, @RequestParam(value="keyword", required = false) String keyword) {
         List<Product> products;

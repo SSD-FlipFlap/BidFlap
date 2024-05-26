@@ -108,20 +108,17 @@ body {
     align-items: center;
     justify-content: center;
 }
-.like-check {
+#like-button {
     position: absolute;
     width: 940px;
     height: 86px;
     left: 772px;
     top: 820px;
-    background: #F5F5F5;
-    border-radius: 20px;
+    background-color: #F5F5F5;
+    border: none;
     display: flex; /* Add this line */
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
-}
-
-.like-check-text {
     font-family: 'Inter', sans-serif; /* 폰트 패밀리 설정 */
     font-weight: 600; /* 폰트 굵기 설정 */
     font-size: 35px; /* 폰트 크기 설정 */
@@ -129,6 +126,10 @@ body {
     color: #000000; /* 텍스트 색상 설정 */
     padding: 0; /* 기본 패딩 제거 */
     margin: 0; /* 기본 마진 제거 */
+    cursor: pointer;
+}
+.like-check-text {
+
 }
 
 
