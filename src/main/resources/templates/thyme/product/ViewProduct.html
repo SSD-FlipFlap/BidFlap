@@ -18,30 +18,30 @@
 <div class="image-13057052"></div>
 <div class="heart"></div>
 <div class="purchase-button">
-    <div class="btn">
-        <button type="submit">구매하기</button>
+    <div class="btn" th:classappend="${product.likeCount >= 2} ? 'purchase-unavailable' : 'purchase-available'">
+        <button type="submit" th:text="${product.likeCount >= 2} ? '구매 불가능' : '구매하기'" th:disabled="${product.likeCount >= 2}"></button>
     </div>
 </div>
 
-<div class="bid-button">
-    <div class="btn">
-        <button type="submit">경매 불가능</button>
+<div th:if="${isAuthor}">
+    <div class="bid-button">
+        <div class="btn" th:classappend="${product.likeCount>=2} ? 'bid-available' : 'bid-unavailable'">
+            <button type="submit" th:text="${product.likeCount>=2}? '경매 시작하기':'경매 불가능'" th:disabled="${product.likeCount>=2}"></button>
+        </div>
     </div>
 </div>
-
 <form id="like-form" action="/product/like" method="post">
     <input type="hidden" name="productId" th:value="${product.id}"/>
-    <button type="submit" id="like-button" th:text=" '좋아요'  + ${product.likeCount}"></button>
+    <button type="submit" id="like-button" th:text="'좋아요 ' + ${product.likeCount}"></button>
 </form>
 
+<!-- 작성자인 경우에만 수정 및 삭제 버튼 표시 -->
 <div th:if="${isAuthor}">
     <form id="delete-form" th:action="@{/product/delete/{id}(id=${product.id})}" method="post">
         <input type="hidden" name="_method" value="DELETE"/>
         <button type="button" id="delete-button" onclick="confirmDelete()">글 삭제</button>
     </form>
-</div>
 
-<div th:if="${isAuthor}">
     <a th:href="@{/product/modify/{id}(id=${product.id})}">
         <button id="modify-button" type="button">글 수정</button>
     </a>
@@ -50,15 +50,15 @@
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
 
 <div class="writer-profile">
-    <span th:text="${nickname}+'님'"></span>
-    <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')+'에 작성하셨습니다.'}"></span>
+    <span th:text="${nickname} + '님'"></span>
+    <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') + '에 작성하셨습니다.'}"></span>
 </div>
 
 <div class="profile-picture"></div>
 <div class="price" th:text="${product.price != null ? product.price + '원' : ''}"></div>
 <div class="product-title" th:text="${product.title}"></div>
 <div class="product-description" th:text="${product.description}"></div>
-<div class="product-category" th:text="${product.category != null ? '#'+product.category : ''}"></div>
+<div class="product-category" th:text="${product.category != null ? '#' + product.category : ''}"></div>
 <div class="writer-price">판매자 제시가</div>
 </body>
 </html>

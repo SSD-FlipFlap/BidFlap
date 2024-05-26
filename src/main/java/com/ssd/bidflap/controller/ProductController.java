@@ -61,6 +61,12 @@ public class ProductController {
         Boolean isProductLiked = (nickname != null) && productService.isProductLikedByMember(id, nickname);
         model.addAttribute("isProductLiked", isProductLiked);
 
+        boolean isAuthor = product.getMember().getNickname().equals(nickname);
+        model.addAttribute("isAuthor", isAuthor);
+
+        Integer likeCount = product.getLikeCount();
+        model.addAttribute("likeCount", likeCount);
+
         return "thyme/product/ViewProduct";
     }
 

@@ -5,6 +5,8 @@ import com.ssd.bidflap.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Data
 @Getter
@@ -21,7 +23,7 @@ public class Product extends BaseEntity {
 
     private String description;
 
-//    private String product_filepath;
+    private Integer likeCount;
 
     @Enumerated(EnumType.STRING)
     private AuctionStatus status;
@@ -40,7 +42,7 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "auction_id")
     private Auction auction;
 
-    @Column(name = "like_count", nullable = false)
-    private Integer likeCount = 0;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductLike> productLikes;
 
 }
