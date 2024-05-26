@@ -45,7 +45,8 @@
 
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
 
-<div class="writer-profile">가을이 님
+<div class="writer-profile">
+    <span th:text="${nickname}+'님'"></span>
     <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')+'에 작성하셨습니다.'}"></span>
 </div>
 

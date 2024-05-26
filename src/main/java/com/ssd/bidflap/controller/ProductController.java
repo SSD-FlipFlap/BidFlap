@@ -53,6 +53,8 @@ public class ProductController {
         model.addAttribute("product",  product);
 
         String nickname = (String) session.getAttribute("loggedInMember");
+        model.addAttribute("nickname", nickname);
+
         Boolean isProductLiked = (nickname != null) && productService.isProductLikedByMember(id, nickname);
         model.addAttribute("isProductLiked", isProductLiked);
 
@@ -76,17 +78,17 @@ public class ProductController {
     }
 
     @PostMapping("product/update/{id}")
-    public String productUpdate(@PathVariable Long id, Product product, Member member, RedirectAttributes redirectAttributes) throws Exception{
+    public String productUpdate(@PathVariable Long id, Product product, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception{
+        String nickname = (String) session.getAttribute("loggedInMember");
+        model.addAttribute("nickname", nickname);
+
         Product productTemp = productService.productView(id);
         productTemp.setTitle(product.getTitle());
         productTemp.setDescription(product.getDescription());
         productTemp.setPrice(product.getPrice());
         productTemp.setCategory(product.getCategory());
 
-        productService.registerProduct(productTemp, member.getNickname());
-
-//        Long productId = productService.getProductId(product);
-//        redirectAttributes.addAttribute("id", productId);
+        productService.registerProduct(productTemp, nickname);
 
         return "redirect:/product/view?id=" + id;
     }
