@@ -29,11 +29,11 @@
     </div>
 </div>
 
-<div class="like-check">
-    <div class="like-check-text">
-        좋아요 n
-    </div>
-</div>
+<form id="like-form" action="/product/like" method="post">
+    <input type="hidden" name="productId" th:value="${product.id}"/>
+    <button type="submit" id="like-button" th:text="${isProductLiked ? '좋아요 취소' : '좋아요'}"></button>
+</form>
+
 <form id="delete-form" th:action="@{/product/delete/{id}(id=${product.id})}" method="post">
     <input type="hidden" name="_method" value="DELETE"/>
     <button type="button" id="delete-button" onclick="confirmDelete()">글 삭제</button>
