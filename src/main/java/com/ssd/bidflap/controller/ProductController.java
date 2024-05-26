@@ -41,6 +41,9 @@ public class ProductController {
 
         productService.registerProduct(product, nickname);
 
+        if (product.getLikeCount() == null) {
+            product.setLikeCount(0);
+        }
         // 상품 등록하고 상품의 ID를 가져와서 상세 페이지로
         Long productId = productService.getProductId(product);
         redirectAttributes.addAttribute("id", productId);
@@ -63,7 +66,7 @@ public class ProductController {
 
 
     @PostMapping("/product/delete/{id}")
-    public String productDelete(@PathVariable Long id){
+    public String productDelete(@PathVariable Long id, HttpSession session){
 
         productService.productDelete(id);
 
