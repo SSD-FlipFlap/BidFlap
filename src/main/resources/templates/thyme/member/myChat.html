@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/editProfile.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myPage.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myChat.css}">
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+
+<div class="container">
+    <main>
+        <aside>
+            <nav class="side-nav">
+                <span><h3><a href="#" th:href="@{/members/my-page}">마이 페이지</a></h3></span>
+                <span><a href="#">판매 내역</a></span>
+                <span><a href="#">구매 내역</a></span>
+                <span><a href="#">경매 내역</a></span>
+                <span><a href="#">좋아요한 글</a></span>
+                <span><a href="#" th:href="@{/members/my-page/chat}">채팅 내역</a></span>
+            </nav>
+        </aside>
+        <section class="main-section">
+            <div><h2>채팅 내역</h2></div><br/>
+
+            <div class="chat-history">
+                <div class="chat-item">
+                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
+                    <div class="chat-info">
+                        <span class="chat-title">무선 이어폰(title)</span>
+                        <div class="chat-details">
+                            <span class="chat-seller">OOO(판매자)</span>
+                            <span class="chat-last-message">마지막 채팅 메시지, 시간 출력</span>
+                            <span class="chat-time">오후 5:43</span>
+                            <span class="chat-delete">x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
+                    <div class="chat-info">
+                        <span class="chat-title">무선 이어폰(title)</span>
+                        <div class="chat-details">
+                            <span class="chat-seller">OOO(판매자)</span>
+                            <span class="chat-last-message">안녕하세요~</span>
+                            <span class="chat-time">오후 6:00</span>
+                            <span class="chat-delete">x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
+                    <div class="chat-info">
+                        <span class="chat-title">무선 이어폰(title)</span>
+                        <div class="chat-details">
+                            <span class="chat-seller">OOO(판매자)</span>
+                            <span class="chat-last-message">상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??!
+                                상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??!</span>
+                            <span class="chat-time">오전 11:30</span>
+                            <span class="chat-delete">x</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-item">
+                    <img th:src="@{/resources/img/productImg.png}" alt="무선 이어폰">
+                    <div class="chat-info">
+                        <span class="chat-title">무선 이어폰(title)</span>
+                        <div class="chat-details">
+                            <span class="chat-seller">OOO(판매자)</span>
+                            <span class="chat-last-message">감사합니다!</span>
+                            <span class="chat-time">오후 5:43</span>
+                            <span class="chat-delete">x</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
+</body>
+</html>

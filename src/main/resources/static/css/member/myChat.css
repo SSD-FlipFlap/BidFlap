@@ -1,0 +1,52 @@
+.chat-history {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.chat-item img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+.chat-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.chat-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chat-details {
+    display: flex;
+    justify-content: space-between; /* 기본적으로 요소들을 동일한 간격으로 배치 */
+    align-items: center;
+}
+
+.chat-last-message {
+    color: #707070;
+    margin-left: auto;
+    margin-right: 50px;
+    max-width: 400px; /* 최대 너비 설정 */
+    white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트를 '...'으로 표시 */
+}
+
+.chat-time {
+    margin-right: 20px;
+    color: #707070;
+}
+
+.chat-delete {
+    cursor: pointer;
+}

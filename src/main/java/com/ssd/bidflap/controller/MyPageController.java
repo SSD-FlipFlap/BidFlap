@@ -39,4 +39,13 @@ public class MyPageController {
         return "thyme/member/deleteAccount";
     }
 
+    @GetMapping("/my-page/chat")
+    public String myChat(HttpSession session, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        return "thyme/member/myChat";
+    }
 }
