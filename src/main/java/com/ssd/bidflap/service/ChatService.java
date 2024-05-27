@@ -9,9 +9,13 @@ import java.util.List;
 public interface ChatService {
     ChatRoom getChatRoomById(long chatRoomId);
 
+    ChatRoom getChatRoomByProductIdAndNickname(long productId, String nickname);
+
+    ChatRoom getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname);
+
     List<ChatMessage> getChatMessagesByChatRoomId(long chatRoomId);
 
-    void insertChatRoom(ChatRoom chatRoom);
+    ChatRoom insertChatRoom(String type, long id);
 
     void deleteChatRoom(long chatRoomId);
 
