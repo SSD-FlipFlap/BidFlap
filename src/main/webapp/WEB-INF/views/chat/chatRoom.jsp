@@ -41,7 +41,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-<script>
+<script type="text/javascript">
 	var stompClient = null;
 	var loggedInMemberNickname = <%= loggedInMemberNickname %>;
 	if(loggedInMemberNickname == null)
@@ -162,9 +162,17 @@
 	});
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
-		//${receiver} - 멤버 객체를 model에 추가 필요
-		var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
-		//var member = ${sender};
+		//var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null };
+		var member = {
+			id: ${sender.id},
+			account: "${sender.account}",
+			bank: "${sender.bank}",
+			email: "${sender.email}",
+			member_role: "${sender.memberRole}",
+			nickname: "${sender.nickname}",
+			password: "${sender.password}",
+			profile: "${sender.profile}"
+		};
 		var message = document.getElementById('message').value;
 
 		sendMessage(roomId, member, message);
