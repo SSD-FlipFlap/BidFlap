@@ -2,8 +2,10 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.ChatMessage;
 import com.ssd.bidflap.domain.ChatRoom;
+import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
 import com.ssd.bidflap.service.ChatService;
+import com.ssd.bidflap.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatController {
     private final ChatService chatService;
+    private final MemberService memberService;
 
     //채팅방리스트 - 마이페이지
     @GetMapping("/chatRooms")
@@ -35,7 +38,7 @@ public class ChatController {
     }
     //입장
     @GetMapping("/chatRoom/{chatRoomId}")
-    public ModelAndView getChatRoomById(@PathVariable long chatRoomId) {
+    public ModelAndView getChatRoomById(@PathVariable long chatRoomId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         //chatRoom, chatRoomMessages, sender
         ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
@@ -43,7 +46,13 @@ public class ChatController {
 
         List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(chatRoomId);
         modelAndView.addObject("chatMessages", chatMessages);
+
+        String nickname = (String) session.getAttribute("loggedInMember");
+        Member sender = memberService.getMemberInfo(nickname);
+        modelAndView.addObject("sender", sender);
+
         modelAndView.setViewName("chat/chatRoom");
+
         //modelAndView.setViewName("thyme/chat/chatRoom");
 
         return modelAndView;
