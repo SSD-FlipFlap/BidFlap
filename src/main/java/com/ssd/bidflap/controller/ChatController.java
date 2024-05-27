@@ -52,6 +52,7 @@ public class ChatController {
         modelAndView.addObject("sender", sender);
 
         modelAndView.setViewName("chat/chatRoom");
+
         //modelAndView.setViewName("thyme/chat/chatRoom");
 
         return modelAndView;

@@ -79,13 +79,11 @@
 			console.error("WebSocket 연결이 설정되지 않았습니다.");
 			return;
 		}
-
 		var messageToSend = {
 			roomId: roomId,
 			member: member,
 			message: message
 		};
-
 		stompClient.send("/send/" + roomId, {}, JSON.stringify(messageToSend));
 	}
 
