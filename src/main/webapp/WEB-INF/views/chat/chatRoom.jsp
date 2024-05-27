@@ -46,7 +46,6 @@
 	var loggedInMemberNickname = <%= loggedInMemberNickname %>;
 	if(loggedInMemberNickname == null)
 		loggedInMemberNickname = "rkfka";
-	console.log(loggedInMemberNickname);
 
 	var roomId = ${chatRoom.id} != null ? ${chatRoom.id} : 4;
 
@@ -166,7 +165,8 @@
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
 		//${receiver} - 멤버 객체를 model에 추가 필요
-		var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
+		//var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
+		var member = ${sender};
 		var message = document.getElementById('message').value;
 
 		sendMessage(roomId, member, message);

@@ -34,7 +34,7 @@
 	    var textInfoHeight = document.querySelector('.textInfo').offsetHeight;
 	    document.querySelector('.line').style.height = textInfoHeight + 'px';
 	}
-	
+
 	window.addEventListener('DOMContentLoaded', adjustLineHeight);
 	window.addEventListener('resize', adjustLineHeight);
 </script>
