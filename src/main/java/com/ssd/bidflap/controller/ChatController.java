@@ -36,18 +36,51 @@ public class ChatController {
         modelAndView.setViewName("chat/chatRoomList");
         return modelAndView;
     }
-    //입장
-    @GetMapping("/chatRoom/{chatRoomId}")
-    public ModelAndView getChatRoomById(@PathVariable long chatRoomId, HttpSession session) {
+    //입장 - product
+    @GetMapping("/chatRoom/product/{productId}")
+    public ModelAndView getChatRoomById(@PathVariable long productId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         //chatRoom, chatRoomMessages, sender
-        ChatRoom chatRoom = chatService.getChatRoomById(chatRoomId);
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if(nickname == null)
+            nickname = "rkfka";
+        System.out.println(nickname+" "+productId);
+        ChatRoom chatRoom = chatService.getChatRoomByProductIdAndNickname(productId, nickname);
+        //System.out.println("chatRoom 찾음? "+chatRoom.getId());
+        if(chatRoom==null){
+            return createChatRoom("product", productId);
+        }
         modelAndView.addObject("chatRoom", chatRoom);
 
-        List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(chatRoomId);
+        List<ChatMessage> chatMessages = chatService.getChatMessagesByChatRoomId(chatRoom.getId());
+        //System.out.println(chatMessages.size()+" "+chatMessages.get(0).getMessage());
         modelAndView.addObject("chatMessages", chatMessages);
 
+        Member sender = memberService.getMemberInfo(nickname);
+        modelAndView.addObject("sender", sender);
+
+        modelAndView.setViewName("chat/chatRoom");
+
+        //modelAndView.setViewName("thyme/chat/chatRoom");
+
+        return modelAndView;
+    }
+    //입장 - afterService
+    @GetMapping("/chatRoom/afterService/{afterServiceId}")
+    public ModelAndView getChatRoomByAfterServiceId(@PathVariable long afterServiceId, HttpSession session) {
+        ModelAndView modelAndView = new ModelAndView();
+        //chatRoom, chatRoomMessages, sender
         String nickname = (String) session.getAttribute("loggedInMember");
+        if(nickname == null)
+            nickname = "rkfka";
+        ChatRoom chatRoom = chatService.getChatRoomByAfterServiceIdAndNickname(afterServiceId, nickname);
+        if(chatRoom==null)
+            return createChatRoom("afterService", afterServiceId);    //생성
+        modelAndView.addObject("chatRoom", chatRoom);
+
+        List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(chatRoom.getId());
+        modelAndView.addObject("chatMessages", chatMessages);
+
         Member sender = memberService.getMemberInfo(nickname);
         modelAndView.addObject("sender", sender);
 
@@ -59,12 +92,13 @@ public class ChatController {
     }
 
     //생성
-    @PostMapping("/createChatRoom")
-    public ModelAndView createChatRoom(@ModelAttribute ChatRoom chatRoom) {
+    private ModelAndView createChatRoom(String type, long id) {
         ModelAndView modelAndView = new ModelAndView();
-        chatService.insertChatRoom(chatRoom);
+        ChatRoom chatRoom = chatService.insertChatRoom(type, id);
+
+        modelAndView.addObject("chatRoom", chatRoom);
         modelAndView.addObject("message", "Chat room created successfully");
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.setViewName("chat/chatRoom/"+chatRoom.getId());
 
         return modelAndView;
     }

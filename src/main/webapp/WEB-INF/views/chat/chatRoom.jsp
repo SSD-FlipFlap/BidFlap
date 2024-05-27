@@ -22,7 +22,7 @@
 			<b>000,000원</b>
 		</div>
 		<div class="info">
-			<h1>무선이어폰</h1>
+			<h1>무선이어폰?</h1>
 			<p>판매자 거래내역 ${5}회</p>
 		</div>
 		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
@@ -163,8 +163,8 @@
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
 		//${receiver} - 멤버 객체를 model에 추가 필요
-		//var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
-		var member = ${sender};
+		var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null }; // 예시로 사용자 정보를 하드코딩되었다고 가정합니다.
+		//var member = ${sender};
 		var message = document.getElementById('message').value;
 
 		sendMessage(roomId, member, message);
