@@ -1,46 +1,62 @@
 package com.ssd.bidflap.service;
 
-import com.ssd.bidflap.domain.Member;
-import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.ProductLike; // 추가: ProductLike 엔티티 import
+import com.ssd.bidflap.config.aws.AmazonS3Manager;
+import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.repository.ProductLikeRepository; // 추가: ProductLikeRepository import
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ssd.bidflap.repository.UuidRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.servlet.http.HttpSession;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ProductLikeRepository productLikeRepository; // 추가: ProductLikeRepository 의존성 주입
-    @Autowired
-    private HttpSession httpSession;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
+    private final ProductLikeRepository productLikeRepository; // 추가: ProductLikeRepository 의존성 주입
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
-    public void registerProduct(Product product, String nickname) {
+    public Product registerProduct(Product product, List<MultipartFile> files, String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if (optionalMember.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
         Member persistedMember = optionalMember.get();
-        product.setMember(persistedMember);
-        productRepository.save(product);
-    }
 
-    public Long getProductId(Product product) {
-        Product savedProduct = productRepository.save(product);
-        return savedProduct.getId();
+        // 이미지 업로드
+        List<ProductImage> productImages = new ArrayList<>(); // 이미지 URL들을 저장할 리스트
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                String uuid = UUID.randomUUID().toString();
+                Uuid savedUuid = uuidRepository.save(Uuid.builder().uuid(uuid).build());
+                String pictureUrl = s3Manager.uploadFile(s3Manager.generateProductKeyName(savedUuid), file);
+
+                // ProductImage 엔티티 생성 및 설정
+                ProductImage productImage = ProductImage.builder()
+                        .url(pictureUrl)
+                        .product(product)
+                        .build();
+
+                // ProductImage 엔티티 리스트에 추가
+                productImages.add(productImage);
+            }
+        }
+
+        product.setMember(persistedMember);
+        product.setProductImageList(productImages);
+        return productRepository.save(product);
     }
 
     public Product productView(Long id) {

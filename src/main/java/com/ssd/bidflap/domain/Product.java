@@ -4,7 +4,9 @@ import com.ssd.bidflap.domain.enums.AuctionStatus;
 import com.ssd.bidflap.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +25,7 @@ public class Product extends BaseEntity {
 
     private String description;
 
+    @ColumnDefault("0")
     private Integer likeCount;
 
     @Enumerated(EnumType.STRING)
@@ -44,5 +47,8 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductLike> productLikes;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> productImageList;
 
 }
