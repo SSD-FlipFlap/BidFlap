@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>경매 상세 페이지</title>
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+<div class="auction-detail-container">
+    <h1 th:text="${product.title}">상품 제목</h1>
+    <div class="product-image">
+<!--        <img th:src="@{${product.imageUrl}}" alt="상품 이미지" />-->
+    </div>
+    <div class="product-details">
+        <p>설명: <span th:text="${product.description}">상품 설명</span></p>
+        <p>현재 입찰가: <span th:text="${auction.highPrice}">0</span> 원</p>
+        <p>남은 시간: <span th:text="${auction.period}">0</span> 일</p>
+<!--        <p>마감 날짜: <span th:text="${#dates.format(auction.endDate, 'yyyy-MM-dd HH:mm')}">2024-05-30</span></p>-->
+        <p>좋아요 수: <span th:text="${product.likeCount}">0</span></p>
+    </div>
+    <div class="bid-container">
+        <form th:action="@{/bid}" method="post">
+            <input type="hidden" name="productId" th:value="${product.id}" />
+            <input type="number" name="bidAmount" placeholder="입찰 금액" required />
+            <button type="submit">입찰하기</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

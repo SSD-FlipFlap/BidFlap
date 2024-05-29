@@ -7,22 +7,68 @@
         document.addEventListener("DOMContentLoaded", function() {
             const participateButton = document.querySelector(".participate-button");
             const modalOverlay = document.querySelector(".modal-overlay");
-            const closeButton = document.querySelector(".close-btn");
-            const cancelButton = document.querySelector(".cancel-btn");
+            const closeButton = document.querySelectorAll(".close-btn");
+            const cancelButton = document.querySelectorAll(".cancel-btn");
+            const startAuctionButton = document.getElementById("start-auction-button");
+
+            // URL 경로에서 productId를 추출하는 함수
+            function getProductIdFromUrl() {
+                const pathParts = window.location.pathname.split('/');
+                return pathParts[pathParts.length - 1]; // URL의 마지막 부분을 반환
+            }
+
+            const productId = getProductIdFromUrl();
+            if (productId) {
+                startAuctionButton.setAttribute('data-product-id', productId);
+            }
 
             participateButton.addEventListener("click", function() {
                 modalOverlay.classList.add("show");
             });
 
-            closeButton.addEventListener("click", function() {
-                modalOverlay.classList.remove("show");
+            closeButton.forEach(button => {
+                button.addEventListener("click", function() {
+                    modalOverlay.classList.remove("show");
+                    document.querySelector(".modal-overlay-start-auction").classList.remove("show");
+                });
             });
 
-            cancelButton.addEventListener("click", function() {
-                modalOverlay.classList.remove("show");
+            cancelButton.forEach(button => {
+                button.addEventListener("click", function() {
+                    modalOverlay.classList.remove("show");
+                    document.querySelector(".modal-overlay-start-auction").classList.remove("show");
+                });
+            });
+
+            startAuctionButton.addEventListener("click", function() {
+                const modalOverlayStartAuction = document.querySelector(".modal-overlay-start-auction");
+                modalOverlayStartAuction.classList.add("show");
+            });
+
+            document.querySelector(".start-auction-submit").addEventListener("click", function() {
+                const duePeriod = document.getElementById("due-period").value;
+
+                if (duePeriod && productId) {
+                    fetch(`/start?id=${productId}&duePeriod=${duePeriod}`, {
+                        method: "POST"
+                    }).then(response => {
+                        if (response.ok) {
+                            alert("경매가 시작되었습니다!");
+                            location.reload();
+                        } else {
+                            response.text().then(text => {
+                                alert("경매 시작 실패: " + text);
+                            });
+                        }
+                    });
+                } else {
+                    alert("경매 기간을 입력하세요.");
+                }
             });
         });
     </script>
+
+
 
 </head>
 <body>
@@ -36,19 +82,18 @@
         </div>
         <div class="profile">
             <img class="profile-image" src="https://via.placeholder.com/110x110" />
-            <span class="profile-name">가을이 님</span>
+            <span class="profile-name" th:text="${nickname} + '님'"></span>
             <br/>
             <span class="profile-start-time">2024년 4월 11일 9시 경매 시작하셨습니다.</span>
-
         </div>
     </div>
     <div class="right-container">
         <div class="product-container">
-            <div class="hashtag">#웨어러블</div>
-            <div class="product-name">에어팟 프로맥스 실버</div>
+            <div class="hashtag" th:text="${product.category}"></div>
+            <div class="product-name" th:text="${product.title}" ></div>
             <div class="product-price">
                 <a class="highest-bid">최고입찰가</a>
-                <div class="price-value">300,000원</div>
+                <div class="price-value"  th:text="${product.price}">300,000원</div>
             </div>
             <div class="product-description">설명글: 에어팟프로맥스 실버 와 예쁘다~~~ 사고싶다 와앙아아ㅏ아아아아아아아아아ㅏ아아아설명설명 어쩌고저쩌고,, 긴 글 글자수 채우기,,, 으아아아아아아아아아아아아아아아 상품설명은 얼마나 길어야 좋은걸까? 모르겠ㄷ...경매품에 대한 수락 혹은 거부의사를 3일 안에 전달해야합니다.<br/><br/> 낙찰 수락 시 ,결제가 가능하며 이후 보증금이 반환됩니다.  <br/>
                 낙찰 수락 후 결제를 취소하는 경우, 보증금은 돌려받을 수 없습니다.  <br/>
@@ -64,16 +109,19 @@
         </div>
         <div class="like-unavailable">좋아요 불가능</div>
         <div class="auction-info">경매 시작 가능 | 10명 이상 좋아요</div>
+        <div class="start-auction-container">
+            <button id="start-auction-button">경매 시작</button>
+        </div>
     </div>
 </div>
+<!-- 경매 참여자 팝업 -->
 <div class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
             <h2>경매 참여자에게 알립니다.</h2>
-            <%--            <button class="close-btn">&times;</button>--%>
+            <button class="close-btn">&times;</button>
         </div>
         <div class="modal-body">
-            <!-- 팝업 내용 -->
             <p>경매 참여시 안전 거래를 위해 판매가 일정 금액 이상일 경우 가격의 5%,<br/> 미만일 경우 기본 금액의 보증금을 납부해야합니다. <br/><br/>
                 낙찰 시 경매품에 대한 수락 혹은 거부의사를 3일 안에 전달해야합니다.<br/><br/> 낙찰 수락 시 ,결제가 가능하며 이후 보증금이 반환됩니다.  <br/>
                 낙찰 수락 후 결제를 취소하는 경우, 보증금은 돌려받을 수 없습니다.  <br/>
@@ -83,6 +131,23 @@
             </label>
             <br/><br/>
             <button class="participate-button2">경매참여</button>
+        </div>
+    </div>
+</div>
+<!-- 경매 시작 팝업 -->
+<!-- 경매 시작 가능 = 좋아요 10개 되면, 버튼 보이게 하는 기능-->
+<div class="modal-overlay modal-overlay-start-auction">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>경매 시작하기</h2>
+            <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>경매 기간을 설정하세요 (일 단위):</p>
+            <input type="number" id="due-period" min="1" required>
+            <br/><br/>
+            <button class="start-auction-submit">경매 시작</button>
+            <button class="cancel-btn">취소</button>
         </div>
     </div>
 </div>
