@@ -15,4 +15,6 @@ public interface AfterServiceRepository extends JpaRepository<AfterService, Long
     AfterService save(AfterService afterService);
 
     Optional<AfterService> findById(long afterServiceId);
+
+    List<AfterService> findByDescriptionContaining(String keyword);
 }
