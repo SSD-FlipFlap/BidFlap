@@ -26,5 +26,4 @@ public class AfterService {
         this.description = description;
         this.price = Integer.valueOf(price);
     }
-
 }
