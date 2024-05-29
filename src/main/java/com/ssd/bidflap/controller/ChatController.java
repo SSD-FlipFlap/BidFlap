@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,9 @@ public class ChatController {
 
         //product
         Product product = productRepository.findById(productId);
+        if(product == null)
+            throw new NotFoundException("product를 찾을 수 없습니다.");
         modelAndView.addObject("product", product);
-        System.out.println(product.getTitle());
         /*
         //seller
         Optional<Member> optionalSeller = memberRepository.findByNickname(product.getMember().getNickname());
@@ -69,9 +71,10 @@ public class ChatController {
         Member sender = optionalMember.get();
         modelAndView.addObject("sender", sender);
         //chatRoom
-        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomByProductIdAndNickname(productId, nickname);
+        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomByProductIdAndNickname(product.getId(), sender.getNickname());
         if(optionalChatRoom.isEmpty()){
-            return createChatRoom(product, sender,"product", productId);    //rollback 필요
+            throw new NotFoundException("채팅방이 없습니다.");
+            //return createChatRoom(product, sender,"product", productId);    //rollback 필요
         }
         modelAndView.addObject("chatRoom", optionalChatRoom.get());
         //chatMessages
@@ -113,7 +116,8 @@ public class ChatController {
         //chatRoom
         Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomByAfterServiceIdAndNickname(afterServiceId, nickname);
         if(optionalChatRoom.isEmpty())
-            return createChatRoom(afterService, sender,"afterService", afterServiceId);    //생성
+            throw new NotFoundException("채팅방이 없습니다.");
+            //return createChatRoom(afterService, sender,"afterService", afterServiceId);    //생성
         modelAndView.addObject("chatRoom", optionalChatRoom.get());
 
         //chatRoomMessages
