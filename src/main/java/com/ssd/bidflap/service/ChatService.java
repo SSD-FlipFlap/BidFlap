@@ -5,13 +5,14 @@ import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Member;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatService {
     ChatRoom getChatRoomById(long chatRoomId);
 
-    ChatRoom getChatRoomByProductIdAndNickname(long productId, String nickname);
+    Optional<ChatRoom> getChatRoomByProductIdAndNickname(long productId, String nickname);
 
-    ChatRoom getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname);
+    Optional<ChatRoom> getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname);
 
     List<ChatMessage> getChatMessagesByChatRoomId(long chatRoomId);
 
