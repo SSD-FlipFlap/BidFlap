@@ -19,10 +19,10 @@
 	<div class="info-container">
 		<div id="product" class="info imgForm">
 			<img src="/resources/img/productImg.png"/>
-			<b>000,000원</b>
+			<b>${product.price}원</b>
 		</div>
 		<div class="info">
-			<h1>무선이어폰?</h1>
+			<h1>${product.title}</h1>
 			<p>판매자 거래내역 ${5}회</p>
 		</div>
 		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
@@ -43,7 +43,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script type="text/javascript">
 	var stompClient = null;
-	var loggedInMemberNickname = <%= loggedInMemberNickname %>;
+	var loggedInMemberNickname = "<%= loggedInMemberNickname %>";
 	if(loggedInMemberNickname == null)
 		loggedInMemberNickname = "rkfka";
 
@@ -54,7 +54,7 @@
 		{
 			message: "<c:out value="${chatMessage.message}"/>",
 			date: "<c:out value="${chatMessage.createdAt}"/>",
-			type: "<c:out value="${chatMessage.member.nickname != loggedInMemberNickname ? 'receiver' : 'sender'}"/>"
+			type: "<c:out value="${chatMessage.member.nickname != loggedInMemberNickname ? 'member1' : 'member2'}"/>"
 		},
 		</c:forEach>
 	];
@@ -94,10 +94,13 @@
 
 	function makeProfileDiv(parent, type) {
 		const profileImage = document.createElement('img');
-		if(type==='receiver')
-			profileImage.src = "/resources/img/Profile.png";
+		var imgSrc = "/resources/img/Profile.png";
+		if(type==='member1' && ${send.profile!=null})
+			profileImage.src = "${sender.profile}";
+		else if(type==='member2' && ${send.profile!=null})	//판매자 프로필로 변경 필요
+			profileImage.src = "${sender.profile}";
 		else
-			profileImage.src = "/resources/img/Profile.png";
+			profileImage.src = imgSrc;
 
 		profileImage.classList.add('chat-profile');
 		profileImage.classList.add(type);
@@ -135,12 +138,12 @@
 				currentDate = messageDate;
 			}
 
-			if (type === "sender")
+			if (type === "member2")
 				makeProfileDiv(messageSet, type);
 
 			makeMessageDiv(messageSet, message, type);
 
-			if (type === "receiver")
+			if (type === "member1")
 				makeProfileDiv(messageSet, type);
 
 			messageSet.classList.add(type);
@@ -186,9 +189,9 @@
 		const chatHistoryDiv = document.getElementById('chat-history');
 		const messageSet = document.createElement('div');
 		messageSet.classList.add('messageSet');
-		makeMessageDiv(messageSet, messageInput, "receiver");
-		makeProfileDiv(messageSet, "receiver");
-		messageSet.classList.add("receiver");
+		makeMessageDiv(messageSet, messageInput, "member1");
+		makeProfileDiv(messageSet, "member1");
+		messageSet.classList.add("member1");
 		chatHistoryDiv.appendChild(messageSet);
 		document.getElementById("message").value = "";
 

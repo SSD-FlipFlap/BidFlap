@@ -144,12 +144,12 @@ div#chat-scroll {
     min-width: 15px;
     border-radius: 5px;
 }
-.receiver {
+.member1 {
     margin-left: auto;
     margin-right: 5px;
 }
 
-.sender {
+.member2 {
     margin-right: auto;
     margin-left: 5px;
 }

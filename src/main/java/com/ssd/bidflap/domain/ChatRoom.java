@@ -25,6 +25,9 @@ public class ChatRoom {
     @JoinColumn(name = "after_service_id")
     private AfterService afterService;
 
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessageList = new ArrayList<>();
+
     public static ChatRoom createRoom() {
         return ChatRoom.builder()
                 .build();
