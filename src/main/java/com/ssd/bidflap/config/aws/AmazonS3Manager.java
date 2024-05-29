@@ -26,8 +26,10 @@ public class AmazonS3Manager {
         // 원본 파일 이름 가져오기
         String originalFilename = file.getOriginalFilename();
         // 확장자 가져오기
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
         // 업로드할 파일의 사이즈를 S3에 알려주기 위함
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
