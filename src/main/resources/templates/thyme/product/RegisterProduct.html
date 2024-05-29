@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <link rel="stylesheet" type="text/css"  href="/resources/css/product/RegisterProduct.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/resources/css/product/RegisterProduct.css}">
   <title>상품 정보</title>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
-<h1>상품정보</h1>
-<form action="/product/register" method="post" enctype="multipart/form-data">
-  <div id="productContainer"><br/>
-    <div id="productPreviewContainer">
-      <img id="productPreview" src="/resources/img/CameraImg.svg">
+<h1>상품정보</h1><br/>
+<form id="productForm" action="/product/register" method="post" enctype="multipart/form-data">
+  <div id="productAlign">
+    <!-- 파일 업로드 박스 -->
+    <div id="productContainer" onclick="document.getElementById('files').click()">
+      <img id="productFileInput" th:src="${'/resources/img/CameraImg.svg'}" alt="camera img">
+      <div><b>사진 등록</b></div>
+      <input type="file" id="files" accept="image/*" multiple onchange="checkFileCount(event)">
     </div>
-    <input type="file" id="product_img" name="product_filepath" accept="image/*" onchange="previewProfile(event)">
+    <!-- 이미지 미리보기 컨테이너 -->
+    <div id="productPreviewContainer">
+      <!-- 이미지 사진 -->
+    </div>
   </div>
 
   <div class="product-name">상품명
@@ -68,5 +74,89 @@
     <button type="submit">등록</button>
   </div>
 </form>
+
+<script>
+  let removedFiles = new Set(); // 삭제된 파일들을 저장하기 위한 Set
+
+  function checkFileCount(event) {
+    const files = event.target.files;
+    let totalFiles = document.querySelectorAll('#productPreviewContainer img').length + files.length;
+
+    if (totalFiles > 4) {
+      alert("사진은 최대 4장까지만 업로드할 수 있습니다.");
+      event.target.value = ""; // 파일 선택을 초기화
+    } else {
+      previewFiles(event);
+    }
+  }
+
+  function previewFiles(event) {
+    const previewContainer = document.getElementById('productPreviewContainer');
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '191px';
+        img.style.maxHeight = '191px';
+        img.onclick = function() {
+          removedFiles.add(file); // 삭제된 파일을 Set에 추가
+          previewContainer.removeChild(img);
+        }
+        previewContainer.appendChild(img);
+      }
+
+      reader.readAsDataURL(file); // 파일을 읽어서 데이터 URL로 변환하여 이미지로 표시
+    }
+  }
+
+  document.getElementById('productForm').onsubmit = function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const previewContainer = document.getElementById('productPreviewContainer');
+    const previewImages = previewContainer.querySelectorAll('img');
+
+    previewImages.forEach((img, index) => {
+      fetch(img.src)
+              .then(res => res.blob())
+              .then(blob => {
+                formData.append('files', blob, `image${index}.png`);
+              })
+              .then(() => {
+                if (index === previewImages.length - 1) {
+                  sendFormData(formData, form.action);
+                }
+              });
+    });
+
+    if (previewImages.length === 0) {
+      sendFormData(formData, form.action);
+    }
+  }
+
+  function sendFormData(formData, action) {
+    fetch(action, {
+      method: 'POST',
+      body: formData
+    }).then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        console.log('리다이렉트 실패');
+      }
+    })
+            .catch(error => {
+              console.error(error);
+            });
+  }
+</script>
+
 </body>
 </html>

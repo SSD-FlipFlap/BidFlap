@@ -5,30 +5,32 @@ import com.ssd.bidflap.repository.ChatMessageRepository;
 import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-    @Autowired private ChatMessageRepository chatMessageRepository;
-    @Autowired private ChatRoomRepository chatRoomRepository;
-    @Autowired private ProductRepository productRepository;
+    private final ChatMessageRepository chatMessageRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ProductRepository productRepository;
 
     public ChatRoom getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
     }
 
     @Override
-    public ChatRoom getChatRoomByProductIdAndNickname(long productId, String nickname) {
+    public Optional<ChatRoom> getChatRoomByProductIdAndNickname(long productId, String nickname) {
         return chatRoomRepository.findByProductIdAndNickname(productId, nickname);
     }
 
     @Override
-    public ChatRoom getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname) {
+    public Optional<ChatRoom> getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname) {
         return chatRoomRepository.findByAfterServiceIdAndNickname(afterServiceId, nickname);
     }
 
