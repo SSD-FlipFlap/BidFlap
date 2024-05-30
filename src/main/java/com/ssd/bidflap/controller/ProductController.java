@@ -63,8 +63,12 @@ public class ProductController {
 
     @PostMapping("/product/delete/{id}")
     public String productDelete(@PathVariable Long id, HttpSession session){
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
 
-        productService.productDelete(id);
+        productService.productDelete(id, nickname);
 
         return "redirect:/";
     }
