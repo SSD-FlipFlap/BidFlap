@@ -3,10 +3,7 @@ package com.ssd.bidflap.controller;
 import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.service.AsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -33,7 +30,7 @@ public class AfterServiceController {
 
         return mv;
     }
-    //조회
+    //상세조회
     @GetMapping("/asInfo/{afterServiceId}")
     public ModelAndView getAfterServiceInfo(@PathVariable long afterServiceId){
         ModelAndView mv = new ModelAndView();
@@ -43,6 +40,20 @@ public class AfterServiceController {
         mv.addObject("asInfo", optionalAfterService.get());
         mv.setViewName("thyme/afterService/asInfo");
 
+        return mv;
+    }
+    //검색
+    @GetMapping("/search")
+    public ModelAndView getsearchedAfterServiceList(@RequestParam String keyword){
+        ModelAndView mv = new ModelAndView();
+
+        List<AfterService> asList = asService.findByDescriptionContaining(keyword);
+        if(asList.isEmpty()) {
+            asList = new ArrayList<>();
+        }
+
+        mv.addObject("asList", asList);
+        mv.setViewName("thyme/afterService/asList");
         return mv;
     }
 }

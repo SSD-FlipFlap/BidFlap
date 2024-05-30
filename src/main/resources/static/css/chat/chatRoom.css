@@ -143,6 +143,8 @@ div#chat-scroll {
     width:auto;
     min-width: 15px;
     border-radius: 5px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 .member1 {
     margin-left: auto;

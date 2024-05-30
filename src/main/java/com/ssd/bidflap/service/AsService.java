@@ -20,4 +20,8 @@ public class AsService {
     public Optional<AfterService> findOptionalAfterService(long afterServiceId){
         return afterServiceRepository.findById(afterServiceId);
     }
+
+    public List<AfterService> findByDescriptionContaining(String keyword) {
+        return afterServiceRepository.findByDescriptionContaining(keyword);
+    }
 }
