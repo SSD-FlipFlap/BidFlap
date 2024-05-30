@@ -77,18 +77,23 @@ public class ProductController {
     }
 
     @PostMapping("product/update/{id}")
-    public String productUpdate(@PathVariable Long id, Product product, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws Exception{
+    public String productUpdate(@PathVariable Long id, Product updatedProduct, HttpSession session,
+                                @RequestParam(value = "files", required = false) List<MultipartFile> files,
+                                @RequestParam(value = "removedExistingImages", required = false) List<String> removedImageUrls) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        model.addAttribute("nickname", nickname);
 
-        Product productTemp = productService.productView(id);
-        productTemp.setTitle(product.getTitle());
-        productTemp.setDescription(product.getDescription());
-        productTemp.setPrice(product.getPrice());
-        productTemp.setCategory(product.getCategory());
+        // 파일 개수 출력
+        System.out.println("**** files" + files.size());
+        // 삭제될 이미지의 URL 개수 출력
+        System.out.println("**** removed " + (removedImageUrls != null ? removedImageUrls.size() : 0));
 
-        // TODO 수정된 registerProduct로 변경하기
-//        productService.registerProduct(productTemp, nickname);
+        // 파일 이름 출력
+        if (files != null) {
+            for (MultipartFile file : files) {
+                System.out.println("File name: " + file.getOriginalFilename());
+            }
+        }
+        productService.updateProduct(id, updatedProduct, files, removedImageUrls, nickname);
 
         return "redirect:/product/view?id=" + id;
     }
