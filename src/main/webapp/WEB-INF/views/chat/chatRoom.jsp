@@ -23,7 +23,7 @@
 		</div>
 		<div class="info">
 			<h1>${product.title}</h1>
-			<p>판매자 거래내역 ${5}회</p>
+			<p>${seller.nickname} 거래내역 ${5}회</p>
 		</div>
 		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 	</div>
@@ -155,7 +155,6 @@
 		chatDiv.scrollTop = chatDiv.scrollHeight;
 	}
 
-	//window.onload = displayChatHistory;
 	window.onload = function() {
 		connect();
 	};
@@ -165,7 +164,6 @@
 	});
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
-		//var member = { id: 61, account: "00000", bank:"신한", email:"river2523@naver.com", member_role:"USER", nickname:"rkfka",password:"$2a$10$y/k.htfvre3tkUnsSTOEd.DRS9G/STn5TCLkyijIeEF8nGEYl11nq", profile:null };
 		var member = {
 			id: ${sender.id},
 			account: "${sender.account}",
