@@ -1,30 +1,22 @@
 package com.ssd.bidflap.controller;
 
-import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.dto.MemberDto;
-import com.ssd.bidflap.repository.ProductRepository;
-import com.ssd.bidflap.service.MemberService;
 import com.ssd.bidflap.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class ProductController {
-    @Autowired
-    private ProductService productService;
 
-    @Autowired
-    private MemberService memberService;
+    private final ProductService productService;
 
     @GetMapping("/product/register")
     public String productRegisterForm(HttpSession session, Model model){
@@ -33,19 +25,17 @@ public class ProductController {
     }
 
     @PostMapping("/product/register")
-    public String productRegisterPro (HttpSession session, Product product, RedirectAttributes redirectAttributes) throws Exception{
+    public String productRegisterPro (HttpSession session, Product product, @RequestParam("files") List<MultipartFile> files,
+                                      RedirectAttributes redirectAttributes) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로
         }
 
-        productService.registerProduct(product, nickname);
+        Product newProduct = productService.registerProduct(product, files, nickname);
 
-        if (product.getLikeCount() == null) {
-            product.setLikeCount(0);
-        }
         // 상품 등록하고 상품의 ID를 가져와서 상세 페이지로
-        Long productId = productService.getProductId(product);
+        Long productId = newProduct.getId();
         redirectAttributes.addAttribute("id", productId);
         return "redirect:/product/view";
     }
@@ -97,7 +87,8 @@ public class ProductController {
         productTemp.setPrice(product.getPrice());
         productTemp.setCategory(product.getCategory());
 
-        productService.registerProduct(productTemp, nickname);
+        // TODO 수정된 registerProduct로 변경하기
+//        productService.registerProduct(productTemp, nickname);
 
         return "redirect:/product/view?id=" + id;
     }
