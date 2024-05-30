@@ -82,17 +82,6 @@ public class ProductController {
                                 @RequestParam(value = "removedExistingImages", required = false) List<String> removedImageUrls) {
         String nickname = (String) session.getAttribute("loggedInMember");
 
-        // 파일 개수 출력
-        System.out.println("**** files" + files.size());
-        // 삭제될 이미지의 URL 개수 출력
-        System.out.println("**** removed " + (removedImageUrls != null ? removedImageUrls.size() : 0));
-
-        // 파일 이름 출력
-        if (files != null) {
-            for (MultipartFile file : files) {
-                System.out.println("File name: " + file.getOriginalFilename());
-            }
-        }
         productService.updateProduct(id, updatedProduct, files, removedImageUrls, nickname);
 
         return "redirect:/product/view?id=" + id;

@@ -86,7 +86,6 @@
 
     function checkFileCount(event) {
         const files = event.target.files;
-        console.log("선택된 파일: ", files);
         let totalFiles = document.querySelectorAll('#productPreviewContainer img').length + files.length;
 
         if (totalFiles > 4) {
@@ -124,16 +123,9 @@
 
     function removeExistingImage(element) {
         const url = element.getAttribute('src');
-        const previewContainer = document.getElementById('productPreviewContainer');
-        const imgs = previewContainer.querySelectorAll('img');
-
-        console.log("삭제 함수 진입");
-        console.log("url ", url);
-        console.log("imgs ", imgs.values());
 
         // URL에 해당하는 이미지를 찾아서 삭제
         if (element.src === url) {
-            console.log("진짜 삭제, ", url);
             removedExistingImages.add(element.src); // 삭제된 기존 이미지를 Set에 추가
             element.parentNode.removeChild(element);
         }
@@ -165,13 +157,6 @@
         selectedFiles.forEach((file) => {
             formData.append('files', file);
         });
-
-        const files = document.getElementById('files').files; // 선택된 파일들을 가져옴
-        console.log("제출 전 선택된 파일 이름: ");
-        for (let i = 0; i < files.length; i++) {
-            console.log(files[i].name); // 파일의 이름 출력
-        }
-        console.log("제출 전 삭제된 기존 이미지 URL: ", Array.from(removedExistingImages)); // 삭제된 기존 이미지 URL 출력
 
         // 서버로 전송하는 함수 호출
         sendFormData(formData, form.action);
