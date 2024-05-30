@@ -45,8 +45,30 @@ public class ProductService {
         return productRepository.findById(id).orElse(null); // 변경: Optional.get() 대신 Optional.orElse(null) 사용
     }
 
-    public void productDelete(Long id) {
-        productRepository.deleteById(id);
+    public void productDelete(Long id, String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 상품을 찾을 수 없습니다.");
+        }
+        Product product = optionalProduct.get();
+
+        // 글 작성자인지 확인
+        if (!(optionalMember.get().equals(product.getMember()))) {
+            throw new IllegalStateException("본인이 작성한 글만 삭제할 수 있습니다.");
+        }
+
+        // S3에서 이미지 삭제
+        List<String> imageUrls = product.getProductImageList().stream()
+                .map(ProductImage::getUrl)
+                .collect(Collectors.toList());
+        deleteProductImagesFromS3(imageUrls);
+
+        productRepository.deleteById(product.getId());
     }
 
 
