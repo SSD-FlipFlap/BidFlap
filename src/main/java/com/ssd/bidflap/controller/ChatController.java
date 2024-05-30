@@ -99,7 +99,7 @@ public class ChatController {
         if(optionalAfterService.isEmpty()){
             throw new NotFoundException("afterService가 없습니다.");
         }
-        modelAndView.addObject("afterService", optionalAfterService.get());
+        modelAndView.addObject("product", optionalAfterService.get());
         //seller
         Optional<Member> optionalSeller = memberRepository.findByNickname(optionalAfterService.get().getMember().getNickname());
         if(optionalSeller.isEmpty()){
@@ -125,7 +125,7 @@ public class ChatController {
         List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
         modelAndView.addObject("chatMessages", chatMessages);
 
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.setViewName("chat/asChatRoom");
 
         //modelAndView.setViewName("thyme/chat/chatRoom");
 
@@ -160,7 +160,7 @@ public class ChatController {
         modelAndView.addObject("seller", seller);
         modelAndView.addObject("chatRoomMessages", chatRoomMessages);
         modelAndView.addObject("message", "Chat room created successfully");
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.setViewName("chat/asChatRoom");
 
         return modelAndView;
     }

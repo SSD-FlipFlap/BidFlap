@@ -1,6 +1,7 @@
 package com.ssd.bidflap.service.impl;
 
 import com.ssd.bidflap.domain.*;
+import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.ChatMessageRepository;
 import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.ProductRepository;
@@ -19,6 +20,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ProductRepository productRepository;
+    private final AfterServiceRepository afterServiceRepository;
 
     public ChatRoom getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -50,18 +52,12 @@ public class ChatServiceImpl implements ChatService {
                     .product(product)
                     .build();
             return chatRoomRepository.save(chatRoom);
-        }/*else {
-            /*
-            AfterService afterService = afterServiceRepository.findById(afterServiceId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid after service ID: " + afterServiceId));
-            ChatRoom chatRoom = ChatRoom.builder()
-                    .afterService(afterService)
-                    .build();
-            return chatRoomRepository.save(chatRoom);
-
-
-        }*/
-        return null;
+        }
+        Optional<AfterService> optionalAfterService = afterServiceRepository.findById(id);
+        ChatRoom chatRoom = ChatRoom.builder()
+                .afterService(optionalAfterService.get())
+                .build();
+        return chatRoomRepository.save(chatRoom);
     }
 
     @Override
