@@ -81,7 +81,9 @@ public class ProductController {
                                 @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                 @RequestParam(value = "removedExistingImages", required = false) List<String> removedImageUrls) {
         String nickname = (String) session.getAttribute("loggedInMember");
-
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
         productService.updateProduct(id, updatedProduct, files, removedImageUrls, nickname);
 
         return "redirect:/product/view?id=" + id;

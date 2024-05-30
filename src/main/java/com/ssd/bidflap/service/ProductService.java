@@ -104,9 +104,19 @@ public class ProductService {
     }
 
     public void updateProduct(Long id, Product updatedProduct, List<MultipartFile> files, List<String> removedImageUrls, String nickname) {
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
         Product productTemp = productView(id);
         if (productTemp == null) {
             throw new IllegalArgumentException("해당하는 상품을 찾을 수 없습니다.");
+        }
+
+        // 글 작성자인지 확인
+        if (!(optionalMember.get().equals(productTemp.getMember()))) {
+            throw new IllegalStateException("본인이 작성한 글만 수정할 수 있습니다.");
         }
 
         // 정보 업데이트
