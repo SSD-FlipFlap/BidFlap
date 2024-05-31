@@ -29,7 +29,7 @@ public class Member {
     private String account; // 계좌 번호
 
     @Enumerated(EnumType.STRING)
-    private MemberRole memberRole;
+    private MemberRole memberRole = MemberRole.USER;
 
     private String profile;
 

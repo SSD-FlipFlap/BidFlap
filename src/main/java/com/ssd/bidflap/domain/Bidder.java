@@ -18,7 +18,7 @@ public class Bidder extends BaseEntity {
     private Integer price;
 
     @Enumerated(EnumType.STRING)
-    private AuctionCancelStatus cancelStatus;
+    private AuctionCancelStatus cancelStatus = AuctionCancelStatus.NOT_CANCEL;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

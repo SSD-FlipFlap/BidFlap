@@ -30,7 +30,7 @@ public class Product extends BaseEntity {
     private Integer likeCount;
 
     @Enumerated(EnumType.STRING)
-    private AuctionStatus status;
+    private AuctionStatus status = AuctionStatus.NOT_STARTED;
 
     private Integer price;
 
