@@ -8,6 +8,7 @@ import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -167,13 +168,10 @@ public class ChatController {
 
     //채팅방 삭제
     @PostMapping("/deleteChatRoom/{chatRoomId}")
-    public ModelAndView deleteChatRoom(@PathVariable long chatRoomId) {
-        ModelAndView modelAndView = new ModelAndView();
+    @ResponseBody
+    public ResponseEntity<String> deleteChatRoom(@PathVariable Long chatRoomId) {
         chatService.deleteChatRoom(chatRoomId);
-        modelAndView.addObject("message", "Chat room deleted successfully");
-
-        modelAndView.setViewName("redirect:/chat/chatRooms");
-        return modelAndView;
+        return ResponseEntity.ok("Chat room deleted successfully");
     }
 
     @MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략

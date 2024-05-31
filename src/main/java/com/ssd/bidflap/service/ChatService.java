@@ -18,7 +18,7 @@ public interface ChatService {
 
     ChatRoom insertChatRoom(String type, long id);
 
-    void deleteChatRoom(long chatRoomId);
+    void deleteChatRoom(Long chatRoomId);
 
     ChatMessage insertMessage(ChatMessage message);
 

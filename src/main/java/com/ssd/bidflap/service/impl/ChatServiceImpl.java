@@ -61,7 +61,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void deleteChatRoom(long chatRoomId) {
+    public void deleteChatRoom(Long chatRoomId) {
         chatRoomRepository.deleteById(chatRoomId);
     }
 
