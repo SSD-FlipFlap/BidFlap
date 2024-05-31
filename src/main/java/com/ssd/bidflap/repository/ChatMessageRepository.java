@@ -1,6 +1,7 @@
 package com.ssd.bidflap.repository;
 
 import com.ssd.bidflap.domain.ChatMessage;
+import com.ssd.bidflap.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     public ChatMessage save(ChatMessage chatMessage);
 
     public void deleteByChatRoomId(int chatRoomId);
+
+    List<ChatMessage> findByMember(Member member);
 }

@@ -29,19 +29,19 @@ public class ChatController {
     private final MemberRepository memberRepository;
     private final AfterServiceRepository asRepository;
 
-    //채팅방리스트 - 마이페이지
-    @GetMapping("/chatRooms")
-    public ModelAndView getChatRoomList(HttpSession session) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        String nickname = (String) session.getAttribute("loggedInMember");
-
-        List<ChatRoom> chatRooms = chatService.getChatRoomListByNickname(nickname);
-        modelAndView.addObject("chatRooms", chatRooms);
-
-        modelAndView.setViewName("chat/chatRoomList");
-        return modelAndView;
-    }
+//    //채팅방리스트 - 마이페이지 -> MyPageController에서 처리
+//    @GetMapping("/chatRooms")
+//    public ModelAndView getChatRoomList(HttpSession session) {
+//        ModelAndView modelAndView = new ModelAndView();
+//
+//        String nickname = (String) session.getAttribute("loggedInMember");
+//
+//        List<ChatRoom> chatRooms = chatService.getChatRoomListByNickname(nickname);
+//        modelAndView.addObject("chatRooms", chatRooms);
+//
+//        modelAndView.setViewName("chat/chatRoomList");
+//        return modelAndView;
+//    }
     //입장 - product
     @GetMapping("/chatRoom/product/{productId}")
     public ModelAndView getChatRoomById(@PathVariable long productId, HttpSession session) {
