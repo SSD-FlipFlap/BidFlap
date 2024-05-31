@@ -217,4 +217,11 @@ public class ProductService {
         AuctionStatus auctionStatus = AuctionStatus.valueOf(status.trim().toUpperCase());
         return productRepository.findByMemberAndStatus(member, auctionStatus);
     }
+
+    public List<ProductLike> getProductLikeByMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return productLikeRepository.findByMember(member);
+    }
 }

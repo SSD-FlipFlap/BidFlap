@@ -26,79 +26,25 @@
 
             <div class="product_images">
                 <div class="image_row">
-                    <!-- 이미지 1 -->
-                    <div class="image_container">
+
+                    <div class="image_container" th:each="like : ${likeList}">
                         <div class="image_and_heart_container">
                             <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                            <a th:href="@{/product/view(id=${like.product.id})}">
+                                <img th:if="${#lists.size(like.product.productImageList) > 0}"
+                                     th:src="${like.product.productImageList.get(0).url}"
+                                     class="product_img" alt="Product Image">
+                                <img th:if="${#lists.size(like.product.productImageList) == 0}"
+                                     th:src="@{/resources/img/product_example.png}"
+                                     class="product_img" alt="Default Image">
+                            </a>
                             <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
                             <div class="heart"></div>
                         </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 2 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 3 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 4 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
+                        <span th:text="${like.product.title}" th:href="@{/product/view(id=${like.product.id})}">판매글 제목</span>
+                        <span th:text="${like.product.price}" th:href="@{/product/view(id=${like.product.id})}">가격</span>
                     </div>
 
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
                 </div>
             </div>
 

@@ -2,6 +2,7 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
+import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.MemberService;
@@ -101,6 +102,9 @@ public class MyPageController {
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+        model.addAttribute("likeList", productLikeList);
 
         return "thyme/member/myLike";
     }
