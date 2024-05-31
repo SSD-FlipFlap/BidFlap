@@ -83,7 +83,7 @@
                     <div class="chat-image clickable">
                         <a th:href="@{/product/view(id=${chatRoom.product.id})}">
                             <img th:if="${#lists.size(chatRoom.product.productImageList) > 0}"
-                                 th:src="${chatRoom.product.productImageList[0]}"
+                                 th:src="${chatRoom.product.productImageList.get(0).url}"
                                  alt="Profile Image">
                             <img th:if="${#lists.size(chatRoom.product.productImageList) == 0}"
                                  th:src="@{/resources/img/product_example.png}"
