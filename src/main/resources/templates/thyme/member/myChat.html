@@ -51,6 +51,9 @@
         .clickable {
             cursor: pointer;
         }
+        .active {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -72,8 +75,8 @@
             <div><h2>채팅 내역</h2></div><br/>
             <div>
                 <ul>
-                    <li><a href="#" th:href="@{/members/my-page/chat/product}">상품</a></li><li>|</li>
-                    <li><a href="#" th:href="@{/members/my-page/chat/as}">AS</a></li><li></li>
+                    <li><a href="#" class="status" th:href="@{/members/my-page/chat/product}">상품</a></li><li>|</li>
+                    <li><a href="#" class="status" th:href="@{/members/my-page/chat/as}">AS</a></li><li></li>
                 </ul>
             </div>
 
@@ -153,5 +156,19 @@
         </section>
     </main>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentPagePath = window.location.pathname;
+        const menuLinks = document.querySelectorAll('.status');
+
+        menuLinks.forEach(link => {
+            const linkPath = new URL(link.href).pathname;
+
+            if (linkPath === currentPagePath) {
+                link.classList.add('active');
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -5,6 +5,11 @@
     <title>MyPage</title>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/editProfile.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myPage.css}">
+    <style>
+        .active {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
@@ -26,10 +31,10 @@
                 <h2>판매 내역</h2><br/>
                 <div>
                     <ul>
-                        <li><a href="#" th:href="@{/members/my-page/product}">전체</a></li><li>|</li>
-                        <li><a href="#" th:href="@{/members/my-page/product(status='not_started')}">판매중</a></li><li>|</li>
-                        <li><a href="#" th:href="@{/members/my-page/product(status='started')}">경매중</a></li><li>|</li>
-                        <li><a href="#" th:href="@{/members/my-page/product(status='sold')}">판매완료</a></li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/product}">전체</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/product(status='not_started')}">판매중</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/product(status='started')}">경매중</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/product(status='sold')}">판매완료</a></li>
                     </ul>
                 </div>
             </div><br/>
@@ -51,8 +56,8 @@
                             <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
                             <div class="heart"></div>
                         </div>
-                        <span th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</span>
-                        <span th:text="${product.price}" th:href="@{/product/view(id=${product.id})}">가격</span>
+                        <a th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</a>
+                        <a th:text="${product.price}" th:href="@{/product/view(id=${product.id})}">가격</a>
                     </div>
 
                 </div>
@@ -61,5 +66,26 @@
         </section>
     </main>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // 현재 URL에서 상태 파라미터 값을 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const menuLinks = document.querySelectorAll('.status');
+
+        menuLinks.forEach(link => {
+            const linkUrlParams = new URLSearchParams(link.search);
+            const linkStatus = linkUrlParams.get('status');
+
+            if (linkStatus === status) {
+                link.classList.add('active');
+            }
+        });
+
+        if (!status) {
+            menuLinks[0].classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>
