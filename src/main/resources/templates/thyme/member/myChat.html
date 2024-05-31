@@ -58,24 +58,26 @@
             <div class="chat-history" th:if="${not #lists.isEmpty(productChatRooms)}">
                 <div class="chat-item" th:each="chatRoom : ${productChatRooms}">
                     <div class="chat-image clickable">
-                        <img th:if="${#lists.size(chatRoom.product.productImageList) > 0}"
-                             th:src="${chatRoom.product.productImageList[0]}"
-                             th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}" alt="Product Image">
-                        <img th:if="${#lists.size(chatRoom.product.productImageList) == 0}"
-                             th:src="@{/resources/img/product_example.png}"
-                             th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}" alt="Default Image">
+                        <a th:href="@{/product/view(id=${chatRoom.product.id})}">
+                            <img th:if="${#lists.size(chatRoom.product.productImageList) > 0}"
+                                 th:src="${chatRoom.product.productImageList[0]}"
+                                 alt="Profile Image">
+                            <img th:if="${#lists.size(chatRoom.product.productImageList) == 0}"
+                                 th:src="@{/resources/img/product_example.png}"
+                                 alt="Default Image">
+                        </a>
                     </div>
 
                     <div class="chat-info">
-                        <span th:text="${chatRoom.product.title}" class="chat-title clickable"
-                              th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}">무선 이어폰(title)</span>
+                        <a th:text="${chatRoom.product.title}" class="chat-title clickable"
+                              th:href="@{/product/view(id=${chatRoom.product.id})}">무선 이어폰(title)</a>
                         <div class="chat-details">
                             <span th:text="${chatRoom.product.member.nickname}" class="chat-seller">OOO(판매자)</span>
 
-                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
-                                  th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}"
-                                  class="chat-last-message clickable">마지막 채팅 메시지</span>
+                                  th:href="@{/chat/chatRoom/product/{productId}(productId=${chatRoom.product.id})}"
+                                  class="chat-last-message clickable">마지막 채팅 메시지</a>
 
                             <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"
@@ -91,22 +93,25 @@
             <div class="chat-history" th:if="${not #lists.isEmpty(asChatRooms)}">
                 <div class="chat-item" th:each="chatRoom : ${asChatRooms}">
                     <div class="chat-image clickable">
-                        <img th:if="${#lists.size(chatRoom.afterService.member.profile) > 0}"
-                             th:src="${chatRoom.afterService.member.profile}"
-                             th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}" alt="Profile Image">
-                        <img th:if="${#lists.size(chatRoom.afterService.member.profile) == 0}"
-                             th:src="@{/resources/img/product_example.png}"
-                             th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}" alt="Default Image">
+                        <a th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${chatRoom.afterService.id})}">
+                            <img th:if="${#lists.size(chatRoom.afterService.member.profile) > 0}"
+                                 th:src="${chatRoom.afterService.member.profile}"
+                                 alt="Profile Image">
+                            <img th:if="${#lists.size(chatRoom.afterService.member.profile) == 0}"
+                                 th:src="@{/resources/img/product_example.png}"
+                                 alt="Default Image">
+                        </a>
                     </div>
+
 
                     <div class="chat-info">
                         <div class="chat-details">
                             <span th:text="${chatRoom.afterService.member.nickname}" class="chat-seller">OOO(판매자)</span>
 
-                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
-                                  th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}"
-                                  class="chat-last-message clickable">마지막 채팅 메시지</span>
+                                  th:href="@{/chat/chatRoom/afterService/{afterServiceId}(afterServiceId=${chatRoom.afterService.id})}"
+                                  class="chat-last-message clickable">마지막 채팅 메시지</a>
 
                             <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"
