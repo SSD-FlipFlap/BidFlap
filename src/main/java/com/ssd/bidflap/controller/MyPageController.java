@@ -1,16 +1,20 @@
 package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.ChatRoom;
+import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.MemberService;
+import com.ssd.bidflap.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -20,6 +24,7 @@ public class MyPageController {
 
     private final MemberService memberService;
     private final ChatService chatService;
+    private final ProductService productService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -48,11 +53,21 @@ public class MyPageController {
 
     // 판매 내역
     @GetMapping("/my-page/product")
-    public String myProduct(HttpSession session, Model model) {
+    public String myProduct(@RequestParam(required = false) String status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<Product> productList = new ArrayList<>();
+        if (status != null) {
+            productList = productService.getProductByMemberAndStatus(nickname, status);
+        }
+        else {
+            productList = productService.getProductByMember(nickname);    // 전체
+        }
+
+        model.addAttribute("productList", productList);
 
         return "thyme/member/myProduct";
     }
