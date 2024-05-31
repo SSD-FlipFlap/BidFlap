@@ -6,6 +6,29 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/editProfile.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myPage.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myChat.css}">
+    <script>
+        function formatTime(dateTimeString) {
+            const dateTime = new Date(dateTimeString);
+            const hours = dateTime.getHours();
+            const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+            const period = hours >= 12 ? '오후' : '오전';
+            const formattedHours = hours % 12 || 12;
+            return `${period} ${formattedHours}:${minutes}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.chat-time').forEach(element => {
+                const dateTimeString = element.getAttribute('data-date-time');
+                element.textContent = formatTime(dateTimeString);
+            });
+        });
+    </script>
+
+    <style>
+        .clickable {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
@@ -19,58 +42,76 @@
                 <span><a href="#" th:href="@{/members/my-page/purchase}">구매 내역</a></span>
                 <span><a href="#" th:href="@{/members/my-page/auction}">경매 내역</a></span>
                 <span><a href="#" th:href="@{/members/my-page/like}">좋아요한 글</a></span>
-                <span><a href="#" th:href="@{/members/my-page/chat}">채팅 내역</a></span>
+                <span><a href="#" th:href="@{/members/my-page/chat/product}">채팅 내역</a></span>
             </nav>
         </aside>
         <section class="main-section">
             <div><h2>채팅 내역</h2></div><br/>
+            <div>
+                <ul>
+                    <li><a href="#" th:href="@{/members/my-page/chat/product}">상품</a></li><li>|</li>
+                    <li><a href="#" th:href="@{/members/my-page/chat/as}">AS</a></li><li></li>
+                </ul>
+            </div>
 
-            <div class="chat-history">
-                <div class="chat-item">
-                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
+            <!-- 상품 채팅 -->
+            <div class="chat-history" th:if="${not #lists.isEmpty(productChatRooms)}">
+                <div class="chat-item" th:each="chatRoom : ${productChatRooms}">
+                    <div class="chat-image clickable">
+                        <img th:if="${#lists.size(chatRoom.product.productImageList) > 0}"
+                             th:src="${chatRoom.product.productImageList[0]}"
+                             th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}" alt="Product Image">
+                        <img th:if="${#lists.size(chatRoom.product.productImageList) == 0}"
+                             th:src="@{/resources/img/product_example.png}"
+                             th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}" alt="Default Image">
+                    </div>
+
                     <div class="chat-info">
-                        <span class="chat-title">무선 이어폰(title)</span>
+                        <span th:text="${chatRoom.product.title}" class="chat-title clickable"
+                              th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}">무선 이어폰(title)</span>
                         <div class="chat-details">
-                            <span class="chat-seller">OOO(판매자)</span>
-                            <span class="chat-last-message">마지막 채팅 메시지, 시간 출력</span>
-                            <span class="chat-time">오후 5:43</span>
+                            <span th:text="${chatRoom.product.member.nickname}" class="chat-seller">OOO(판매자)</span>
+
+                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                                  th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
+                                  th:href="@{/chatRoom/product/{productId}(id=${chatRoom.product.id})}"
+                                  class="chat-last-message clickable">마지막 채팅 메시지</span>
+
+                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                                  th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"
+                                  class="chat-time">오전 hh:mm</span>
+
                             <span class="chat-delete">x</span>
                         </div>
                     </div>
                 </div>
-                <div class="chat-item">
-                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
-                    <div class="chat-info">
-                        <span class="chat-title">무선 이어폰(title)</span>
-                        <div class="chat-details">
-                            <span class="chat-seller">OOO(판매자)</span>
-                            <span class="chat-last-message">안녕하세요~</span>
-                            <span class="chat-time">오후 6:00</span>
-                            <span class="chat-delete">x</span>
-                        </div>
+            </div>
+
+            <!-- as 채팅 -->
+            <div class="chat-history" th:if="${not #lists.isEmpty(asChatRooms)}">
+                <div class="chat-item" th:each="chatRoom : ${asChatRooms}">
+                    <div class="chat-image clickable">
+                        <img th:if="${#lists.size(chatRoom.afterService.member.profile) > 0}"
+                             th:src="${chatRoom.afterService.member.profile}"
+                             th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}" alt="Profile Image">
+                        <img th:if="${#lists.size(chatRoom.afterService.member.profile) == 0}"
+                             th:src="@{/resources/img/product_example.png}"
+                             th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}" alt="Default Image">
                     </div>
-                </div>
-                <div class="chat-item">
-                    <img th:src="@{/resources/img/product_example.png}" alt="무선 이어폰">
+
                     <div class="chat-info">
-                        <span class="chat-title">무선 이어폰(title)</span>
                         <div class="chat-details">
-                            <span class="chat-seller">OOO(판매자)</span>
-                            <span class="chat-last-message">상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??!
-                                상품 상세 사진 볼 수 있을까요??! 상품 상세 사진 볼 수 있을까요??!</span>
-                            <span class="chat-time">오전 11:30</span>
-                            <span class="chat-delete">x</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="chat-item">
-                    <img th:src="@{/resources/img/productImg.png}" alt="무선 이어폰">
-                    <div class="chat-info">
-                        <span class="chat-title">무선 이어폰(title)</span>
-                        <div class="chat-details">
-                            <span class="chat-seller">OOO(판매자)</span>
-                            <span class="chat-last-message">감사합니다!</span>
-                            <span class="chat-time">오후 5:43</span>
+                            <span th:text="${chatRoom.afterService.member.nickname}" class="chat-seller">OOO(판매자)</span>
+
+                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                                  th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
+                                  th:href="@{/chatRoom/afterService/{afterServiceId}(id=${chatRoom.afterService.id})}"
+                                  class="chat-last-message clickable">마지막 채팅 메시지</span>
+
+                            <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
+                                  th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"
+                                  class="chat-time">오전 hh:mm</span>
+
                             <span class="chat-delete">x</span>
                         </div>
                     </div>
