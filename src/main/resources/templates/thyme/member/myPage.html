@@ -38,19 +38,19 @@
                 <div class="stats">
                     <div class="stat-item">
                         <span>전체</span>
-                        <span><a href="#">4</a></span>
+                        <span><a href="#" th:href="@{/members/my-page/product}">4</a></span>
                     </div>
                     <div class="stat-item">
                         <span>판매중</span>
-                        <span><a href="#">2</a></span>
+                        <span><a href="#" th:href="@{/members/my-page/product(status='not_started')}">2</a></span>
                     </div>
                     <div class="stat-item">
                         <span>경매중</span>
-                        <span><a href="#">1</a></span>
+                        <span><a href="#" th:href="@{/members/my-page/product(status='started')}">1</a></span>
                     </div>
                     <div class="stat-item">
                         <span>판매완료</span>
-                        <span><a href="#">1</a></span>
+                        <span><a href="#" th:href="@{/members/my-page/product(status='sold')}">1</a></span>
                     </div>
                 </div>
             </div>

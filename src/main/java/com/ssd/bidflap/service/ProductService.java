@@ -2,6 +2,7 @@ package com.ssd.bidflap.service;
 
 import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
+import com.ssd.bidflap.domain.enums.AuctionStatus;
 import com.ssd.bidflap.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,12 +33,12 @@ public class ProductService {
         if (optionalMember.isEmpty()) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        
+
         Member persistedMember = optionalMember.get();
         product.setMember(persistedMember);
-        
+
         registerProductImages(product, files);  // 이미지 저장
-        
+
         return productRepository.save(product);
     }
 
@@ -168,7 +169,7 @@ public class ProductService {
             s3Manager.deleteFile(image);
         }
     }
-    
+
     // 이미지 저장
     private void registerProductImages(Product product, List<MultipartFile> files) {
         if (files != null && !files.isEmpty()) {
@@ -202,4 +203,18 @@ public class ProductService {
         }
     }
 
+    public List<Product> getProductByMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return productRepository.findByMember(member);
+    }
+
+    public List<Product> getProductByMemberAndStatus(String nickname, String status) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        AuctionStatus auctionStatus = AuctionStatus.valueOf(status.trim().toUpperCase());
+        return productRepository.findByMemberAndStatus(member, auctionStatus);
+    }
 }
