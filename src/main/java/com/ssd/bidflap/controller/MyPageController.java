@@ -1,6 +1,8 @@
 package com.ssd.bidflap.controller;
 
+import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -9,12 +11,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MyPageController {
 
     private final MemberService memberService;
+    private final ChatService chatService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -85,13 +90,30 @@ public class MyPageController {
         return "thyme/member/myLike";
     }
 
-    // 채팅 내역
-    @GetMapping("/my-page/chat")
-    public String myChat(HttpSession session, Model model) {
+    // 판매글 채팅 내역
+    @GetMapping("/my-page/chat/product")
+    public String myProductChat(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<ChatRoom> chatRooms = chatService.getProductChatRoomListByNickname(nickname);
+        model.addAttribute("productChatRooms", chatRooms);
+
+        return "thyme/member/myChat";
+    }
+
+    // as 채팅 내역
+    @GetMapping("/my-page/chat/as")
+    public String myAsChat(HttpSession session, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        List<ChatRoom> chatRooms = chatService.getAsChatRoomListByNickname(nickname);
+        model.addAttribute("asChatRooms", chatRooms);
 
         return "thyme/member/myChat";
     }

@@ -1,17 +1,16 @@
 package com.ssd.bidflap.service.impl;
 
 import com.ssd.bidflap.domain.*;
-import com.ssd.bidflap.repository.AfterServiceRepository;
-import com.ssd.bidflap.repository.ChatMessageRepository;
-import com.ssd.bidflap.repository.ChatRoomRepository;
-import com.ssd.bidflap.repository.ProductRepository;
+import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +20,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ProductRepository productRepository;
     private final AfterServiceRepository afterServiceRepository;
+    private final MemberRepository memberRepository;
 
     public ChatRoom getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -71,8 +71,35 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatRoom> getChatRoomListByNickname(String nickname) {
-        return chatRoomRepository.getChatRoomListByNickname(nickname);
+    public List<ChatRoom> getProductChatRoomListByNickname(String nickname) {
+        Optional<Member> member = memberRepository.findByNickname(nickname);
+        if (member.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
+        List<ChatRoom> productChatRooms = chatMessages.stream()
+                .filter(chatMessage -> chatMessage.getChatRoom().getProduct() != null)
+                .map(ChatMessage::getChatRoom)
+                .distinct()
+                .collect(Collectors.toList());
+        return productChatRooms;
+    }
+
+    @Override
+    public List<ChatRoom> getAsChatRoomListByNickname(String nickname) {
+        Optional<Member> member = memberRepository.findByNickname(nickname);
+        if (member.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+
+        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
+        List<ChatRoom> asChatRooms = chatMessages.stream()
+                .filter(chatMessage -> chatMessage.getChatRoom().getAfterService() != null)
+                .map(ChatMessage::getChatRoom)
+                .distinct()
+                .collect(Collectors.toList());
+        return asChatRooms;
     }
 
     @Override
