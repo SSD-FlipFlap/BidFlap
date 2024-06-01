@@ -24,6 +24,11 @@ public class ProductController {
         return "thyme/product/RegisterProduct";
     }
 
+    @GetMapping("/product/purchase")
+    public String productPurchase(){
+        return "thyme/product/PurchaseProduct";
+    }
+
     @PostMapping("/product/register")
     public String productRegisterPro (HttpSession session, Product product, @RequestParam("files") List<MultipartFile> files,
                                       RedirectAttributes redirectAttributes) {
