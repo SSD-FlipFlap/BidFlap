@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>구매 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/product/PurchaseProduct.css}">
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+<form id="paymentForm" action="/payment/complete" method="post">
+    <div id="productDetails">
+        <img src="your-image-url.png" alt="Product Image" class="product-image">
+        <div class="product-info">
+            <div class="product-title">무선 이어폰(title)</div>
+            <div class="product-price">270,000원</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>배송지</h2>
+        <div class="line"></div>
+        <div class="input-group">
+            <input type="text" id="recipient" name="recipient" placeholder="수령인">
+        </div>
+        <div class="input-group">
+            <input type="text" id="postcode" name="postcode" placeholder="우편번호">
+        </div>
+        <div class="input-group">
+            <input type="text" id="address" name="address" placeholder="주소">
+        </div>
+        <div class="input-group">
+            <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소">
+        </div>
+        <div class="input-group">
+            <div class="phone-group">
+                <input type="text" id="phone1" name="phone1" maxlength="3" placeholder="전화번호">
+                <span>-</span>
+                <input type="text" id="phone2" name="phone2" maxlength="4">
+                <span>-</span>
+                <input type="text" id="phone3" name="phone3" maxlength="4">
+            </div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="message" name="phone" placeholder="배송메시지">
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>결제 정보</h2>
+        <div class="line"></div>
+        <div class="input-group">
+            <label for="paymentMethod">결제수단</label>
+            <select id="paymentMethod" name="paymentMethod">
+                <option value="card">카드결제</option>
+                <option value="bank">계좌이체</option>
+                <option value="mobile">휴대폰결제</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>결제 요약</h2>
+        <div class="summary">
+            <div class="summary-item">
+                <span>상품 금액</span>
+                <span>270,000원</span>
+            </div>
+            <div class="summary-item">
+                <span>배송비</span>
+                <span>2,500원</span>
+            </div>
+            <div class="summary-item">
+                <span>지역별 배송비</span>
+                <span>0원</span>
+            </div>
+            <div class="total">
+                <span>최종 결제 금액</span>
+                <span>272,500원</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button type="submit">결제하기</button>
+    </div>
+</form>
+</body>
+</html>
