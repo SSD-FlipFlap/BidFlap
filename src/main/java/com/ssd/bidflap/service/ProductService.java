@@ -102,6 +102,11 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void startAuction(Long productId, String nickname) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
+//        product.setStatus(AuctionStatus.ACTIVE); // 경매 상태로 변경
+        productRepository.save(product);
+    }
     public boolean isProductLikedByMember(Long productId, String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if (optionalMember.isEmpty()) {

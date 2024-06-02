@@ -60,8 +60,9 @@
 <!-- 작성자가 아닌 경우 -->
 <div th:if="${!isAuthor}">
     <div class="btn" th:classappend="${product.status == 'ACTIVE'} ? 'purchase-unavailable' : 'purchase-available'">
-        <form action="/product/purchase" method="get">
-        <button type="submit" th:text="${product.status == 'ACTIVE'} ? '구매 불가능' : '구매하기'" th:disabled="${product.status == 'ACTIVE'}"></button>
+        <form action="/product/purchase" method="post"> <!-- GET 방식에서 POST 방식으로 변경 -->
+            <input type="hidden" name="id" th:value="${product.id}" /> <!-- 상품 id를 hidden 필드로 전송 -->
+            <button type="submit" th:text="${product.status == 'ACTIVE'} ? '구매 불가능' : '구매하기'" th:disabled="${product.status == 'ACTIVE'}"></button>
         </form>
     </div>
     <div th:if="${product.status == 'ACTIVE'}" class="bid-available">
@@ -95,7 +96,7 @@
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
 
 <div class="writer-profile">
-    <span th:text="${nickname} + '님'"></span>
+    <span th:text="${product.member.nickname} + '님'"></span>
     <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') + '에 작성하셨습니다.'}"></span>
 </div>
 

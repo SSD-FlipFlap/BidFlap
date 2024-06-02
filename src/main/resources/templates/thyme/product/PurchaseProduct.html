@@ -6,12 +6,12 @@
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
-<form id="paymentForm" action="/payment/complete" method="post">
+<form id="paymentForm" action="/product/purchase/confirm" method="post">
     <div id="productDetails">
         <img src="your-image-url.png" alt="Product Image" class="product-image">
         <div class="product-info">
-            <div class="product-title">무선 이어폰(title)</div>
-            <div class="product-price">270,000원</div>
+            <div class="product-title" th:text="${product.title != null ?product.title: ''}"></div>
+            <div class="product-price" th:text="${product.price != null ? product.price  : ''}"></div>
         </div>
     </div>
 
@@ -19,16 +19,16 @@
         <h2>배송지</h2>
         <div class="line"></div>
         <div class="input-group">
-            <input type="text" id="recipient" name="recipient" placeholder="수령인">
+            <input type="text" id="name" name="name" placeholder="수령인">
         </div>
         <div class="input-group">
-            <input type="text" id="postcode" name="postcode" placeholder="우편번호">
+            <input type="text" id="zipcode" name="zipcode" placeholder="우편번호">
         </div>
         <div class="input-group">
             <input type="text" id="address" name="address" placeholder="주소">
         </div>
         <div class="input-group">
-            <input type="text" id="detailAddress" name="detailAddress" placeholder="상세주소">
+            <input type="text" id="address_spec" name="address_spec" placeholder="상세주소">
         </div>
         <div class="input-group">
             <div class="phone-group">
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="input-group">
-            <input type="text" id="message" name="phone" placeholder="배송메시지">
+            <input type="text" id="delivery_message" name="delivery_message" placeholder="배송메시지">
         </div>
     </div>
 
@@ -62,7 +62,7 @@
         <div class="summary">
             <div class="summary-item">
                 <span>상품 금액</span>
-                <span>270,000원</span>
+                <span th:text="${product.price != null ? product.price + '원' : ''}"></span>
             </div>
             <div class="summary-item">
                 <span>배송비</span>
@@ -74,13 +74,14 @@
             </div>
             <div class="total">
                 <span>최종 결제 금액</span>
-                <span>272,500원</span>
+                <span th:text="${product.price  + 2500} + '원'"></span>
             </div>
         </div>
     </div>
 
     <div class="button-container">
-        <button type="submit">결제하기</button>
+        <input type="hidden" name="productId" th:value="${product.id}" />
+        <button type="submit" >결제하기</button>
     </div>
 </form>
 </body>
