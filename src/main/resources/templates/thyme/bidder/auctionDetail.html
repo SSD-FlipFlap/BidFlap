@@ -2,28 +2,129 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>경매 상세 페이지</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div th:include="thyme/HeaderWithCategory"></div>
+<div th:insert="~{thyme/HeaderWithCategory}"></div>
 <div class="auction-detail-container">
     <h1 th:text="${product.title}">상품 제목</h1>
     <div class="product-image">
-<!--        <img th:src="@{${product.imageUrl}}" alt="상품 이미지" />-->
+        <!-- <img th:src="@{${product.imageUrl}}" alt="상품 이미지" /> -->
     </div>
     <div class="product-details">
         <p>설명: <span th:text="${product.description}">상품 설명</span></p>
-        <p>현재 입찰가: <span th:text="${auction.highPrice}">0</span> 원</p>
+        <p>현재 입찰가: <span id="currentPrice" th:text="${auction.highPrice}">0</span> 원</p>
         <p>남은 시간: <span th:text="${auction.period}">0</span> 일</p>
-<!--        <p>마감 날짜: <span th:text="${#dates.format(auction.endDate, 'yyyy-MM-dd HH:mm')}">2024-05-30</span></p>-->
+        <!-- <p>마감 날짜: <span th:text="${#dates.format(auction.endDate, 'yyyy-MM-dd HH:mm')}">2024-05-30</span></p> -->
         <p>좋아요 수: <span th:text="${product.likeCount}">0</span></p>
     </div>
     <div class="bid-container">
-        <form th:action="@{/bid}" method="post">
-            <input type="hidden" name="productId" th:value="${product.id}" />
-            <input type="number" name="bidAmount" placeholder="입찰 금액" required />
-            <button type="submit">입찰하기</button>
+        <button id="bidButton">입찰하기</button>
+    </div>
+</div>
+
+<!-- 입찰 모달 -->
+<div id="bidModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>입찰하기</h2>
+        <form id="bidForm">
+            <input type="number" id="bidPrice" placeholder="입찰 금액" required>
+            <button type="submit">입찰</button>
         </form>
     </div>
 </div>
+<p>현재 로그인된 사용자: <span th:text="${session.loggedUser}">사용자 없음</span></p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const socket = new SockJS('/ws-stomp'); // 웹소켓 연결
+        const stompClient = Stomp.over(socket); // STOMP 클라이언트 생성
+
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/bid', function (message) {
+                const newHighPrice = JSON.parse(message.body);
+                console.log("New high price received: " + newHighPrice); // 로그 추가
+                document.getElementById('currentPrice').innerText = newHighPrice;
+            });
+        });
+
+        const modal = document.getElementById("bidModal");
+        const bidButton = document.getElementById("bidButton");
+        const closeButton = document.querySelector(".close");
+
+        bidButton.addEventListener("click", function () {
+            modal.style.display = "block";
+        });
+
+        closeButton.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        const bidForm = document.getElementById("bidForm");
+        bidForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const bidPriceString = document.getElementById("bidPrice").value;
+            const bidPrice = parseInt(bidPriceString); // 문자열을 정수로 변환
+
+            // URL에서 productId를 추출
+            const urlParams = new URLSearchParams(window.location.search);
+            const auctionId = urlParams.get('productId');
+
+            if (auctionId && !isNaN(bidPrice)) {
+                const payload = JSON.stringify({ price: bidPrice, nickname: "사용자 닉네임" });
+
+                // 로그 추가
+                console.log("Sending bid: " + bidPrice + " for auction: " + auctionId);
+
+                stompClient.send(`/send/bid/${auctionId}`, {}, payload);
+
+                modal.style.display = "none";
+            } else {
+                console.error("Invalid auction ID or bid price");
+            }
+        });
+    });
+</script>
 </body>
 </html>

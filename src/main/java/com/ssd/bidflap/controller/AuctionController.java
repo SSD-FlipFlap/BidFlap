@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
 
@@ -19,13 +21,15 @@ import java.util.Map;
 
 public class AuctionController {
     @Autowired
-    private  AuctionService auctionService;
+    private AuctionService auctionService;
     @Autowired
-    private  ProductService productService;
+    private ProductService productService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @GetMapping("/bidder/{id}")
-    public String bidderPage(@PathVariable Long id, Model model, HttpSession session ){
+    public String bidderPage(@PathVariable Long id, Model model, HttpSession session) {
         Product product = productService.productView(id);
         model.addAttribute("product", product);
         String nickname = (String) session.getAttribute("loggedInMember");
@@ -34,8 +38,7 @@ public class AuctionController {
     }
 
 
-
-    @PostMapping("/start")
+    @PostMapping("/auction/start")
     public ResponseEntity<String> startAuction(@RequestParam Long id, @RequestParam int duePeriod) {
         try {
             auctionService.startAuction(id, duePeriod);
@@ -44,7 +47,6 @@ public class AuctionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 
 
     @GetMapping("/auction/detail")
@@ -56,5 +58,22 @@ public class AuctionController {
 
         return "thyme/bidder/auctionDetail";
     }
+
+    @PostMapping("/bid")
+    public String placeBid(HttpSession session, @RequestParam Long productId, @RequestParam int bidPrice, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null || nickname.isEmpty()) {
+            return "redirect:/auth/login";
+        }
+
+        try {
+            auctionService.placeBid(productId, bidPrice, nickname);
+            return "redirect:/auction/detail?productId=" + productId;
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/auction/detail?productId=" + productId;
+        }
+    }
 }
+
 

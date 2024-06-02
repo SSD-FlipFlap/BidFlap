@@ -51,4 +51,5 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImage> productImageList;
 
-}
+
+    }
