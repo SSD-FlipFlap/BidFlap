@@ -24,11 +24,6 @@ public class ProductController {
         return "thyme/product/RegisterProduct";
     }
 
-    @GetMapping("/product/purchase")
-    public String productPurchase(){
-        return "thyme/product/PurchaseProduct";
-    }
-
     @PostMapping("/product/register")
     public String productRegisterPro (HttpSession session, Product product, @RequestParam("files") List<MultipartFile> files,
                                       RedirectAttributes redirectAttributes) {
@@ -44,7 +39,6 @@ public class ProductController {
         redirectAttributes.addAttribute("id", productId);
         return "redirect:/product/view";
     }
-
     @GetMapping("/product/view")
     public String productView(Model model, Long id, HttpSession session) {
         Product product = productService.productView(id);
@@ -64,7 +58,6 @@ public class ProductController {
 
         return "thyme/product/ViewProduct";
     }
-
 
     @PostMapping("/product/delete/{id}")
     public String productDelete(@PathVariable Long id, HttpSession session){
@@ -108,6 +101,16 @@ public class ProductController {
         productService.toggleLike(productId, nickname);
 
         return "redirect:/product/view?id=" + productId;
+    }
+    @PostMapping("/product/startAuction")
+    public String startAuction(@RequestParam("productId") Long productId, HttpSession session){
+        String nickname= (String) session.getAttribute("loggedInMember");
+        if (nickname==null){
+            return "redirect:/auth/login";
+        }
+        productService.startAuction(productId, nickname);
+
+        return "redirect:/product/view?id="+ productId;
     }
 
     @GetMapping("/product/list")
