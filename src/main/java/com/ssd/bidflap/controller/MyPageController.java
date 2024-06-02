@@ -1,13 +1,22 @@
 package com.ssd.bidflap.controller;
 
+import com.ssd.bidflap.domain.ChatRoom;
+import com.ssd.bidflap.domain.Product;
+import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.MemberService;
+import com.ssd.bidflap.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/members")
@@ -15,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MyPageController {
 
     private final MemberService memberService;
+    private final ChatService chatService;
+    private final ProductService productService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -43,11 +54,21 @@ public class MyPageController {
 
     // 판매 내역
     @GetMapping("/my-page/product")
-    public String myProduct(HttpSession session, Model model) {
+    public String myProduct(@RequestParam(required = false) String status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<Product> productList = new ArrayList<>();
+        if (status != null) {
+            productList = productService.getProductByMemberAndStatus(nickname, status);
+        }
+        else {
+            productList = productService.getProductByMember(nickname);    // 전체
+        }
+
+        model.addAttribute("productList", productList);
 
         return "thyme/member/myProduct";
     }
@@ -82,16 +103,36 @@ public class MyPageController {
             return "redirect:/auth/login";
         }
 
+        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+        model.addAttribute("likeList", productLikeList);
+
         return "thyme/member/myLike";
     }
 
-    // 채팅 내역
-    @GetMapping("/my-page/chat")
-    public String myChat(HttpSession session, Model model) {
+    // 판매글 채팅 내역
+    @GetMapping("/my-page/chat/product")
+    public String myProductChat(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<ChatRoom> chatRooms = chatService.getProductChatRoomListByNickname(nickname);
+        model.addAttribute("productChatRooms", chatRooms);
+
+        return "thyme/member/myChat";
+    }
+
+    // as 채팅 내역
+    @GetMapping("/my-page/chat/as")
+    public String myAsChat(HttpSession session, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        List<ChatRoom> chatRooms = chatService.getAsChatRoomListByNickname(nickname);
+        model.addAttribute("asChatRooms", chatRooms);
 
         return "thyme/member/myChat";
     }

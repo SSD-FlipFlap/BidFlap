@@ -13,27 +13,73 @@
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
-<div class="image-gray-box"></div>
-<div class="line"></div>
-<div class="image-13057052"></div>
-<div class="heart"></div>
-<div class="purchase-button">
-    <div class="btn" th:classappend="${product.likeCount >= 2} ? 'purchase-unavailable' : 'purchase-available'">
-        <button type="submit" th:text="${product.likeCount >= 2} ? '구매 불가능' : '구매하기'" th:disabled="${product.likeCount >= 2}"></button>
+
+<div class="image-slider">
+    <button class="prev-btn">＜</button>
+    <div class="image-gray-box">
+            <div id="productPreviewContainer">
+                <!-- 각 이미지의 URL을 반복하여 화면에 출력 -->
+                <div th:each="image, index : ${product.productImageList}">
+                    <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"
+                         onclick="removePreviewImage(event, ${index.index})">
+                </div>
+            </div>
     </div>
+    <button class="next-btn">＞</button>
 </div>
 
+<div class="line"></div>
+
+<!-- 작성자인 경우, 아닌 경우에 따른 버튼 변경 구현 -->
 <div th:if="${isAuthor}">
-    <div class="bid-button">
-        <div class="btn" th:classappend="${product.likeCount>=2} ? 'bid-available' : 'bid-unavailable'">
-            <button type="submit" th:text="${product.likeCount>=2}? '경매 시작하기':'경매 불가능'" th:disabled="${product.likeCount>=2}"></button>
+    <div class="purchase-unavailable">
+        <div class="btn">
+            <button type="button" th:text="'구매 불가능'" disabled></button>
         </div>
     </div>
+    <div th:if="${product.likeCount >= 1}">
+        <div class="bid-available">
+            <div class="btn">
+                <form action="/product/startAuction" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <button type="submit" th:text="'경매 시작하기'"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:if="${product.likeCount < 1}">
+        <div class="bid-unavailable">
+            <div class="btn">
+                <button type="button" th:text="'경매 불가능'" disabled></button>
+            </div>
+        </div>
+    </div>
+    <button type="button" id="like-button-author" th:text="'좋아요 ' + ${product.likeCount}"></button>
 </div>
-<form id="like-form" action="/product/like" method="post">
-    <input type="hidden" name="productId" th:value="${product.id}"/>
-    <button type="submit" id="like-button" th:text="'좋아요 ' + ${product.likeCount}"></button>
-</form>
+
+<!-- 작성자가 아닌 경우 -->
+<div th:if="${!isAuthor}">
+    <div class="btn" th:classappend="${product.status == 'ACTIVE'} ? 'purchase-unavailable' : 'purchase-available'">
+        <form action="/product/purchase" method="post"> <!-- GET 방식에서 POST 방식으로 변경 -->
+            <input type="hidden" name="id" th:value="${product.id}" /> <!-- 상품 id를 hidden 필드로 전송 -->
+            <button type="submit" th:text="${product.status == 'ACTIVE'} ? '구매 불가능' : '구매하기'" th:disabled="${product.status == 'ACTIVE'}"></button>
+        </form>
+    </div>
+    <div th:if="${product.status == 'ACTIVE'}" class="bid-available">
+        <div class="btn">
+            <button type="button" th:text="'경매 참여하기'"></button>
+        </div>
+    </div>
+    <div th:if="${product.status != 'ACTIVE'}" class="bid-unavailable">
+        <div class="btn">
+            <button type="button" th:text="'경매 참여 불가능'"></button>
+        </div>
+    </div>
+    <form id="like-form" action="/product/like" method="post">
+        <input type="hidden" name="productId" th:value="${product.id}"/>
+        <button type="submit" id="like-button-non-author" th:text="'좋아요 ' + ${product.likeCount}"></button>
+    </form>
+</div>
 
 <!-- 작성자인 경우에만 수정 및 삭제 버튼 표시 -->
 <div th:if="${isAuthor}">
@@ -50,7 +96,7 @@
 <div class="auction-notice">경매 시작 가능 | 10명 이상 좋아요</div>
 
 <div class="writer-profile">
-    <span th:text="${nickname} + '님'"></span>
+    <span th:text="${product.member.nickname} + '님'"></span>
     <span th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') + '에 작성하셨습니다.'}"></span>
 </div>
 

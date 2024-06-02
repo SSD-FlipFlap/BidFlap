@@ -19,7 +19,7 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
     private String message;
 
     @Enumerated(EnumType.STRING)
-    private ReadStatus isRead;
+    private ReadStatus isRead = ReadStatus.NOT_READ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

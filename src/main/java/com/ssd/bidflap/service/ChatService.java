@@ -18,11 +18,13 @@ public interface ChatService {
 
     ChatRoom insertChatRoom(String type, long id);
 
-    void deleteChatRoom(long chatRoomId);
+    void deleteChatRoom(Long chatRoomId);
 
     ChatMessage insertMessage(ChatMessage message);
 
-    List<ChatRoom> getChatRoomListByNickname(String nickname);
+    List<ChatRoom> getProductChatRoomListByNickname(String nickname);
+
+    List<ChatRoom> getAsChatRoomListByNickname(String nickname);
 
     ChatMessage createMessage(Long roomId, Member member, String message);
 
