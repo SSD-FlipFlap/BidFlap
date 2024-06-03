@@ -1,6 +1,6 @@
 package com.ssd.bidflap.domain;
 
-import com.ssd.bidflap.domain.enums.AuctionStatus;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,7 +30,7 @@ public class Product extends BaseEntity {
     private Integer likeCount;
 
     @Enumerated(EnumType.STRING)
-    private AuctionStatus status = AuctionStatus.NOT_STARTED;
+    private ProductStatus status = ProductStatus.SELLING;
 
     private Integer price;
 
@@ -47,10 +47,11 @@ public class Product extends BaseEntity {
     private Auction auction;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductLike> productLikes;
+    private Set<ProductLike> productLikeList;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductImage> productImageList = new ArrayList<>();
 
-
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRoomList;
+}

@@ -188,7 +188,7 @@ public class MemberService {
         }
 
         // interest 객체 리스트를 String 리스트로 변환
-        List<String> categories = member.getInterests().stream()
+        List<String> categories = member.getInterestList().stream()
                 .map(interest -> interest.getCategory().name().toLowerCase())
                 .collect(Collectors.toList());
 

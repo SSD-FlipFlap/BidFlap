@@ -34,7 +34,28 @@ public class Member {
     private String profile;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Interest> interests = new ArrayList<>();
+    private List<Interest> interestList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Product> productList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ProductLike> productLikeList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Purchase> purchaseList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Bidder> bidderList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<AfterService> afterServiceList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRoomList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessageList;
 
     public void changePassword(String newEncodedPassword) {
         this.password = newEncodedPassword;
