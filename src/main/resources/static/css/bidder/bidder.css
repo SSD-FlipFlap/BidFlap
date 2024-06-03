@@ -191,7 +191,23 @@
     margin-left: 50px;
     cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 }
-
+.bidButton{
+    width: 350px; /* 버튼 너비 조정 */
+    height: 70px; /* 버튼 높이 조정 */
+    background: #F5F5F5;
+    border-radius: 20px;
+    font-size: 30px; /* 폰트 크기 조정 */
+    font-family: Inter;
+    font-weight: 600;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #215818;
+    color: white;
+    margin-left: 50px;
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}
 .participate-button:hover {
     background-color: #1a4312; /* 마우스를 올렸을 때의 배경색 */
 }
@@ -267,6 +283,7 @@
 }
 
 .modal {
+    /*display: none;*/
     position: absolute;
     top: 50%;
     left: 50%;

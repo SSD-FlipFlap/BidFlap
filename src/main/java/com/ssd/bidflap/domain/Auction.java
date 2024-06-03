@@ -3,6 +3,8 @@ package com.ssd.bidflap.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,5 +36,13 @@ public class Auction extends BaseEntity {
     public void updateHighPrice(Integer highPrice) {
         this.highPrice = highPrice;
     }
+
+//    public LocalDateTime getEndTime() {
+//        return getCreatedDate().plusDays(period);
+//    }
+
+//    public Duration getRemainingTime() {
+//        return Duration.between(LocalDateTime.now(), getEndTime());
+//    }
 
 }
