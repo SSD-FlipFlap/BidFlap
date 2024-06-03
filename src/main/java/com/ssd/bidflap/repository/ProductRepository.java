@@ -2,7 +2,7 @@ package com.ssd.bidflap.repository;
 
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.enums.AuctionStatus;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +15,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByMember(Member member);
 
-    List<Product> findByMemberAndStatus(Member member, AuctionStatus status);
+    List<Product> findByMemberAndStatus(Member member, ProductStatus status);
 }

@@ -2,6 +2,7 @@ package com.ssd.bidflap.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class Auction extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ColumnDefault("1")
     private Integer period;
-
 
     private Integer highPrice;
 
@@ -26,7 +27,6 @@ public class Auction extends BaseEntity {
 
     @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bidder> bidderList = new ArrayList<>();
-
 
     @Column(name = "product_id")
     private Long productId;
