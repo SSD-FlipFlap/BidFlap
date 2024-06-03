@@ -19,6 +19,7 @@ public class Auction extends BaseEntity {
 
     private Integer period;
 
+
     private Integer highPrice;
 
     private Long successfulBidder;    // 낙찰자(Bidder의 pk)
@@ -26,7 +27,12 @@ public class Auction extends BaseEntity {
     @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Bidder> bidderList = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+
+    @Column(name = "product_id")
+    private Long productId;
+
+    public void updateHighPrice(Integer highPrice) {
+        this.highPrice = highPrice;
+    }
+
 }

@@ -49,7 +49,7 @@
                 const duePeriod = document.getElementById("due-period").value;
 
                 if (duePeriod && productId) {
-                    fetch(`/start?id=${productId}&duePeriod=${duePeriod}`, {
+                    fetch(`/auction/start?id=${productId}&duePeriod=${duePeriod}`, {
                         method: "POST"
                     }).then(response => {
                         if (response.ok) {
