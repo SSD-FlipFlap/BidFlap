@@ -3,10 +3,12 @@ package com.ssd.bidflap.domain;
 import com.ssd.bidflap.domain.enums.ReadStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
 @Builder
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
@@ -15,7 +17,7 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
     private String message;
 
     @Enumerated(EnumType.STRING)
@@ -47,5 +49,9 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
     @Override
     public int compareTo(ChatMessage o) {
         return this.getCreatedAt().compareTo(o.getCreatedAt());
+    }
+
+    public void updateReadStatus(ReadStatus readStatus) {
+        this.isRead = readStatus;
     }
 }

@@ -5,6 +5,7 @@ import com.ssd.bidflap.domain.enums.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Product extends BaseEntity {
@@ -24,6 +26,7 @@ public class Product extends BaseEntity {
 
     private String title;
 
+    @Lob
     private String description;
 
     @ColumnDefault("0")

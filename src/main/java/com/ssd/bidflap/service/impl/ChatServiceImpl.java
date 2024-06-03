@@ -1,6 +1,7 @@
 package com.ssd.bidflap.service.impl;
 
 import com.ssd.bidflap.domain.*;
+import com.ssd.bidflap.domain.enums.ReadStatus;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -106,6 +107,7 @@ public class ChatServiceImpl implements ChatService {
     public ChatMessage createMessage(Long roomId, Member member, String message) {
         ChatRoom room = getChatRoomById(roomId);
         ChatMessage mm = new ChatMessage(room, member, message);
+        mm.updateReadStatus(ReadStatus.NOT_READ);   // 초기 상태 설정
         mm.getCreatedAt();
         return chatMessageRepository.save(mm);
     }
