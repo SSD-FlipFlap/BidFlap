@@ -36,6 +36,7 @@ public class ProductService {
 
         Member persistedMember = optionalMember.get();
         product.setMember(persistedMember);
+        product.setStatus(ProductStatus.SELLING);   // 초기 상태 설정
 
         registerProductImages(product, files);  // 이미지 저장
 
