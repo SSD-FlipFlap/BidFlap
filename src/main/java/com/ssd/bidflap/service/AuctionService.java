@@ -60,9 +60,17 @@ public class AuctionService {
     //입찰
     @Transactional
     public void placeBid(Long productId, int bidPrice, String nickname) {
-        if (nickname == null || nickname.isEmpty()) {
-            throw new IllegalArgumentException("로그인이 필요합니다.");
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        System.out.println("Optional<Member> 값: " + optionalMember);
+
+        if (optionalMember.isEmpty()) {
+            System.out.println("사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        } else {
+            System.out.println("사용자를 찾았습니다.");
         }
+
+        Member member = optionalMember.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
@@ -71,23 +79,18 @@ public class AuctionService {
         if (auction == null) {
             throw new IllegalArgumentException("해당 상품은 경매가 시작되지 않았습니다.");
         }
-
-        Member member = memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        if (bidPrice <= auction.getHighPrice()) {
-            throw new IllegalArgumentException("현재 최고 입찰가보다 높은 가격을 입력해야 합니다.");
-        }
-
         Bidder bidder = Bidder.builder()
                 .price(bidPrice)
                 .member(member)
                 .auction(auction)
                 .build();
-
         bidderRepository.save(bidder);
+
 
         auction.updateHighPrice(bidPrice);
         auctionRepository.save(auction);
+
+        messagingTemplate.convertAndSend("/bid", bidPrice);
     }
 
 

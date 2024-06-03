@@ -2,6 +2,7 @@ package com.ssd.bidflap.controller;
 
 
 import com.ssd.bidflap.domain.Product;
+import com.ssd.bidflap.domain.dto.BidderDto;
 import com.ssd.bidflap.service.AuctionService;
 import com.ssd.bidflap.service.ProductService;
 import jakarta.servlet.http.HttpSession;
@@ -50,30 +51,29 @@ public class AuctionController {
 
 
     @GetMapping("/auction/detail")
-    public String auctionDetail(@RequestParam Long productId, Model model) {
-        Product product = productService.productView(productId);
+    public String auctionDetail(@RequestParam Long productId, Model model, HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+        }
 
+        Product product = productService.productView(productId);
         model.addAttribute("product", product);
         model.addAttribute("auction", product.getAuction());
-
+        model.addAttribute("loggedUser", nickname);
         return "thyme/bidder/auctionDetail";
     }
 
-    @PostMapping("/bid")
-    public String placeBid(HttpSession session, @RequestParam Long productId, @RequestParam int bidPrice, Model model) {
-        String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null || nickname.isEmpty()) {
-            return "redirect:/auth/login";
-        }
-
+    @PostMapping("/send/bid/{productId}")
+    public ResponseEntity<?> placeBid(@PathVariable Long productId, @RequestBody BidderDto bidRequest) {
         try {
-            auctionService.placeBid(productId, bidPrice, nickname);
-            return "redirect:/auction/detail?productId=" + productId;
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            return "redirect:/auction/detail?productId=" + productId;
+            auctionService.placeBid(productId, bidRequest.getPrice(), bidRequest.getNickname());
+            return ResponseEntity.ok("Bid placed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to place bid: " + e.getMessage());
         }
     }
+
 }
 
 
