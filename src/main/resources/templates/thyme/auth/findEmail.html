@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/auth/SignUp.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/auth/Login.css}">
     <title></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/auth/Login.css}">
 </head>
 <body>
 <div th:include="thyme/HeaderWithoutCategory"></div>
@@ -12,12 +12,13 @@
     <h2>Bid Flap</h2><br/>
     <form th:action="@{/auth/find-email}" th:object="${findEmailDto}" method="post">
         <div class="form-group">
-            <label for="email">이메일 주소</label>
-            <input type="email" id="email" name="email" th:value="*{email}">
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" name="nickname" th:value="*{nickname}">
+            <div class="error-msg" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
         </div>
 
         <div class="form-group">
-            <br/><label for="email">계좌 정보</label>
+            <br/><label for="accountNumber">계좌 정보</label>
             <div class="bank-container">
                 <select th:field="*{bank}" class="input-style">
                     <option value="">은행을 선택하세요</option>
@@ -26,10 +27,20 @@
                 </select>
                 <input type="text" id="accountNumber" name="accountNumber" class="input-style" placeholder="계좌 번호를 입력하세요" th:value="*{accountNumber}">
             </div>
+            <span class="error-msg" th:if="${#fields.hasErrors('bank')}" th:errors="*{bank}"></span>
+            <span class="error-msg" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></span>
         </div>
         <br/>
         <button type="submit">이메일 찾기</button>
     </form>
+
+    <div class="error-msg" th:if="${emailError}">
+        <p th:text="${emailError}"></p>
+    </div>
+    <div th:if="${userEmail}">
+        <p>찾으시는 이메일 주소는: <span class="correct-msg" th:text="${userEmail}"></span> 입니다.</p>
+    </div>
+
     <div class="link-container">
         <a href="#" th:href="@{/auth/signup}" class="link">회원가입</a>
         <a href="#" th:href="@{/auth/login}" class="link">로그인</a>

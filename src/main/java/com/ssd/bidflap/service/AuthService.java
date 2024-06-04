@@ -5,6 +5,7 @@ import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Uuid;
+import com.ssd.bidflap.domain.dto.FindEmailDto;
 import com.ssd.bidflap.domain.dto.LoginDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.enums.Category;
@@ -138,5 +139,17 @@ public class AuthService {
         }
 
         return member.getNickname();
+    }
+
+    @Transactional(readOnly = true)
+    public String findEmail(FindEmailDto findEmailDto) {
+        String nickname = findEmailDto.getNickname();
+        String bank = findEmailDto.getBank();
+        String account = findEmailDto.getAccountNumber();
+
+        Member member =  memberRepository.findEmailByNicknameAndBankAndAccount(nickname, bank, account)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
+
+        return member.getEmail();
     }
 }

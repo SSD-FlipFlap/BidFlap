@@ -109,7 +109,20 @@ public class AuthController {
 
     @PostMapping("/find-email")
     public String findEmail(@Valid @ModelAttribute FindEmailDto findEmailDto, BindingResult bindingResult, Model model) {
-        model.addAttribute("findEmailDto", new FindEmailDto());
+        if (bindingResult.hasErrors()) {
+            return "thyme/auth/findEmail";
+        }
+
+        model.addAttribute("findEmailDto", findEmailDto);
+        String userEmail= null;
+
+        try {
+            userEmail = authService.findEmail(findEmailDto);
+        } catch (IllegalArgumentException e) {  // 서버 에러
+            model.addAttribute("emailError", e.getMessage());
+            return "thyme/auth/findEmail";
+        }
+        model.addAttribute("userEmail", userEmail);
         return "thyme/auth/findEmail";
     }
 
