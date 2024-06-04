@@ -6,10 +6,12 @@ import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.repository.PurchaseRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,4 +30,10 @@ public class PurchaseService {
         return purchaseRepository.save(purchase);
     }
 
+    @Transactional(readOnly = true)
+    public List<Purchase> getPurchaseByMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return purchaseRepository.findByMember(member);
+    }
 }
