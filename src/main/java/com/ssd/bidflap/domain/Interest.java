@@ -12,7 +12,8 @@ import lombok.*;
 public class Interest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "interest_seq_generator")
+    @SequenceGenerator(name = "interest_seq_generator", sequenceName = "INTEREST_SEQ", allocationSize = 1)
     private Long id;
 
     @Enumerated(EnumType.STRING)

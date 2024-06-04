@@ -13,7 +13,8 @@ import java.util.List;
 public class AfterService {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "after_service_seq")
+    @SequenceGenerator(name = "after_service_seq", sequenceName = "AFTER_SERVICE_SEQ", allocationSize = 1)
     private Long id;
 
     @Lob

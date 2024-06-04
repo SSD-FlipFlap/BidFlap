@@ -13,7 +13,8 @@ import lombok.*;
 public class Purchase extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchase_seq_generator")
+    @SequenceGenerator(name = "purchase_seq_generator", sequenceName = "PURCHASE_SEQ", allocationSize = 1)
     private Long id;
 
     private String name;
