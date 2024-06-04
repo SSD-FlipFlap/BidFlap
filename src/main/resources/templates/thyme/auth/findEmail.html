@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/auth/SignUp.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/auth/Login.css}">
+    <title></title>
+</head>
+<body>
+<div th:include="thyme/HeaderWithoutCategory"></div>
+
+<div class="login-container">
+    <h2>Bid Flap</h2><br/>
+    <form th:action="@{/auth/find-email}" th:object="${findEmailDto}" method="post">
+        <div class="form-group">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" name="email" th:value="*{email}">
+        </div>
+
+        <div class="form-group">
+            <br/><label for="email">계좌 정보</label>
+            <div class="bank-container">
+                <select th:field="*{bank}" class="input-style">
+                    <option value="">은행을 선택하세요</option>
+                    <option th:each="bank : ${bankList}" th:value="${bank}"
+                            th:text="${bank}">은행</option>
+                </select>
+                <input type="text" id="accountNumber" name="accountNumber" class="input-style" placeholder="계좌 번호를 입력하세요" th:value="*{accountNumber}">
+            </div>
+        </div>
+        <br/>
+        <button type="submit">이메일 찾기</button>
+    </form>
+    <div class="link-container">
+        <a href="#" th:href="@{/auth/signup}" class="link">회원가입</a>
+        <a href="#" th:href="@{/auth/login}" class="link">로그인</a>
+        <a href="#" th:href="@{/auth/reset-password}" class="link">비밀번호 재설정</a>
+    </div>
+</div>
+</body>
+</html>

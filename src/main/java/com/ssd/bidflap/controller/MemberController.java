@@ -1,8 +1,6 @@
 package com.ssd.bidflap.controller;
 
-import com.ssd.bidflap.domain.dto.LoginDto;
-import com.ssd.bidflap.domain.dto.SignUpDto;
-import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.domain.dto.*;
 import com.ssd.bidflap.exception.MemberException;
 import com.ssd.bidflap.service.AuthService;
 import com.ssd.bidflap.service.MemberService;
@@ -96,6 +94,32 @@ public class MemberController {
             model.addAttribute("loginError", e.getMessage());
             return "thyme/auth/Login";
         }
+    }
+
+    // 아이디 찾기
+    @GetMapping("/auth/find-email")
+    public String findEmail(Model model) {
+        model.addAttribute("findEmailDto", new FindEmailDto());
+        return "thyme/auth/findEmail";
+    }
+
+    @PostMapping("/auth/find-email")
+    public String findEmail(@Valid @ModelAttribute FindEmailDto findEmailDto, BindingResult bindingResult, Model model) {
+        model.addAttribute("findEmailDto", new FindEmailDto());
+        return "thyme/auth/findEmail";
+    }
+
+    // 비밀번호 재설정
+    @GetMapping("/auth/reset-password")
+    public String resetPassword(Model model) {
+        model.addAttribute("resetPasswordDto", new ResetPasswordDto());
+        return "thyme/auth/resetPassword";
+    }
+
+    @PostMapping("/auth/reset-password")
+    public String resetPassword(@Valid @ModelAttribute ResetPasswordDto resetPasswordDto, BindingResult bindingResult, Model model) {
+        model.addAttribute("resetPasswordDto", new ResetPasswordDto());
+        return "thyme/auth/resetPassword";
     }
 
     // 로그아웃
