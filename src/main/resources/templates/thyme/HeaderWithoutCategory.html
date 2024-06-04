@@ -46,7 +46,7 @@
                 <li th:if="${session.loggedInMember != null}">|</li>
                 <li th:if="${session.loggedInMember != null}">
                     <!-- confirmLogout 함수를 호출하는 onclick 이벤트 -->
-                    <form th:action="@{/logout}" method="post" id="logoutForm" onsubmit="confirmLogout(event)">
+                    <form th:action="@{/members/logout}" method="post" id="logoutForm" onsubmit="confirmLogout(event)">
                         <button type="submit" class="logout">로그아웃</button>
                     </form>
                 </li>
