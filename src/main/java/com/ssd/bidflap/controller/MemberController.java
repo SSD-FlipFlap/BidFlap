@@ -21,40 +21,10 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/members")
 public class MemberController {
 
-    private final AuthService authService;
     private final MemberService memberService;
-
-    // 회원가입
-    @GetMapping("/auth/signup")
-    public String showSignUpForm(Model model) {
-        model.addAttribute("signUpDto", new SignUpDto());
-        return "thyme/auth/SignUp";
-    }
-
-    @PostMapping(value = "/auth/signup", consumes = {"multipart/form-data"})
-    public String signUp(@Valid @ModelAttribute("signUpDto") SignUpDto signUpDto, BindingResult bindingResult,
-                         Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) throws IOException {
-        if (bindingResult.hasErrors()) {    // valid 바인딩 에러
-            return "thyme/auth/SignUp";
-        }
-
-        try {
-            authService.signUp(signUpDto);
-            redirectAttributes.addFlashAttribute("signupSuccess", true);
-            return "redirect:/auth/login";
-        } catch (MemberException.EmailDuplicatedException e) {  // 서버 에러
-            model.addAttribute("emailError", e.getMessage());
-        } catch (MemberException.NicknameDuplicatedException e) {
-            model.addAttribute("nicknameError", e.getMessage());
-        } catch (MemberException.AsDescInputException e) {
-            model.addAttribute("asInfoError", e.getMessage());
-        } catch (MemberException.AsPriceInputException e) {
-            model.addAttribute("asPriceError", e.getMessage());
-        }
-        return "thyme/auth/SignUp";
-    }
 
     // 뷰에 은행 목록을 전달(drop-down list)
     @ModelAttribute("bankList")
@@ -71,57 +41,6 @@ public class MemberController {
         return bankList;
     }
 
-    // 로그인
-    @GetMapping("/auth/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("loginDto", new LoginDto());
-        return "thyme/auth/Login";
-    }
-
-    @PostMapping("/auth/login")
-    public String login(@Valid @ModelAttribute LoginDto loginDto, BindingResult bindingResult,
-                        HttpSession session, Model model, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "thyme/auth/Login";
-        }
-
-        try {
-            String nickname = authService.login(loginDto);
-            session.setAttribute("loggedInMember", nickname);
-            redirectAttributes.addFlashAttribute("loginSuccess", true); // 리다이렉트 후 한번만 사용되는 데이터
-            return "redirect:/";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("loginError", e.getMessage());
-            return "thyme/auth/Login";
-        }
-    }
-
-    // 아이디 찾기
-    @GetMapping("/auth/find-email")
-    public String findEmail(Model model) {
-        model.addAttribute("findEmailDto", new FindEmailDto());
-        return "thyme/auth/findEmail";
-    }
-
-    @PostMapping("/auth/find-email")
-    public String findEmail(@Valid @ModelAttribute FindEmailDto findEmailDto, BindingResult bindingResult, Model model) {
-        model.addAttribute("findEmailDto", new FindEmailDto());
-        return "thyme/auth/findEmail";
-    }
-
-    // 비밀번호 재설정
-    @GetMapping("/auth/reset-password")
-    public String resetPassword(Model model) {
-        model.addAttribute("resetPasswordDto", new ResetPasswordDto());
-        return "thyme/auth/resetPassword";
-    }
-
-    @PostMapping("/auth/reset-password")
-    public String resetPassword(@Valid @ModelAttribute ResetPasswordDto resetPasswordDto, BindingResult bindingResult, Model model) {
-        model.addAttribute("resetPasswordDto", new ResetPasswordDto());
-        return "thyme/auth/resetPassword";
-    }
-
     // 로그아웃
     @PostMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
@@ -131,7 +50,7 @@ public class MemberController {
     }
 
     // 프로필 관리
-    @GetMapping("/members/edit-profile")
+    @GetMapping("/edit-profile")
     public String editProfile(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
@@ -147,7 +66,7 @@ public class MemberController {
     }
 
     // 비밀번호 변경
-    @PostMapping("/members/change-password")
+    @PostMapping("/change-password")
     public String changePassword(@Valid @ModelAttribute("changePasswordDto") MemberDto.ChangePasswordDto changePasswordDto,
                                  BindingResult result, HttpSession session, // bindingResilt는 @ModelAttribute 다음에 위치해야 한다.
                                  Model model, RedirectAttributes redirectAttributes) {
@@ -183,7 +102,7 @@ public class MemberController {
     }
 
     // 회원 정보 수정
-    @PostMapping("/members/update-member")
+    @PostMapping("/update-member")
     public String updateMember(@Valid @ModelAttribute("updateMemberDto") MemberDto.UpdateMemberDto updateMemberDto,
                                  BindingResult result, HttpSession session,
                                  Model model, RedirectAttributes redirectAttributes) {
@@ -221,7 +140,7 @@ public class MemberController {
     }
 
     // 프로필 사진 변경
-    @PostMapping("/members/change-profile")
+    @PostMapping("/change-profile")
     public String updateMember(@RequestParam MultipartFile profile,HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
 
