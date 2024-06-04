@@ -3,6 +3,7 @@ package com.ssd.bidflap.domain;
 import com.ssd.bidflap.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member {
@@ -34,7 +36,28 @@ public class Member {
     private String profile;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Interest> interests = new ArrayList<>();
+    private List<Interest> interestList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Product> productList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ProductLike> productLikeList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Purchase> purchaseList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Bidder> bidderList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<AfterService> afterServiceList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRoomList;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<ChatMessage> chatMessageList;
 
     public void changePassword(String newEncodedPassword) {
         this.password = newEncodedPassword;

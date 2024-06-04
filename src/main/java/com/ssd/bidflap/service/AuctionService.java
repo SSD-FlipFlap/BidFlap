@@ -4,7 +4,7 @@ import com.ssd.bidflap.domain.Auction;
 import com.ssd.bidflap.domain.Bidder;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.Member;
-import com.ssd.bidflap.domain.enums.AuctionStatus;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.AuctionRepository;
 import com.ssd.bidflap.repository.BidderRepository;
 import com.ssd.bidflap.repository.ProductRepository;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,7 +51,7 @@ public class AuctionService {
 
 
         product.setAuction(auction);
-        product.setStatus(AuctionStatus.STARTED);
+        product.setStatus(ProductStatus.AUCTION);
         auctionRepository.save(auction);
         productRepository.save(product);
     }

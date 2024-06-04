@@ -25,6 +25,10 @@ public class ChatRoom {
     @JoinColumn(name = "after_service_id")
     private AfterService afterService;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
 

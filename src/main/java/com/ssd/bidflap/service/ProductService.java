@@ -2,7 +2,7 @@ package com.ssd.bidflap.service;
 
 import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
-import com.ssd.bidflap.domain.enums.AuctionStatus;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -36,6 +36,7 @@ public class ProductService {
 
         Member persistedMember = optionalMember.get();
         product.setMember(persistedMember);
+        product.setStatus(ProductStatus.SELLING);   // 초기 상태 설정
 
         registerProductImages(product, files);  // 이미지 저장
 
@@ -219,8 +220,8 @@ public class ProductService {
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        AuctionStatus auctionStatus = AuctionStatus.valueOf(status.trim().toUpperCase());
-        return productRepository.findByMemberAndStatus(member, auctionStatus);
+        ProductStatus productStatus = ProductStatus.valueOf(status.trim().toUpperCase());
+        return productRepository.findByMemberAndStatus(member, productStatus);
     }
 
     public List<ProductLike> getProductLikeByMember(String nickname) {

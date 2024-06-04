@@ -1,5 +1,6 @@
 package com.ssd.bidflap.domain;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Purchase extends BaseEntity {
 
     private String phone;
 
+    @Nullable
     private String deliveryMessage;
 
     @ManyToOne(fetch = FetchType.LAZY)
