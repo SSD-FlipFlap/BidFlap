@@ -134,8 +134,20 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public String resetPassword(@Valid @ModelAttribute ResetPasswordDto resetPasswordDto, BindingResult bindingResult, Model model) {
-        model.addAttribute("resetPasswordDto", new ResetPasswordDto());
-        return "thyme/auth/resetPassword";
+    public String resetPassword(@Valid @ModelAttribute ResetPasswordDto resetPasswordDto, BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "thyme/auth/resetPassword";
+        }
+        model.addAttribute("resetPasswordDto", resetPasswordDto);
+
+        try {
+            authService.resetPassword(resetPasswordDto);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            model.addAttribute("passwordError", e.getMessage());
+            return "thyme/auth/resetPassword";
+        }
+        redirectAttributes.addFlashAttribute("resetPasswordSuccess", true);
+        return "redirect:/auth/reset-password";
     }
 }
