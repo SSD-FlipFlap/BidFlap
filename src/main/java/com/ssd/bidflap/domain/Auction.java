@@ -17,7 +17,8 @@ import java.util.List;
 public class Auction extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auction_seq_generator")
+    @SequenceGenerator(name = "auction_seq_generator", sequenceName = "AUCTION_SEQ", allocationSize = 1)
     private Long id;
 
     @ColumnDefault("1")

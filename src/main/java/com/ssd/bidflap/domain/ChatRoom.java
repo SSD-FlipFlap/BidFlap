@@ -14,7 +14,8 @@ import java.util.List;
 public class ChatRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_room_seq_generator")
+    @SequenceGenerator(name = "chat_room_seq_generator", sequenceName = "CHAT_ROOM_SEQ", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

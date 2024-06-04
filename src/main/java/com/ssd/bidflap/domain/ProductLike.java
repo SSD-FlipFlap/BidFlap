@@ -11,7 +11,8 @@ import lombok.*;
 public class ProductLike {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_like_seq_generator")
+    @SequenceGenerator(name = "product_like_seq_generator", sequenceName = "PRODUCT_LIKE_SEQ", allocationSize = 1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

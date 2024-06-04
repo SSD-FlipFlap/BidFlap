@@ -11,7 +11,8 @@ import lombok.*;
 public class Uuid extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uuid_seq_generator")
+    @SequenceGenerator(name = "uuid_seq_generator", sequenceName = "UUID_SEQ", allocationSize = 1)
     private Long id;
 
     @Column(unique = true)
