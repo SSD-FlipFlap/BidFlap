@@ -10,11 +10,5 @@ import java.util.List;
 public interface AfterServiceRepository extends JpaRepository<AfterService, Long> {
     Optional<AfterService> findByMember(Member savedMember);
 
-    //List<AfterService> findAll();
-
-    //AfterService save(AfterService afterService);
-
-    //Optional<AfterService> findById(long afterServiceId);
-
     List<AfterService> findByDescriptionContaining(String keyword);
 }
