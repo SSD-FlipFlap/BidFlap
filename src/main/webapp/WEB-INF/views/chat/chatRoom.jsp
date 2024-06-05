@@ -44,17 +44,15 @@
 <script type="text/javascript">
 	var stompClient = null;
 	var loggedInMemberNickname = "<%= loggedInMemberNickname %>";
-	if(loggedInMemberNickname == null)
-		loggedInMemberNickname = "rkfka";
 
-	var roomId = ${chatRoom.id} != null ? ${chatRoom.id} : 4;
+	var roomId = "${chatRoom.id}";
 
 	var chatHistory = [
 		<c:forEach var="chatMessage" items="${chatMessages}">
 		{
 			message: "<c:out value="${chatMessage.message}"/>",
 			date: "<c:out value="${chatMessage.createdAt}"/>",
-			type: "<c:out value="${chatMessage.member.nickname != loggedInMemberNickname ? 'member1' : 'member2'}"/>"
+			type: "<c:out value="${chatMessage.member.nickname == sender.nickname ? 'member1' : 'member2'}"/>"
 		},
 		</c:forEach>
 	];
@@ -103,15 +101,13 @@
 			profileImage.src = imgSrc;
 
 		profileImage.classList.add('chat-profile');
-		profileImage.classList.add(type);
 		parent.appendChild(profileImage);
 	}
 
-	function makeMessageDiv(parent, message, type) {
+	function makeMessageDiv(parent, message) {
 		const chatMessage = document.createElement('div');
 		chatMessage.innerHTML = message;
 		chatMessage.classList.add('message');
-		chatMessage.classList.add(type);
 		parent.appendChild(chatMessage);
 	}
 
@@ -141,7 +137,7 @@
 			if (type === "member2")
 				makeProfileDiv(messageSet, type);
 
-			makeMessageDiv(messageSet, message, type);
+			makeMessageDiv(messageSet, message);
 
 			if (type === "member1")
 				makeProfileDiv(messageSet, type);
@@ -180,16 +176,27 @@
 	});
 
 	function showChat(messageJson) {
-		console.log("send message!");
 		//var attachmentFile = document.getElementById("attachment").files[0];
 		const messageInput = messageJson.message;
 		//보낸 채팅
 		const chatHistoryDiv = document.getElementById('chat-history');
 		const messageSet = document.createElement('div');
 		messageSet.classList.add('messageSet');
-		makeMessageDiv(messageSet, messageInput, "member1");
-		makeProfileDiv(messageSet, "member1");
-		messageSet.classList.add("member1");
+
+		if(messageJson.member.nickname == loggedInMemberNickname)
+			type = "member1";
+		else
+			type = "member2";
+
+		if(type == "member1"){
+			makeMessageDiv(messageSet, messageInput);
+			makeProfileDiv(messageSet, "member1");
+		}else{
+			makeProfileDiv(messageSet, "member2");
+			makeMessageDiv(messageSet, messageInput);
+		}
+		messageSet.classList.add(type);
+
 		chatHistoryDiv.appendChild(messageSet);
 		document.getElementById("message").value = "";
 
