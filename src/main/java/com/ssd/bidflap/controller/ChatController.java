@@ -3,6 +3,7 @@ package com.ssd.bidflap.controller;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
 import com.ssd.bidflap.repository.AfterServiceRepository;
+import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
@@ -30,40 +31,33 @@ public class ChatController {
     private final MemberRepository memberRepository;
     private final AfterServiceRepository asRepository;
 
-//    //채팅방리스트 - 마이페이지 -> MyPageController에서 처리
-//    @GetMapping("/chatRooms")
-//    public ModelAndView getChatRoomList(HttpSession session) {
-//        ModelAndView modelAndView = new ModelAndView();
-//
-//        String nickname = (String) session.getAttribute("loggedInMember");
-//
-//        List<ChatRoom> chatRooms = chatService.getChatRoomListByNickname(nickname);
-//        modelAndView.addObject("chatRooms", chatRooms);
-//
-//        modelAndView.setViewName("chat/chatRoomList");
-//        return modelAndView;
-//    }
     //입장 - product
-    @GetMapping("/chatRoom/product/{productId}")
-    public ModelAndView getChatRoomById(@PathVariable long productId, HttpSession session) {
+    @GetMapping("/chatRoom/product/{roomId}")
+    public ModelAndView getChatRoomById(@PathVariable long roomId,  HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         //product, seller, sender, chatRoom, chatRoomMessages
         String nickname = (String) session.getAttribute("loggedInMember");
 
+        //chatRoom
+        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomById(roomId);
+        if(optionalChatRoom.isEmpty()){
+            throw new NotFoundException("채팅방이 없습니다.");
+            //return createChatRoom(product, seller, sender,"product", productId);    //rollback 필요
+        }
+        modelAndView.addObject("chatRoom", optionalChatRoom.get());
+
         //product
-        Product product = productRepository.findById(productId);
-        if(product == null)
+        Optional<Product> optionalProduct = productRepository.findById(optionalChatRoom.get().getProduct().getId());
+        if(optionalProduct.isEmpty())
             throw new NotFoundException("product를 찾을 수 없습니다.");
-        modelAndView.addObject("product", product);
+        modelAndView.addObject("product", optionalProduct.get());
 
         //seller
-        Optional<Member> optionalSeller = memberRepository.findByNickname(product.getMember().getNickname());
+        Optional<Member> optionalSeller = memberRepository.findByNickname(optionalProduct.get().getMember().getNickname());
         if(optionalSeller.isEmpty()){
-            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+            throw new UsernameNotFoundException("판매자를 찾을 수 없습니다.");
         }
-        Member seller = optionalSeller.get();
-        modelAndView.addObject("seller", seller);
-
+        modelAndView.addObject("seller", optionalSeller.get());
 
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
@@ -72,31 +66,30 @@ public class ChatController {
         }
         Member sender = optionalMember.get();
         modelAndView.addObject("sender", sender);
-        //chatRoom
-        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomByProductIdAndNickname(product.getId(), sender.getNickname());
-        if(optionalChatRoom.isEmpty()){
-            //throw new NotFoundException("채팅방이 없습니다.");
-            return createChatRoom(product, seller, sender,"product", productId);    //rollback 필요
-        }
-        modelAndView.addObject("chatRoom", optionalChatRoom.get());
+
         //chatMessages
         List<ChatMessage> chatMessages = chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
         modelAndView.addObject("chatMessages", chatMessages);
 
-        //modelAndView.setViewName("chat/chatRoom");
         modelAndView.setViewName("chat/chatRoom");
 
         return modelAndView;
     }
 
     //입장 - afterService
-    @GetMapping("/chatRoom/afterService/{afterServiceId}")
-    public ModelAndView getChatRoomByAfterServiceId(@PathVariable long afterServiceId, HttpSession session) {
+    @GetMapping("/chatRoom/afterService/{roomId}")
+    public ModelAndView getChatRoomByAfterServiceId(@PathVariable long roomId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
         //afterService, seller, sender, chatRoom, chatRoomMessages
         String nickname = (String) session.getAttribute("loggedInMember");
+        //chatRoom
+        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomById(roomId);
+        if(optionalChatRoom.isEmpty())
+            throw new NotFoundException("채팅방이 없습니다.");
+        modelAndView.addObject("chatRoom", optionalChatRoom.get());
+
         //afterService
-        Optional<AfterService> optionalAfterService = asRepository.findById(afterServiceId);
+        Optional<AfterService> optionalAfterService = asRepository.findById(optionalChatRoom.get().getAfterService().getId());
         if(optionalAfterService.isEmpty()){
             throw new NotFoundException("afterService가 없습니다.");
         }
@@ -116,11 +109,6 @@ public class ChatController {
         }
         Member sender = optionalMember.get();
         modelAndView.addObject("sender", sender);
-        //chatRoom
-        Optional<ChatRoom> optionalChatRoom = chatService.getChatRoomByAfterServiceIdAndNickname(optionalAfterService.get().getId(), sender.getNickname());
-        if(optionalChatRoom.isEmpty())
-            return createASChatRoom(optionalAfterService.get(), seller, sender,"afterService", afterServiceId);    //생성
-        modelAndView.addObject("chatRoom", optionalChatRoom.get());
 
         //chatRoomMessages
         List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
@@ -128,37 +116,77 @@ public class ChatController {
 
         modelAndView.setViewName("chat/asChatRoom");
 
-        //modelAndView.setViewName("thyme/chat/chatRoom");
-
         return modelAndView;
     }
+
     //생성
-    @PostMapping("/createChatRoom")
-    private ModelAndView createChatRoom(Product product, Member seller, Member sender, String type, long id) {
+    @PostMapping("/createChatRoom/{pId}")
+    private ModelAndView createChatRoom(@PathVariable long pId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        ChatRoom chatRoom = chatService.insertChatRoom(type, id);
-        List<ChatMessage> chatRoomMessages = new ArrayList<>();
+        String nickname = (String) session.getAttribute("loggedInMember");
         //product, seller, sender, chatRoom, chatRoomMessages
+        //product
+        Optional<Product> optionalProduct = productRepository.findById(pId);
+        if(optionalProduct.isEmpty())
+            throw new NotFoundException("product를 찾을 수 없습니다.");
+        modelAndView.addObject("product", optionalProduct.get());
+
+        //sender
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if(optionalMember.isEmpty()){
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        modelAndView.addObject("sender", optionalMember.get());
+
+        ChatRoom chatRoom = chatService.insertChatRoom("product", pId, optionalMember.get());
+        List<ChatMessage> chatRoomMessages = new ArrayList<>();
         modelAndView.addObject("chatRoom", chatRoom);
-        modelAndView.addObject("product", product);
-        modelAndView.addObject("sender", sender);
-        modelAndView.addObject("seller", seller);
+
+        //seller
+        Optional<Member> optionalSeller = memberRepository.findByNickname(optionalProduct.get().getMember().getNickname());
+        if(optionalSeller.isEmpty()){
+            throw new UsernameNotFoundException("판매자를 찾을 수 없습니다.");
+        }
+        modelAndView.addObject("seller", optionalSeller.get());
+
         modelAndView.addObject("chatRoomMessages", chatRoomMessages);
         modelAndView.addObject("message", "Chat room created successfully");
         modelAndView.setViewName("chat/chatRoom");
 
         return modelAndView;
     }
-    @PostMapping("/createASChatRoom")
-    private ModelAndView createASChatRoom(AfterService as, Member seller, Member sender, String type, long id) {
+
+    @PostMapping("/createASChatRoom/{afterServiceId}")
+    private ModelAndView createASChatRoom(@PathVariable long afterServiceId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        ChatRoom chatRoom = chatService.insertChatRoom(type, id);
-        List<ChatMessage> chatRoomMessages = new ArrayList<>();
+        String nickname = (String) session.getAttribute("loggedInMember");
+
         //product, seller, sender, chatRoom, chatRoomMessages
+        //afterService
+        Optional<AfterService> optionalAfterService = asRepository.findById(afterServiceId);
+        if(optionalAfterService.isEmpty()){
+            throw new NotFoundException("afterService가 없습니다.");
+        }
+
+        //sender
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if(optionalMember.isEmpty()){
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        modelAndView.addObject("sender", optionalMember.get());
+
+        ChatRoom chatRoom = chatService.insertChatRoom("afterService", afterServiceId, optionalMember.get());
+        List<ChatMessage> chatRoomMessages = new ArrayList<>();
         modelAndView.addObject("chatRoom", chatRoom);
-        modelAndView.addObject("product", as);
-        modelAndView.addObject("sender", sender);
+        modelAndView.addObject("product", optionalAfterService.get());
+        //seller
+        Optional<Member> optionalSeller = memberRepository.findByNickname(optionalAfterService.get().getMember().getNickname());
+        if(optionalSeller.isEmpty()){
+            throw new UsernameNotFoundException("판매자를 찾을 수 없습니다.");
+        }
+        Member seller = optionalSeller.get();
         modelAndView.addObject("seller", seller);
+
         modelAndView.addObject("chatRoomMessages", chatRoomMessages);
         modelAndView.addObject("message", "Chat room created successfully");
         modelAndView.setViewName("chat/asChatRoom");
@@ -167,7 +195,7 @@ public class ChatController {
     }
 
     //채팅방 삭제
-    @PostMapping("/deleteChatRoom/{chatRoomId}")
+    @DeleteMapping("/deleteChatRoom/{chatRoomId}")
     @ResponseBody
     public ResponseEntity<String> deleteChatRoom(@PathVariable Long chatRoomId) {
         chatService.deleteChatRoom(chatRoomId);
@@ -185,7 +213,7 @@ public class ChatController {
                 .build();
     }
     /*
-    @PostMapping("/delete/{chatRoomId}")
+    @DeleteMapping("/delete/{chatRoomId}")
     public ModelAndView deleteMessage(@PathVariable int chatRoomId) {
         ModelAndView modelAndView = new ModelAndView();
 

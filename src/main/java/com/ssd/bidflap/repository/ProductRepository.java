@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Product findById(long productId);
+    //Optional<Product> findById(Long aLong);
+
+    //Optional<Product> findById(long productId);
     List<Product> findByTitleContaining(String keyword);
 
     List<Product> findByMember(Member member);

@@ -24,7 +24,13 @@
 			<p>안녕하세요! 서울시 성동구에서 수리 업체 서비스를 10년... 째 운영 중인</p>
 			<p>편하게 문의 주세요</p>
 
-			<button>AS 서비스 문의하기</button>
+			<button id="open-modal">AS 서비스 문의하기</button>
+		</div>
+	</div>
+	<div class="modal">
+		<div class="modal_body">
+			<h2>모달창 제목</h2>
+			<p>모달창 내용 </p>
 		</div>
 	</div>
 </div>
@@ -37,6 +43,13 @@
 
 	window.addEventListener('DOMContentLoaded', adjustLineHeight);
 	window.addEventListener('resize', adjustLineHeight);
+
+	const modal = document.querySelector('.modal');
+	const btnOpenModal=document.querySelector('.btn-open-modal');
+
+	btnOpenModal.addEventListener("click", ()=>{
+		modal.style.display="flex";
+	});
 </script>
 </body>
 </html>

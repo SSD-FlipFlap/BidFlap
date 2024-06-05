@@ -1,12 +1,12 @@
 package com.ssd.bidflap.service.impl;
 
 import com.ssd.bidflap.domain.*;
-import com.ssd.bidflap.domain.enums.ReadStatus;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,17 +23,17 @@ public class ChatServiceImpl implements ChatService {
     private final AfterServiceRepository afterServiceRepository;
     private final MemberRepository memberRepository;
 
-    public ChatRoom getChatRoomById(long chatRoomId) {
+    public Optional<ChatRoom> getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
     }
 
     @Override
-    public Optional<ChatRoom> getChatRoomByProductIdAndNickname(long productId, String nickname) {
+    public List<ChatRoom> findChatRoomByProductIdAndNickname(long productId, String nickname) {
         return chatRoomRepository.findByProductIdAndNickname(productId, nickname);
     }
 
     @Override
-    public Optional<ChatRoom> getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname) {
+    public List<ChatRoom> findByAfterServiceIdAndNickname(long afterServiceId, String nickname) {
         return chatRoomRepository.findByAfterServiceIdAndNickname(afterServiceId, nickname);
     }
 
@@ -46,17 +46,24 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatRoom insertChatRoom(String type, long id) {
+    public ChatRoom insertChatRoom(String type, long id, Member member) {
         if(type.equals("product")) {
-            Product product = productRepository.findById(id);
+            Optional<Product> optionalProduct = productRepository.findById(id);
+
+            if(optionalProduct.isEmpty())
+                throw new NotFoundException("판매글이 없습니다.");
+
             ChatRoom chatRoom = ChatRoom.builder()
-                    .product(product)
+                    .product(optionalProduct.get())
+                    .member(member)
                     .build();
             return chatRoomRepository.save(chatRoom);
         }
+
         Optional<AfterService> optionalAfterService = afterServiceRepository.findById(id);
         ChatRoom chatRoom = ChatRoom.builder()
                 .afterService(optionalAfterService.get())
+                .member(member)
                 .build();
         return chatRoomRepository.save(chatRoom);
     }
@@ -105,11 +112,20 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatMessage createMessage(Long roomId, Member member, String message) {
-        ChatRoom room = getChatRoomById(roomId);
-        ChatMessage mm = new ChatMessage(room, member, message);
-        mm.updateReadStatus(ReadStatus.NOT_READ);   // 초기 상태 설정
+        Optional<ChatRoom> room = getChatRoomById(roomId);
+        ChatMessage mm = new ChatMessage(room.get(), member, message);
         mm.getCreatedAt();
         return chatMessageRepository.save(mm);
+    }
+
+    @Override
+    public List<ChatRoom> findByProductId(long pId) {
+        return chatRoomRepository.findByProductId(pId);
+    }
+
+    @Override
+    public List<ChatRoom> findByAfterServiceId(long asId) {
+        return chatRoomRepository.findByAfterServiceId(asId);
     }
     /*
     @Override
