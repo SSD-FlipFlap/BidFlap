@@ -39,6 +39,11 @@
     color: #707070;
 }
 
+.chatImg{
+    width: 181px;
+    height: 181px;
+}
+
 .imgForm {
     background-color: #F5F5F5;
     width: 214px;
@@ -52,6 +57,12 @@
 }
 
 .imgForm div#product {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.imgForm div#product2 {
     width: 180px;
     height: 180px;
     object-fit: cover;

@@ -16,17 +16,41 @@
 <body>
 <%@ include file="../Header2.jsp" %>
 <div class="chat-container">
-	<div class="info-container">
-		<div id="product" class="info imgForm">
-			<img src="/resources/img/productImg.png"/>
-			<b>${product.price}원</b>
+	<c:choose>
+	<c:when test="${message == '채팅 가능'}">
+		<div class="info-container">
+			<div id="product" class="info imgForm">
+				<c:choose>
+					<c:when test="${seller.profile != null && !seller.profile.isEmpty()}">
+						<img class="chatImg" src="${seller.profile}" alt="Seller Profile"/>
+					</c:when>
+					<c:otherwise>
+						<img class="chatImg" src="/resources/img/Profile.png" alt="Default Profile"/>
+					</c:otherwise>
+				</c:choose>
+				<b>${product.price}원</b>
+			</div>
+			<div class="info">
+				<h1>${seller.nickname}</h1>
+				<p>${seller.nickname} 문의 채팅방</p>
+			</div>
+			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 		</div>
-		<div class="info">
-			<h1>${seller.nickname}</h1>
-			<p>${seller.nickname} 거래내역 ${5}회</p>
+	</c:when>
+	<c:otherwise>
+		<div class="info-container">
+			<div id="product2" class="info imgForm">
+				<img class="chatImg" src="/resources/img/Profile.png"/>
+				<b>거래 불가능</b>
+			</div>
+			<div class="info">
+				<h1>알 수 없는 사용자</h1>
+				<p>채팅을 보낼 수 없습니다.</p>
+			</div>
+			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 		</div>
-		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
-	</div>
+	</c:otherwise>
+	</c:choose>
 	<div id="chat-scroll">
 		<div id="chat-history"></div>
 	</div>
@@ -160,19 +184,23 @@
 	});
 
 	document.getElementById('sendIcon').addEventListener('click', function () {
-		var member = {
-			id: ${sender.id},
-			account: "${sender.account}",
-			bank: "${sender.bank}",
-			email: "${sender.email}",
-			member_role: "${sender.memberRole}",
-			nickname: "${sender.nickname}",
-			password: "${sender.password}",
-			profile: "${sender.profile}"
-		};
-		var message = document.getElementById('message').value;
-
-		sendMessage(roomId, member, message);
+		if("${sender.nickname!= '알수없음'}" && "${message != '채팅 가능'}"){
+			var member = {
+				id: ${sender.id},
+				account: "${sender.account}",
+				bank: "${sender.bank}",
+				email: "${sender.email}",
+				member_role: "${sender.memberRole}",
+				nickname: "${sender.nickname}",
+				password: "${sender.password}",
+				profile: "${sender.profile}"
+			};
+			var message = document.getElementById('message').value;
+			if(message != "")
+				sendMessage(roomId, member, message);
+		}else{
+			alert("판매자가 탈퇴했거나 삭제한 경우 채팅을 보낼 수 없습니다.");
+		}
 	});
 
 	function showChat(messageJson) {

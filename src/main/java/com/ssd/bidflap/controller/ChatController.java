@@ -80,6 +80,8 @@ public class ChatController {
     @GetMapping("/chatRoom/afterService/{roomId}")
     public ModelAndView getChatRoomByAfterServiceId(@PathVariable long roomId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("chat/asChatRoom");
+
         //afterService, seller, sender, chatRoom, chatRoomMessages
         String nickname = (String) session.getAttribute("loggedInMember");
         //chatRoom
@@ -91,7 +93,9 @@ public class ChatController {
         //afterService
         Optional<AfterService> optionalAfterService = asRepository.findById(optionalChatRoom.get().getAfterService().getId());
         if(optionalAfterService.isEmpty()){
-            throw new NotFoundException("afterService가 없습니다.");
+            //throw new NotFoundException("afterService가 없습니다.");
+            modelAndView.addObject("message", "사용할 수 없는 채팅방입니다.");
+            return modelAndView;
         }
         modelAndView.addObject("product", optionalAfterService.get());
         //seller
@@ -114,7 +118,7 @@ public class ChatController {
         List<ChatMessage> chatMessages=chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
         modelAndView.addObject("chatMessages", chatMessages);
 
-        modelAndView.setViewName("chat/asChatRoom");
+        modelAndView.addObject("message", "채팅 가능");
 
         return modelAndView;
     }
