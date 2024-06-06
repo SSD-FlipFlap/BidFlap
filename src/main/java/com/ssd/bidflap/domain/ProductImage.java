@@ -11,7 +11,8 @@ import lombok.*;
 public class ProductImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_image_seq_generator")
+    @SequenceGenerator(name = "product_image_seq_generator", sequenceName = "PRODUCT_IMAGE_SEQ", allocationSize = 1)
     private Long id;
 
     private String url;

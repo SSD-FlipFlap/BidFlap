@@ -14,7 +14,8 @@ import org.hibernate.annotations.DynamicInsert;
 public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_message_seq_generator")
+    @SequenceGenerator(name = "chat_message_seq_generator", sequenceName = "CHAT_MESSAGE_SEQ", allocationSize = 1)
     private Long id;
 
     @Lob

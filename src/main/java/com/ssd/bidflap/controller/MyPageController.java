@@ -3,10 +3,12 @@ package com.ssd.bidflap.controller;
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductLike;
+import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.MemberService;
 import com.ssd.bidflap.service.ProductService;
+import com.ssd.bidflap.service.PurchaseService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ public class MyPageController {
     private final MemberService memberService;
     private final ChatService chatService;
     private final ProductService productService;
+    private final PurchaseService purchaseService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -80,6 +83,9 @@ public class MyPageController {
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<Purchase> purchaseList = purchaseService.getPurchaseByMember(nickname);
+        model.addAttribute("purchaseList", purchaseList);
 
         return "thyme/member/myPurchase";
     }

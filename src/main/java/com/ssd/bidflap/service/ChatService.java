@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatService {
-    ChatRoom getChatRoomById(long chatRoomId);
+    Optional<ChatRoom> getChatRoomById(long chatRoomId);
 
-    Optional<ChatRoom> getChatRoomByProductIdAndNickname(long productId, String nickname);
+    List<ChatRoom> findChatRoomByProductIdAndNickname(long productId, String nickname);
 
-    Optional<ChatRoom> getChatRoomByAfterServiceIdAndNickname(long afterServiceId, String nickname);
+    List<ChatRoom> findByAfterServiceIdAndNickname(long afterServiceId, String nickname);
 
     List<ChatMessage> getChatMessagesByChatRoomId(long chatRoomId);
 
-    ChatRoom insertChatRoom(String type, long id);
+    ChatRoom insertChatRoom(String type, long id, Member member);
 
     void deleteChatRoom(Long chatRoomId);
 
@@ -27,6 +27,10 @@ public interface ChatService {
     List<ChatRoom> getAsChatRoomListByNickname(String nickname);
 
     ChatMessage createMessage(Long roomId, Member member, String message);
+
+    List<ChatRoom> findByProductId(long pId);
+
+    List<ChatRoom> findByAfterServiceId(long asId);
 
     //void deleteMessages(int chatRoomId);
 

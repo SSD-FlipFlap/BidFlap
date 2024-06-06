@@ -5,7 +5,9 @@ import com.ssd.bidflap.domain.AfterService;
 import com.ssd.bidflap.domain.Interest;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Uuid;
+import com.ssd.bidflap.domain.dto.FindEmailDto;
 import com.ssd.bidflap.domain.dto.LoginDto;
+import com.ssd.bidflap.domain.dto.ResetPasswordDto;
 import com.ssd.bidflap.domain.dto.SignUpDto;
 import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.domain.enums.MemberRole;
@@ -138,5 +140,34 @@ public class AuthService {
         }
 
         return member.getNickname();
+    }
+
+    @Transactional(readOnly = true)
+    public String findEmail(FindEmailDto findEmailDto) {
+        String nickname = findEmailDto.getNickname();
+        String bank = findEmailDto.getBank();
+        String account = findEmailDto.getAccountNumber();
+
+        Member member =  memberRepository.findEmailByNicknameAndBankAndAccount(nickname, bank, account)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
+
+        return member.getEmail();
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordDto resetPasswordDto) {
+        Member member = memberRepository.findByEmailAndNickname(resetPasswordDto.getEmail(), resetPasswordDto.getNickname())
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 존재하지 않습니다."));
+
+        String newPassword = resetPasswordDto.getNewPassword();
+        String confirmPassword = resetPasswordDto.getConfirmPassword();
+        if (!newPassword.equals(confirmPassword)) {
+            throw new IllegalStateException("새 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 새 비밀번호 암호화
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+        member.changePassword(encryptedPassword);
+        memberRepository.save(member);
     }
 }

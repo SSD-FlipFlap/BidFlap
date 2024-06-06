@@ -12,8 +12,6 @@ import java.util.List;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
     public List<ChatMessage> getChatMessagesByChatRoomId(long chatRoomId);
 
-    public ChatMessage save(ChatMessage chatMessage);
-
     public void deleteByChatRoomId(int chatRoomId);
 
     List<ChatMessage> findByMember(Member member);

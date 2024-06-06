@@ -35,7 +35,8 @@ label {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
     width: 400px;
     height: 40px;
     font-size: 15px;
@@ -49,6 +50,7 @@ button {
     width: 410px;
     height: 50px;
     font-size: 20px;
+    font-weight: bold;
     background-color: #215818;
     color: #ffffff;
     padding: 3px;
@@ -71,4 +73,8 @@ button {
 
 .error-msg {
     color: red;
+}
+
+.correct-msg {
+    color: blue;
 }

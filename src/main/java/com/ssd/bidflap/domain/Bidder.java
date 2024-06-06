@@ -14,7 +14,8 @@ import org.hibernate.annotations.DynamicInsert;
 public class Bidder extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bidder_seq_generator")
+    @SequenceGenerator(name = "bidder_seq_generator", sequenceName = "BIDDER_SEQ", allocationSize = 1)
     private Long id;
 
     private Integer price;
