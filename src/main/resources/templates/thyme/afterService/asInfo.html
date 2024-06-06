@@ -29,7 +29,8 @@
 </div>
 <div class="asInfo-container">
     <div class="asProfile">
-        <img id="profile" th:src="@{/resources/img/asProfile.png}">
+        <img class="asprofileImg" th:if="${asInfo.member.profile}!=null" th:src="${asInfo.member.profile}">
+        <img class="asprofileImg" th:if="${asInfo.member.profile}==null" th:src="@{/resources/img/Profile.png}">
     </div>
     <div class="line"></div>
     <div class="textInfo">

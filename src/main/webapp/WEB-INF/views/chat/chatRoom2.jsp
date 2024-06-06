@@ -32,25 +32,25 @@
 				<b>${product.price}원</b>
 			</div>
 			<div class="info">
-				<h1>${seller.nickname}</h1>
-				<p>${seller.nickname} 문의 채팅방</p>
+				<h1>${product.title}</h1>
+				<p>${seller.nickname} 거래내역 ${5}회</p>
 			</div>
 			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 		</div>
 	</c:when>
-	<c:otherwise>
-		<div class="info-container">
-			<div id="product2" class="info imgForm">
-				<img class="chatImg" src="/resources/img/Profile.png"/>
-				<b>거래 불가능</b>
+		<c:otherwise>
+			<div class="info-container">
+				<div id="product2" class="info imgForm">
+					<img class="chatImg" src="/resources/img/Profile.png"/>
+					<b>거래 불가능</b>
+				</div>
+				<div class="info">
+					<h1>알 수 없는 사용자</h1>
+					<p>채팅을 보낼 수 없습니다.</p>
+				</div>
+				<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 			</div>
-			<div class="info">
-				<h1>알 수 없는 사용자</h1>
-				<p>채팅을 보낼 수 없습니다.</p>
-			</div>
-			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
-		</div>
-	</c:otherwise>
+		</c:otherwise>
 	</c:choose>
 	<div id="chat-scroll">
 		<div id="chat-history"></div>
@@ -219,9 +219,9 @@
 
 		if(type == "member1"){
 			makeMessageDiv(messageSet, messageInput);
-			makeProfileDiv(messageSet, type);
+			makeProfileDiv(messageSet, "member1");
 		}else{
-			makeProfileDiv(messageSet, type);
+			makeProfileDiv(messageSet, "member2");
 			makeMessageDiv(messageSet, messageInput);
 		}
 		messageSet.classList.add(type);
@@ -236,5 +236,4 @@
 </script>
 </body>
 </html>
-
 -->

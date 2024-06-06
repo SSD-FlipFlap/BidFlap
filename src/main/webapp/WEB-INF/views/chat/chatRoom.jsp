@@ -16,30 +16,37 @@
 <body>
 <%@ include file="../Header2.jsp" %>
 <div class="chat-container">
-	<c:choose>
-	<c:when test="${message == '채팅 가능'}">
-		<div class="info-container">
-			<div id="product" class="info imgForm">
+	<div class="info-container">
+		<c:choose>
+			<c:when test="${message == '채팅가능'}">
+				<div class="info imgForm product">
+					<c:choose>
+						<c:when test="${seller.profile != null && !seller.profile.isEmpty()}">
+							<img class="chatImg" src="${seller.profile}" alt="Seller Profile"/>
+						</c:when>
+						<c:otherwise>
+							<img class="chatImg" src="/resources/img/Profile.png" alt="Default Profile"/>
+						</c:otherwise>
+					</c:choose>
+					<b>${product.price}원</b>
+				</div>
 				<c:choose>
-					<c:when test="${seller.profile != null && !seller.profile.isEmpty()}">
-						<img class="chatImg" src="${seller.profile}" alt="Seller Profile"/>
+					<c:when test="${crType == 'product'}">
+						<div class="info">
+							<h1>${product.title}</h1>
+							<p>${seller.nickname} 거래내역 ${5}회</p>
+						</div>
 					</c:when>
-					<c:otherwise>
-						<img class="chatImg" src="/resources/img/Profile.png" alt="Default Profile"/>
-					</c:otherwise>
+					<c:when test="${message == '채팅가능' && crType == 'afterService'}">
+						<div class="info">
+							<h1>${seller.nickname}</h1>
+							<p>${seller.nickname} 문의 채팅방</p>
+						</div>
+					</c:when>
 				</c:choose>
-				<b>${product.price}원</b>
-			</div>
-			<div class="info">
-				<h1>${product.title}</h1>
-				<p>${seller.nickname} 거래내역 ${5}회</p>
-			</div>
-			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
-		</div>
-	</c:when>
-		<c:otherwise>
-			<div class="info-container">
-				<div id="product2" class="info imgForm">
+			</c:when>
+			<c:otherwise>
+				<div class="info imgForm product">
 					<img class="chatImg" src="/resources/img/Profile.png"/>
 					<b>거래 불가능</b>
 				</div>
@@ -47,16 +54,15 @@
 					<h1>알 수 없는 사용자</h1>
 					<p>채팅을 보낼 수 없습니다.</p>
 				</div>
-				<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
-			</div>
-		</c:otherwise>
-	</c:choose>
+			</c:otherwise>
+		</c:choose>
+		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
+	</div>
 	<div id="chat-scroll">
 		<div id="chat-history"></div>
 	</div>
 	<div class="send-container">
 		<img src="/resources/img/fileIcon.png" id="imageUpload">
-
 		<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
 		<input type="file" id="attachment" style="display: none;">
 		<input type="text" id="message" placeholder="Type your message...">

@@ -56,13 +56,7 @@
     z-index: 1;
 }
 
-.imgForm div#product {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-.imgForm div#product2 {
+.imgForm div.product {
     width: 180px;
     height: 180px;
     object-fit: cover;
