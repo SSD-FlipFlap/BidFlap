@@ -35,6 +35,7 @@ public class ChatController {
     @GetMapping("/chatRoom/product/{roomId}")
     public ModelAndView getChatRoomById(@PathVariable long roomId,  HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("chat/chatRoom");
         //product, seller, sender, chatRoom, chatRoomMessages
         String nickname = (String) session.getAttribute("loggedInMember");
 
@@ -48,8 +49,11 @@ public class ChatController {
 
         //product
         Optional<Product> optionalProduct = productRepository.findById(optionalChatRoom.get().getProduct().getId());
-        if(optionalProduct.isEmpty())
-            throw new NotFoundException("product를 찾을 수 없습니다.");
+        if(optionalProduct.isEmpty()){
+            //throw new NotFoundException("product를 찾을 수 없습니다.");
+            modelAndView.addObject("message", "사용할 수 없는 채팅방입니다.");
+            return modelAndView;
+        }
         modelAndView.addObject("product", optionalProduct.get());
 
         //seller
@@ -71,7 +75,7 @@ public class ChatController {
         List<ChatMessage> chatMessages = chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
         modelAndView.addObject("chatMessages", chatMessages);
 
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.addObject("message", "채팅 가능");
 
         return modelAndView;
     }
