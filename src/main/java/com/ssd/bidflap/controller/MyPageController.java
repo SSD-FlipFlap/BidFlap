@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/members")
@@ -40,6 +41,39 @@ public class MyPageController {
         // 닉네임, 이메일 정보 가져오기
         MemberDto.SimpleInfoResponseDto memberInfo = memberService.getSimpleInfoByNickname(nickname);
         model.addAttribute("memberInfo", memberInfo);
+
+        // 판매 내역 개수 가져오기
+        int sellingProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SELLING);
+        int auctionProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.AUCTION);
+        int soldProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SOLD);
+        int totalProducts = sellingProducts + auctionProducts + soldProducts;
+
+        model.addAttribute("sellingProducts", sellingProducts);
+        model.addAttribute("auctionProducts", auctionProducts);
+        model.addAttribute("soldProducts", soldProducts);
+        model.addAttribute("totalProducts", totalProducts);
+
+        // 경매 내역 개수 가져오기
+        int ongoingAuctions = auctionService.countAuctionProductsByMemberIdAndStatus(nickname, ProductStatus.AUCTION);
+        int endedAuctions = auctionService.countAuctionProductsByMemberIdAndStatus(nickname, ProductStatus.AUCTION_ENDED);
+        int successfulAuctions = auctionService.countSuccessfulBidProductsByMember(nickname);
+        int totalAuctions = ongoingAuctions + endedAuctions;
+
+        model.addAttribute("ongoingAuctions", ongoingAuctions);
+        model.addAttribute("endedAuctions", endedAuctions);
+        model.addAttribute("successfulAuctions", successfulAuctions);
+        model.addAttribute("totalAuctions", totalAuctions);
+
+        // 구매 내역 4개
+        List<Purchase> purchaseList = purchaseService.getPurchaseByMember(nickname);
+        List<Purchase> recentPurchaseList = purchaseList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("purchaseList", recentPurchaseList);
+
+        // 좋아요 내역 4개
+        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+        List<ProductLike> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("likeList", recentProductLikeList);
+
         return "thyme/member/myPage";
     }
 

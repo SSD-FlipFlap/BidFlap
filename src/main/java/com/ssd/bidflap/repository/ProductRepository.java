@@ -19,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByMember(Member member);
 
     List<Product> findByMemberAndStatus(Member member, ProductStatus status);
+
+    int countByMemberAndStatus(Member member, ProductStatus productStatus);
 }

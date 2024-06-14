@@ -34,7 +34,7 @@
 					<c:when test="${crType == 'product'}">
 						<div class="info">
 							<h1>${product.title}</h1>
-							<p>${seller.nickname} 거래내역 ${5}회</p>
+							<p>${seller.nickname} 거래내역 ${soldCounts}회</p>
 						</div>
 					</c:when>
 					<c:when test="${message == '채팅가능' && crType == 'afterService'}">

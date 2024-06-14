@@ -39,6 +39,11 @@
                 </div>
             </div><br/>
 
+            <!-- 판매 내역이 비어있는 경우 -->
+            <div th:if="${productList == null or #lists.isEmpty(productList)}">
+                해당 내역이 없습니다.
+            </div>
+
             <div class="product_images">
                 <div class="image_row">
 
@@ -57,7 +62,7 @@
                             <div class="heart"></div>
                         </div>
                         <a th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</a>
-                        <a th:text="${product.price}" th:href="@{/product/view(id=${product.id})}">가격</a>
+                        <a th:text="${product.price} + '원'" th:href="@{/product/view(id=${product.id})}">가격</a>
                     </div>
 
                 </div>

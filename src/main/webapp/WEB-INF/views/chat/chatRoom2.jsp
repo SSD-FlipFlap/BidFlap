@@ -33,7 +33,7 @@
 			</div>
 			<div class="info">
 				<h1>${product.title}</h1>
-				<p>${seller.nickname} 거래내역 ${5}회</p>
+				<p>${seller.nickname} 거래내역 ${soldCounts}회</p>
 			</div>
 			<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
 		</div>
