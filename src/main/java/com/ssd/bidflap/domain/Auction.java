@@ -8,7 +8,9 @@ import org.hibernate.annotations.DynamicInsert;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -42,6 +44,7 @@ public class Auction extends BaseEntity {
     public void updateHighPrice(Integer highPrice) {
         this.highPrice = highPrice;
     }
+
 
     public LocalDateTime getEndTime() {
         return createdAt.plusDays(period);
