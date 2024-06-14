@@ -20,6 +20,8 @@ public class Bidder extends BaseEntity {
 
     private Integer price;
 
+    private Integer deposit;
+
     @Enumerated(EnumType.STRING)
     private AuctionCancelStatus cancelStatus = AuctionCancelStatus.NOT_CANCEL;
 

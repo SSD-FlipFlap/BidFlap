@@ -23,6 +23,9 @@ public class Auction extends BaseEntity {
     @SequenceGenerator(name = "auction_seq_generator", sequenceName = "AUCTION_SEQ", allocationSize = 1)
     private Long id;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @ColumnDefault("1")
     private Integer period;
 
@@ -40,12 +43,15 @@ public class Auction extends BaseEntity {
         this.highPrice = highPrice;
     }
 
-//    public LocalDateTime getEndTime() {
-//        return getCreatedDate().plusDays(period);
-//    }
+    public LocalDateTime getEndTime() {
+        return createdAt.plusDays(period);
+    }
 
-//    public Duration getRemainingTime() {
-//        return Duration.between(LocalDateTime.now(), getEndTime());
-//    }
 
+    public Duration getRemainingTime() {
+        LocalDateTime endTime = this.getEndTime();
+        return Duration.between(LocalDateTime.now(), endTime);
+
+
+    }
 }

@@ -41,11 +41,24 @@
 <div class="bidder-container">
     <div class="image-placeholder"></div>
     <div class="left-container">
-        <div class="image-frame">
-            <img class="product-image" src="https://via.placeholder.com/420x420" />
-            <img class="rotate-image" src="https://via.placeholder.com/32x32" />
+<!--        <div class="image-frame">-->
+<!--            <img class="product-image" src="https://via.placeholder.com/420x420" />-->
+<!--            <img class="rotate-image" src="https://via.placeholder.com/32x32" />-->
+<!--        </div>-->
+        <div class="image-slider">
+            <button class="prev-btn">＜</button>
+            <div class="image-frame">
+                <div id="product-image">
+                    <!-- 각 이미지의 URL을 반복하여 화면에 출력 -->
+                    <div th:each="image, index : ${product.productImageList}">
+                        <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"
+                             onclick="removePreviewImage(event, ${index.index})">
+                    </div>
+                </div>
+            </div>
+
+            <!--        <span class="profile-name" th:text="${nickname} + 판매자 이름 여기"></span>-->
         </div>
-<!--        <span class="profile-name" th:text="${nickname} + 판매자 이름 여기"></span>-->
         </div>
     <div class="right-container">
         <div class="product-container">
@@ -55,8 +68,9 @@
             <div class="product-price"> <p>현재 최고가</p>
             <div class="price-value" th:text="${auction.highPrice}">0</div></div>
         <p>남은 시간: <span th:text="${auction.period}">0</span> 일</p>
+            <p>남은 시간: <span th:text="${auction.getRemainingTime().toHours()}">0</span> 시간</p>
 
-    </div>
+        </div>
 
     <div class="bid-container">
         <button id="bidButton">입찰하기</button>

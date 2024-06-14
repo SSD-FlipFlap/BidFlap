@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,6 +45,7 @@ public class AuctionService {
         LocalDateTime dueDate = LocalDateTime.now().plusDays(duePeriod);
         //경매 객체 생성
         Auction auction = Auction.builder()
+                .createdAt(LocalDateTime.now())
                 .period(duePeriod)
                 .productId(product.getId())
                 .highPrice(product.getPrice())
@@ -78,8 +80,23 @@ public class AuctionService {
         if (auction == null) {
             throw new IllegalArgumentException("해당 상품은 경매가 시작되지 않았습니다.");
         }
+        //보증금 제도
+        boolean alreadyBid = bidderRepository
+                .existsByAuctionAndMember(auction, member);
+
+        int depositAmount = alreadyBid ? 0: (int)(0.5*bidPrice);
+
+        if (depositAmount > 0) {
+            if (member.getDepositBalance() < depositAmount) {
+                throw new IllegalArgumentException("보증금 잔액이 부족합니다.");
+            }
+            member.setDepositBalance(member.getDepositBalance() - depositAmount);
+            memberRepository.save(member);
+        }
+
         Bidder bidder = Bidder.builder()
                 .price(bidPrice)
+                .deposit(depositAmount)
                 .member(member)
                 .auction(auction)
                 .build();
@@ -91,6 +108,8 @@ public class AuctionService {
 
         messagingTemplate.convertAndSend("/bid", bidPrice);
     }
-
+//    public List<Bidder> getBiddersByAuctionId(Long auctionId) {
+//        return bidderRepository.findByAuctionId(auctionId);
+//    }
 
 }
