@@ -80,6 +80,12 @@
                 </ul>
             </div>
 
+            <!-- 채팅 내역이 비어있는 경우 -->
+            <div th:if="${(productChatRooms == null or #lists.isEmpty(productChatRooms)) and (asChatRooms == null or #lists.isEmpty(asChatRooms))}">
+                <br/>
+                해당 내역이 없습니다.
+            </div>
+
             <!-- 상품 채팅 -->
             <div class="chat-history" th:if="${not #lists.isEmpty(productChatRooms)}">
                 <div class="chat-item" th:each="chatRoom : ${productChatRooms}">

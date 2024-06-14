@@ -27,6 +27,11 @@
             <div class="product_images">
                 <div class="image_row">
 
+                    <!-- 결제 내역이 비어있는 경우 -->
+                    <div th:if="${purchaseList == null or #lists.isEmpty(purchaseList)}">
+                        결제 내역이 없습니다.
+                    </div>
+
                     <!-- product -->
                     <div class="image_container" th:each="purchase : ${purchaseList}" th:if="${purchase.product != null}">
                         <div class="image_and_heart_container">
@@ -43,7 +48,7 @@
                             <div class="heart"></div>
                         </div>
                         <a th:text="${purchase.product.title}" th:href="@{/product/view(id=${purchase.product.id})}">판매글 제목</a>
-                        <a th:text="${purchase.product.price}" th:href="@{/product/view(id=${purchase.product.id})}">가격</a>
+                        <a th:text="${purchase.product.price} + '원'" th:href="@{/product/view(id=${purchase.product.id})}">가격</a>
                     </div>
 
                     <!-- as -->
@@ -63,7 +68,7 @@
                             <div class="heart"></div>
                         </div>
                         <a th:text="${purchase.afterService.description}" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${purchase.afterService.id})}">판매글 제목</a>
-                        <a th:text="${purchase.afterService.price}" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${purchase.afterService.id})}">가격</a>
+                        <a th:text="${purchase.afterService.price} + '원'" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${purchase.afterService.id})}">가격</a>
                     </div>
                 </div>
             </div>
