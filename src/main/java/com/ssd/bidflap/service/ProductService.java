@@ -230,4 +230,12 @@ public class ProductService {
 
         return productLikeRepository.findByMember(member);
     }
+
+    public int countProductsByMemberAndStatus(String nickname, ProductStatus status) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return productRepository.countByMemberAndStatus(member, status);
+    }
+
 }

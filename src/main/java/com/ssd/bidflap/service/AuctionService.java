@@ -110,4 +110,18 @@ public class AuctionService {
         Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         return bidderRepository.getAllProductsByMemberId(member.getId());
     }
+
+    // 참여 중인 경매 or 완료된 경매 개수
+    public int countAuctionProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.countAuctionProductsByMemberIdAndStatus(member.getId(), status);
+    }
+
+    // 낙찰된 경매 개수
+    public int countSuccessfulBidProductsByMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.countSuccessfulBidProductsByMemberId(member.getId());
+    }
 }
