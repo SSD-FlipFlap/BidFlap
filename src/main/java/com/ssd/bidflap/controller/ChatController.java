@@ -2,11 +2,13 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
+import com.ssd.bidflap.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ public class ChatController {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
     private final AfterServiceRepository asRepository;
+    private final ProductService productService;
 
     //입장 - product
     @GetMapping("/chatRoom/product/{roomId}")
@@ -125,6 +128,10 @@ public class ChatController {
         modelAndView.addObject("chatMessages", chatMessages);
 
         modelAndView.addObject("message", "채팅가능");
+
+        // 거래 내역
+        int soldCounts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SOLD);
+        modelAndView.addObject("soldCounts", soldCounts);
 
         return modelAndView;
     }
