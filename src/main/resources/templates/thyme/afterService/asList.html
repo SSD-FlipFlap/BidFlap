@@ -29,7 +29,8 @@
         <div th:each="expert : ${asList}">
             <div class="expert-container" th:onclick="|goToExpertDetails(${expert.id})|">
                 <div class="asListProfile-container">
-                    <img class="asListProfile" th:src="@{/resources/img/asProfile.png}"/>
+                    <img class="asListProfile" th:if="${expert.member.profile}!=null" th:src="${expert.member.profile}">
+                    <img class="asListProfile" th:if="${expert.member.profile}==null" th:src="@{/resources/img/Profile.png}">
                     <p class="name" th:text="${expert.member.nickname} + ' 님'"></p>
                 </div>
                 <div class="description-container">

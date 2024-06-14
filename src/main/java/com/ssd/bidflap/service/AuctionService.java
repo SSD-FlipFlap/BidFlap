@@ -45,7 +45,6 @@ public class AuctionService {
         LocalDateTime dueDate = LocalDateTime.now().plusDays(duePeriod);
         //경매 객체 생성
         Auction auction = Auction.builder()
-                .createdAt(LocalDateTime.now())
                 .period(duePeriod)
                 .productId(product.getId())
                 .highPrice(product.getPrice())
@@ -80,23 +79,8 @@ public class AuctionService {
         if (auction == null) {
             throw new IllegalArgumentException("해당 상품은 경매가 시작되지 않았습니다.");
         }
-        //보증금 제도
-        boolean alreadyBid = bidderRepository
-                .existsByAuctionAndMember(auction, member);
-
-        int depositAmount = alreadyBid ? 0: (int)(0.5*bidPrice);
-
-        if (depositAmount > 0) {
-            if (member.getDepositBalance() < depositAmount) {
-                throw new IllegalArgumentException("보증금 잔액이 부족합니다.");
-            }
-            member.setDepositBalance(member.getDepositBalance() - depositAmount);
-            memberRepository.save(member);
-        }
-
         Bidder bidder = Bidder.builder()
                 .price(bidPrice)
-                .deposit(depositAmount)
                 .member(member)
                 .auction(auction)
                 .build();
@@ -108,8 +92,36 @@ public class AuctionService {
 
         messagingTemplate.convertAndSend("/bid", bidPrice);
     }
-//    public List<Bidder> getBiddersByAuctionId(Long auctionId) {
-//        return bidderRepository.findByAuctionId(auctionId);
-//    }
 
+    // 낙찰된 경매 내역 조회
+    public List<Product> getProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.findProductsByMemberIdAndStatus(member.getId(), status);
+    }
+
+    // 진행 중인 or 완료된 경매 내역 조회
+    public List<Product> getAuctionWonProductsByMemberIdAndStatus(String nickname) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.getProductsByMemberId(member.getId());
+    }
+
+    // 모든 경매 내역 조회
+    public List<Product> getAllProductsByMemberId(String nickname) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.getAllProductsByMemberId(member.getId());
+    }
+
+    // 참여 중인 경매 or 완료된 경매 개수
+    public int countAuctionProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.countAuctionProductsByMemberIdAndStatus(member.getId(), status);
+    }
+
+    // 낙찰된 경매 개수
+    public int countSuccessfulBidProductsByMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.countSuccessfulBidProductsByMemberId(member.getId());
+    }
 }

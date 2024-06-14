@@ -5,10 +5,8 @@ import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.domain.dto.MemberDto;
-import com.ssd.bidflap.service.ChatService;
-import com.ssd.bidflap.service.MemberService;
-import com.ssd.bidflap.service.ProductService;
-import com.ssd.bidflap.service.PurchaseService;
+import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/members")
@@ -29,6 +28,7 @@ public class MyPageController {
     private final ChatService chatService;
     private final ProductService productService;
     private final PurchaseService purchaseService;
+    private final AuctionService auctionService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -41,6 +41,39 @@ public class MyPageController {
         // 닉네임, 이메일 정보 가져오기
         MemberDto.SimpleInfoResponseDto memberInfo = memberService.getSimpleInfoByNickname(nickname);
         model.addAttribute("memberInfo", memberInfo);
+
+        // 판매 내역 개수 가져오기
+        int sellingProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SELLING);
+        int auctionProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.AUCTION);
+        int soldProducts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SOLD);
+        int totalProducts = sellingProducts + auctionProducts + soldProducts;
+
+        model.addAttribute("sellingProducts", sellingProducts);
+        model.addAttribute("auctionProducts", auctionProducts);
+        model.addAttribute("soldProducts", soldProducts);
+        model.addAttribute("totalProducts", totalProducts);
+
+        // 경매 내역 개수 가져오기
+        int ongoingAuctions = auctionService.countAuctionProductsByMemberIdAndStatus(nickname, ProductStatus.AUCTION);
+        int endedAuctions = auctionService.countAuctionProductsByMemberIdAndStatus(nickname, ProductStatus.AUCTION_ENDED);
+        int successfulAuctions = auctionService.countSuccessfulBidProductsByMember(nickname);
+        int totalAuctions = ongoingAuctions + endedAuctions;
+
+        model.addAttribute("ongoingAuctions", ongoingAuctions);
+        model.addAttribute("endedAuctions", endedAuctions);
+        model.addAttribute("successfulAuctions", successfulAuctions);
+        model.addAttribute("totalAuctions", totalAuctions);
+
+        // 구매 내역 4개
+        List<Purchase> purchaseList = purchaseService.getPurchaseByMember(nickname);
+        List<Purchase> recentPurchaseList = purchaseList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("purchaseList", recentPurchaseList);
+
+        // 좋아요 내역 4개
+        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+        List<ProductLike> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("likeList", recentProductLikeList);
+
         return "thyme/member/myPage";
     }
 
@@ -92,11 +125,23 @@ public class MyPageController {
 
     // 경매 내역
     @GetMapping("/my-page/auction")
-    public String myAuction(HttpSession session, Model model) {
+    public String myAuction(@RequestParam(required = false) ProductStatus status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+
+        List<Product> auctionProductList = new ArrayList<>();
+
+        if (status == null) {   // 전체
+            auctionProductList = auctionService.getAllProductsByMemberId(nickname);
+        } else if (status.equals(ProductStatus.AUCTION_WON)) {  // 낙찰
+            auctionProductList = auctionService.getAuctionWonProductsByMemberIdAndStatus(nickname);
+        } else {
+            auctionProductList = auctionService.getProductsByMemberIdAndStatus(nickname, status);
+        }
+
+        model.addAttribute("productList", auctionProductList);
 
         return "thyme/member/myAuction";
     }
