@@ -1,101 +1,67 @@
-/* 공통 스타일 */
-* {
-    box-sizing: border-box;
-}
-body {
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: #000000;
-    background: #FFFFFF;
-    height:1000px;
-}
-.position-absolute {
-    position: absolute;
-}
-.width-500 {
-    width: 500px;
-}
-.height-500 {
-    height: 500px;
-}
-.left-156 {
-    left: 156px;
-}
-.top-275 {
-    top: 275px;
-}
-.background-f5f5f5 {
-    background: #F5F5F5;
-}
-.border-radius-10 {
-    border-radius: 10px;
-}
-
 .image-gray-box {
-    /*position: absolute;*/
-    /*width: 500px;*/
-    /*height: 500px;*/
-    /*left: 140px;*/
-    /*top: 275px;*/
     width: 500px;
     height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 331px;
-    left: 50%;
+    top: 310px;
+    left: 370px;
     transform: translate(-50%, -50%);
     background: #F5F5F5;
     border-radius: 10px;
+    overflow: hidden;
 }
-
 
 .image-slider {
     position: relative;
     width: 500px;
     height: 500px;
-    left: 140px;
-    top: 275px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* 슬라이드 이미지를 감싸는 컨테이너 */
+.image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+/* 각 이미지 슬라이드 */
+.image-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 제품 이미지 */
+.product-image {
+    width: 350px;
+    height: 350px;
+    border-radius: 10px;
+}
 .prev-btn, .next-btn {
     background-color: #F5F5F5;
     border: none;
     font-size: 24px;
     cursor: pointer;
     z-index: 1;
+    position:absolute;
+    bottom:50%;
+    transform:translateY(50%);
+}
+.prev-btn {
+    left: 10px;
 }
 
-.image-container {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 10px;
-    display: flex;
-    position: relative;
-    background: #F5F5F5;
-}
-
-.image-slide {
-    min-width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-    background-size: cover;
-    background-position: center;
-}
-/* Image */
-.image-13057052 {
-    position: absolute;
-    width: 420px;
-    height: 420px;
-    left: calc(140px + 40px); /* (500px - 420px) / 2 = 40px */
-    top: calc(275px + 40px);  /* (500px - 420px) / 2 = 40px */
-    border-radius: 10px;
-    background-color: #323232;
+.next-btn {
+    right: 10px;
 }
 .line {
     position: absolute;
@@ -105,15 +71,6 @@ body {
     top: 600px;
     border: 1px solid #989292;
     transform: rotate(-90deg);
-}
-
-/* Heart */
-.heart {
-    position: absolute;
-    width: 45px;
-    height: 45px;
-    left: 562px;
-    top: 674px;
 }
 
 /* 구매버튼 */
@@ -221,47 +178,6 @@ body {
     cursor: pointer;
 }
 
-/* Text Styles */
-.text-white {
-    color: #FFFFFF;
-}
-.text-black {
-    color: #000000;
-}
-.font-bold {
-    font-weight: 600;
-}
-.font-regular {
-    font-weight: 400;
-}
-.font-light {
-    font-weight: 300;
-}
-.font-size-35 {
-    font-size: 35px;
-}
-.font-size-30 {
-    font-size: 30px;
-}
-.font-size-25 {
-    font-size: 25px;
-}
-.font-size-20 {
-    font-size: 20px;
-}
-.line-height-42 {
-    line-height: 42px;
-}
-.line-height-36 {
-    line-height: 36px;
-}
-.line-height-30 {
-    line-height: 30px;
-}
-.text-center {
-    text-align: center;
-}
-
 /* 좋아요 불가능 */
 .like-count {
     position: absolute;
@@ -333,29 +249,38 @@ body {
     color: #000000;
 }
 
-/*  작성자 이름, 작성 시간 */
+/* 작성자 프로필 */
 .writer-profile {
     position: absolute;
-    width: 384px;
+    width: 550px;
     height: 139px;
-    left: 140px;
+    left: 115px;
     top: 818px;
-    font-family: 'Inter';
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
     font-size: 30px;
     line-height: 36px;
     color: #636363;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 /* 작성자 프로필 사진 */
 .profile-picture {
-    position: absolute;
     width: 110px;
     height: 110px;
-    left: 156px;
-    top: 818px;
-    /*background: url(가을이.jpg);*/
     border-radius: 20px;
+    object-fit: cover; /* 이미지를 컨테이너에 맞춤 */
+}
+
+.profile-nickname {
+    font-size: 30px;
+    margin-bottom: 7px;
+}
+
+.profile-created-at {
+    font-size: 18px;
 }
 
 /* 상품 가격 */

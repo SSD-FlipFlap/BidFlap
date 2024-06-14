@@ -1,6 +1,8 @@
 package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.Product;
+import com.ssd.bidflap.domain.ProductImage;
+import com.ssd.bidflap.repository.ProductImageRepository;
 import com.ssd.bidflap.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductImageRepository productImageRepository;
 
     @GetMapping("/product/register")
     public String productRegisterForm(HttpSession session, Model model){
