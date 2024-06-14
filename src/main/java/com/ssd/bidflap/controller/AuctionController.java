@@ -74,6 +74,11 @@ public class AuctionController {
         }
     }
 
+//    @GetMapping("/auction/{auctionId}/bidders")
+//    public List<Bidder> getBiddersByAuctionId(@PathVariable Long auctionId) {
+//        return auctionService.getBiddersByAuctionId(auctionId);
+//    }
+
 }
 
 

@@ -5,8 +5,12 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -20,6 +24,9 @@ public class Auction extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auction_seq_generator")
     @SequenceGenerator(name = "auction_seq_generator", sequenceName = "AUCTION_SEQ", allocationSize = 1)
     private Long id;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ColumnDefault("1")
     private Integer period;
@@ -38,4 +45,16 @@ public class Auction extends BaseEntity {
         this.highPrice = highPrice;
     }
 
+
+    public LocalDateTime getEndTime() {
+        return createdAt.plusDays(period);
+    }
+
+
+    public Duration getRemainingTime() {
+        LocalDateTime endTime = this.getEndTime();
+        return Duration.between(LocalDateTime.now(), endTime);
+
+
+    }
 }

@@ -31,6 +31,8 @@ public class Member {
 
     private String account; // 계좌 번호
 
+    private Integer depositBalance; //보증금잔고
+    
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole = MemberRole.USER;
 
@@ -73,5 +75,9 @@ public class Member {
 
     public void changeProfile(String profile) {
         this.profile = profile;
+    }
+
+    public void setDepositBalance(Integer depositBalance) {
+        this.depositBalance = depositBalance;
     }
 }

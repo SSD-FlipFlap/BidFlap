@@ -45,6 +45,7 @@ public class AuctionService {
         LocalDateTime dueDate = LocalDateTime.now().plusDays(duePeriod);
         //경매 객체 생성
         Auction auction = Auction.builder()
+                .createdAt(LocalDateTime.now())
                 .period(duePeriod)
                 .productId(product.getId())
                 .highPrice(product.getPrice())
@@ -70,8 +71,7 @@ public class AuctionService {
             System.out.println("사용자를 찾았습니다.");
         }
 
-        Member member = optionalMember.orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
-
+        Member member = optionalMember.get();
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
@@ -79,19 +79,43 @@ public class AuctionService {
         if (auction == null) {
             throw new IllegalArgumentException("해당 상품은 경매가 시작되지 않았습니다.");
         }
+        //최고금액
+        if (bidPrice <= auction.getHighPrice()) {
+            throw new IllegalArgumentException("현재 최고 금액보다 높은 입찰 금액을 입력해야 합니다.");
+        }
+        
+        //보증금 제도
+        boolean alreadyBid = auction.getBidderList().stream()
+                .anyMatch(bidder -> bidder.getMember().equals(member));
+        //보증금 현재 50%
+        int depositAmount = alreadyBid ? 0: (int)(0.5*product.getPrice());
+
+        if (depositAmount > 0) {
+            if (member.getDepositBalance() < depositAmount) {
+                throw new IllegalArgumentException("보증금 잔액 부족");
+            }
+            member.setDepositBalance(member.getDepositBalance() - depositAmount);
+            memberRepository.save(member);
+        }
+
         Bidder bidder = Bidder.builder()
                 .price(bidPrice)
+                .deposit(depositAmount)
                 .member(member)
                 .auction(auction)
                 .build();
         bidderRepository.save(bidder);
-
-
+        auction.getBidderList().add(bidder);
         auction.updateHighPrice(bidPrice);
         auctionRepository.save(auction);
 
         messagingTemplate.convertAndSend("/bid", bidPrice);
     }
+//    public List<Bidder> getBiddersByAuctionId(Long auctionId) {
+//        return bidderRepository.findByAuctionId(auctionId);
+//    }
+
+
 
     // 낙찰된 경매 내역 조회
     public List<Product> getProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
