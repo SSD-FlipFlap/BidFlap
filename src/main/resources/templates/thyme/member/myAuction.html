@@ -5,6 +5,11 @@
     <title>MyPage</title>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/editProfile.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/member/myPage.css}">
+    <style>
+        .active {
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
@@ -26,93 +31,61 @@
                 <h2>경매 내역</h2><br/>
                 <div>
                     <ul>
-                        <li><a href="#">전체</a></li><li>|</li>
-                        <li><a href="#">경매중</a></li><li>|</li>
-                        <li><a href="#">경매종료</a></li><li>|</li>
-                        <li><a href="#">낙찰</a></li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/auction}">전체</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/auction(status='AUCTION')}">경매중</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/auction(status='AUCTION_ENDED')}">경매종료</a></li><li>|</li>
+                        <li><a href="#" class="status" th:href="@{/members/my-page/auction(status='AUCTION_WON')}">낙찰</a></li>
                     </ul>
                 </div>
             </div><br/>
 
             <div class="product_images">
                 <div class="image_row">
-                    <!-- 이미지 1 -->
-                    <div class="image_container">
+
+                    <div class="image_container" th:each="product : ${productList}">
                         <div class="image_and_heart_container">
                             <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
+                            <a th:href="@{/product/view(id=${product.id})}">
+                                <img th:if="${#lists.size(product.productImageList) > 0}"
+                                     th:src="${product.productImageList.get(0).url}"
+                                     class="product_img" alt="Product Image">
+                                <img th:if="${#lists.size(product.productImageList) == 0}"
+                                     th:src="@{/resources/img/product_example.png}"
+                                     class="product_img" alt="Default Image">
+                            </a>
                             <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
                             <div class="heart"></div>
                         </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 2 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 3 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <div class="image_placeholder"></div>
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-                    <!-- 이미지 4 -->
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
+                        <a th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</a>
+                        <a th:text="${product.price}" th:href="@{/product/view(id=${product.id})}">가격</a>
                     </div>
 
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
-
-                    <div class="image_container">
-                        <div class="image_and_heart_container">
-                            <img th:src="@{/resources/img/product_example.png}" alt="Product 1" class="product_img">
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <span>에어팟 맥스</span>
-                        <span>100,000원</span>
-                    </div>
                 </div>
             </div>
+
         </section>
     </main>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+        const menuLinks = document.querySelectorAll('.status');
+
+        menuLinks.forEach(link => {
+            const linkUrlParams = new URLSearchParams(link.search);
+            const linkStatus = linkUrlParams.get('status');
+
+            if (linkStatus === status) {
+                link.classList.add('active');
+            }
+        });
+
+        if (!status) {
+            menuLinks[0].classList.add('active');
+        }
+    });
+</script>
 </body>
 </html>

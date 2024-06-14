@@ -5,10 +5,8 @@ import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.domain.dto.MemberDto;
-import com.ssd.bidflap.service.ChatService;
-import com.ssd.bidflap.service.MemberService;
-import com.ssd.bidflap.service.ProductService;
-import com.ssd.bidflap.service.PurchaseService;
+import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -29,6 +27,7 @@ public class MyPageController {
     private final ChatService chatService;
     private final ProductService productService;
     private final PurchaseService purchaseService;
+    private final AuctionService auctionService;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -92,11 +91,24 @@ public class MyPageController {
 
     // 경매 내역
     @GetMapping("/my-page/auction")
-    public String myAuction(HttpSession session, Model model) {
+    public String myAuction(@RequestParam(required = false) ProductStatus status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
+        if (status == null) {
+            status = ProductStatus.AUCTION;
+        }
+
+        List<Product> auctionProductList = new ArrayList<>();
+        if (status.equals(ProductStatus.AUCTION_WON)) {
+            auctionProductList = auctionService.getAuctionWonProductsByMemberIdAndStatus(nickname);
+        }
+        else {
+            auctionProductList = auctionService.getProductsByMemberIdAndStatus(nickname, status);
+        }
+
+        model.addAttribute("productList", auctionProductList);
 
         return "thyme/member/myAuction";
     }

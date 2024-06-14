@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -92,5 +93,15 @@ public class AuctionService {
         messagingTemplate.convertAndSend("/bid", bidPrice);
     }
 
+    // 낙찰된 경매 내역 조회
+    public List<Product> getProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.findProductsByMemberIdAndStatus(member.getId(), status);
+    }
 
+    // 경매 내역 조회
+    public List<Product> getAuctionWonProductsByMemberIdAndStatus(String nickname) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.getProductsByMemberId(member.getId());
+    }
 }
