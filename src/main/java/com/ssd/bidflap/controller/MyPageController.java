@@ -96,15 +96,14 @@ public class MyPageController {
         if (nickname == null) {
             return "redirect:/auth/login";
         }
-        if (status == null) {
-            status = ProductStatus.AUCTION;
-        }
 
         List<Product> auctionProductList = new ArrayList<>();
-        if (status.equals(ProductStatus.AUCTION_WON)) {
+
+        if (status == null) {   // 전체
+            auctionProductList = auctionService.getAllProductsByMemberId(nickname);
+        } else if (status.equals(ProductStatus.AUCTION_WON)) {  // 낙찰
             auctionProductList = auctionService.getAuctionWonProductsByMemberIdAndStatus(nickname);
-        }
-        else {
+        } else {
             auctionProductList = auctionService.getProductsByMemberIdAndStatus(nickname, status);
         }
 

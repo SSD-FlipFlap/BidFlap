@@ -99,9 +99,15 @@ public class AuctionService {
         return bidderRepository.findProductsByMemberIdAndStatus(member.getId(), status);
     }
 
-    // 경매 내역 조회
+    // 진행 중인 or 완료된 경매 내역 조회
     public List<Product> getAuctionWonProductsByMemberIdAndStatus(String nickname) {
         Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         return bidderRepository.getProductsByMemberId(member.getId());
+    }
+
+    // 모든 경매 내역 조회
+    public List<Product> getAllProductsByMemberId(String nickname) {
+        Member member = memberRepository.findByNickname(nickname).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+        return bidderRepository.getAllProductsByMemberId(member.getId());
     }
 }
