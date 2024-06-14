@@ -15,7 +15,9 @@ public interface BidderRepository extends JpaRepository<Bidder, Long> {
     @Query("SELECT p FROM Product p JOIN p.auction a JOIN a.bidderList b WHERE b.member.id = :memberId AND p.status = :status")
     List<Product> findProductsByMemberIdAndStatus(Long memberId, ProductStatus status);
 
-    @Query("SELECT p FROM Product p JOIN p.auction a " +
-            "WHERE a.successfulBidder = :memberId")
+    @Query("SELECT p FROM Product p JOIN p.auction a WHERE a.successfulBidder = :memberId")
     List<Product> getProductsByMemberId(Long memberId);
+
+    @Query("SELECT p FROM Product p JOIN p.auction a JOIN a.bidderList b WHERE b.member.id = :memberId ")
+    List<Product> getAllProductsByMemberId(Long memberId);
 }
