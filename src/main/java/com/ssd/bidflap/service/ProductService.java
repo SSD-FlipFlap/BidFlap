@@ -242,5 +242,15 @@ public class ProductService {
     public List<Product> getProductsByCategory(Category category){
         return productRepository.findByCategory(category);
     }
+    
+    //요즘뜨는상품
+    @Transactional(readOnly = true)
+    public List<Product> getPopularProducts() {
+        return productRepository.findAllByOrderByLikeCountDesc();
+    }
+    @Transactional(readOnly = true)
+    public List<Product> getProductsByCategories(List<Category> categories) {
+        return productRepository.findByCategoryInOrderByLikeCountDesc(categories);
+    }
 
 }

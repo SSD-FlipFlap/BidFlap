@@ -23,4 +23,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     int countByMemberAndStatus(Member member, ProductStatus productStatus);
 
     List<Product> findByCategory(Category category);
+
+    List<Product> findAllByOrderByLikeCountDesc();
+
+    List<Product> findByCategoryInOrderByLikeCountDesc(List<Category> categories);
 }

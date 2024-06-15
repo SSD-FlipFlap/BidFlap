@@ -233,4 +233,16 @@ public class MemberService {
         return optionalMember.get();
     }
 
+    public List<Category> getMemberByInterests(String nickname){
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        Member member = optionalMember.get();
+
+        return member.getInterestList().stream()
+                .map(interest -> interest.getCategory())
+                .collect(Collectors.toList());
+    }
+
 }
