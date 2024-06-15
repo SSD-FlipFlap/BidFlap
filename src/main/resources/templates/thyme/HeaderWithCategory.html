@@ -1,13 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html><!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
@@ -18,7 +9,7 @@
     <script>
         function confirmLogout(event) {
             event.preventDefault(); // 폼 전송 막기
-            const logoutConfirmed = confirm("로그아웃 하시겠습니까?");
+            const logoutConfirmed = confirm("로그아웃하시겠습니까?");
             if (logoutConfirmed) {
                 // 사용자가 확인을 누른 경우, 로그아웃 폼을 제출
                 document.getElementById("logoutForm").submit();
@@ -52,6 +43,19 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="category">
+        <ul>
+            <li><a href="#" th:href="@{/product(category='ALL')}">전체</a></li>
+            <li><a href="#" th:href="@{/product(category='MOBILE')}">휴대폰</a></li>
+            <li><a href="#" th:href="@{/product(category='TABLET')}">태블릿</a></li>
+            <li><a href="#" th:href="@{/product(category='WEARABLE')}">웨어러블</a></li>
+            <li><a href="#" th:href="@{/product(category='PC_NOTEBOOK')}">PC/노트북</a></li>
+            <li><a href="#" th:href="@{/product(category='CAMERA')}">카메라</a></li>
+            <li><a href="#" th:href="@{/product(category='PC_PARTS')}">PC 부품</a></li>
+            <li><a href="#" th:href="@{/product(category='ACCESSORY')}">악세사리</a></li>
+            <li><a href="#" th:href="@{/product(category='ALL')}">기타</a></li>
+        </ul>
     </div>
 </header>
 </body>
