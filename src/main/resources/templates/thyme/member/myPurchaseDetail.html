@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>구매 페이지</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/product/PurchaseProduct.css}">
+</head>
+<body>
+<div th:include="thyme/HeaderWithCategory"></div>
+<form id="paymentForm" action="/product/purchase/confirm" method="post" th:object="${purchase}">
+    <div id="productDetails">
+        <a th:if="${purchase.product != null}" th:href="@{/product/view(id=${purchase.product.id})}">
+            <img th:src="${purchase.product.productImageList[0].url}" alt="Product Image" style="width: 150px; max-height: 150px; border-radius: 10px">
+        </a>
+        <a th:if="${purchase.afterService != null}" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${purchase.afterService.id})}">
+            <img th:if="${#lists.size(purchase.afterService.member.profile) > 0}"
+                 th:src="${purchase.afterService.member.profile}"
+                 alt="Profile Image" style="width: 150px; max-height: 150px; border-radius: 10px">
+            <img th:if="${#lists.size(purchase.afterService.member.profile) == 0}"
+                 th:src="@{/resources/img/product_example.png}"
+                 alt="Default Image" style="width: 150px; max-height: 150px; border-radius: 10px">
+        </a>
+
+        <div class="product-info">
+            <a th:if="${purchase.product != null}" th:href="@{/product/view(id=${purchase.product.id})}">
+                <div class="product-title" th:text="*{product.title}"></div>
+            </a>
+            <a th:if="${purchase.afterService != null}" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${purchase.afterService.id})}">
+                <div class="product-title" th:text="*{afterService.description}"></div>
+            </a>
+            <div class="product-price" th:text="${purchase.product.price != null ? purchase.product.price: purchase.afterService.price}"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>배송지</h2>
+        <div class="line"></div>
+        <div class="input-group">
+            <label for="name">수령인</label>
+            <input type="text" id="name" name="name" th:field="*{name}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="zipcode">우편번호</label>
+            <input type="text" id="zipcode" name="zipcode" th:field="*{zipcode}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="address">주소</label>
+            <input type="text" id="address" name="address" th:field="*{address}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="addressSpec">상세주소</label>
+            <input type="text" id="addressSpec" name="addressSpec" th:field="*{addressSpec}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="phone">전화번호</label>
+            <input type="text" id="phone" name="phone" th:field="*{phone}" disabled>
+        </div>
+        <div class="input-group">
+            <label for="deliveryMessage">배송메시지</label>
+            <input type="text" id="deliveryMessage" name="deliveryMessage" th:field="*{deliveryMessage}" disabled>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>결제 정보</h2>
+        <div class="line"></div>
+        <div class="input-group">
+            <label for="paymentMethod">결제수단</label>
+            <select id="paymentMethod" name="paymentMethod" disabled>
+                <option value="card">카드결제</option>
+                <option value="bank">계좌이체</option>
+                <option value="mobile">휴대폰결제</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>결제 요약</h2>
+        <div class="summary">
+            <div class="summary-item">
+                <span>상품 금액</span>
+                <span th:text="${purchase.product.price != null ? purchase.product.price + '원': purchase.afterService.price + '원'}"></span>
+            </div>
+            <div class="summary-item">
+                <span>배송비</span>
+                <span>2,500원</span>
+            </div>
+            <div class="summary-item">
+                <span>지역별 배송비</span>
+                <span>0원</span>
+            </div>
+            <div class="total">
+                <span>최종 결제 금액</span>
+                <span th:text="${purchase.product.price != null ? purchase.product.price + 2500 + '원': purchase.afterService.price + 2500 + '원'}"></span>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+</html>

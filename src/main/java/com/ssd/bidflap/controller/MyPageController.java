@@ -6,12 +6,15 @@ import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.repository.PurchaseRepository;
 import com.ssd.bidflap.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,6 +32,7 @@ public class MyPageController {
     private final ProductService productService;
     private final PurchaseService purchaseService;
     private final AuctionService auctionService;
+    private final PurchaseRepository purchaseRepository;
 
     // 마이페이지 홈
     @GetMapping("/my-page")
@@ -121,6 +125,21 @@ public class MyPageController {
         model.addAttribute("purchaseList", purchaseList);
 
         return "thyme/member/myPurchase";
+    }
+
+    // 구매 내역 상세
+    @GetMapping("/my-page/purchase/{id}")
+    public String myPurchase(@PathVariable Long id, HttpSession session, Model model) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        Purchase purchase = purchaseRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("구매 정보를 찾을 수 없습니다."));
+        model.addAttribute("purchase", purchase);
+
+        return "thyme/member/myPurchaseDetail";
     }
 
     // 경매 내역
