@@ -35,6 +35,12 @@
     </script>
 </div>
 
+<div th:if="${deleteSuccess}">
+    <script th:inline="javascript">
+        alert("탈퇴되었습니다.");
+    </script>
+</div>
+
 <div class="main-container">
 
     <div class="main-frame">
