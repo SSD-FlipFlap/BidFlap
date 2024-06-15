@@ -2,6 +2,7 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductImage;
+import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.repository.ProductImageRepository;
 import com.ssd.bidflap.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -117,9 +118,15 @@ public class ProductController {
     }
 
     @GetMapping("/product/list")
-    public String productList(Model model, @RequestParam(value="keyword", required = false) String keyword) {
+    public String productList(Model model,
+                              @RequestParam(value = "keyword", required = false) String keyword,
+                              @RequestParam(value = "category", required = false) String category) {
         List<Product> products;
-        if (keyword != null && !keyword.isEmpty()) {
+        if (category != null && !category.isEmpty()) {
+            // 문자열로 된 category를 Category 열거형(Enum)으로 변환
+            Category categoryEnum = Category.valueOf(category.toUpperCase());
+            products = productService.getProductsByCategory(categoryEnum);
+        } else if (keyword != null && !keyword.isEmpty()) {
             products = productService.searchByTitle(keyword);
         } else {
             products = productService.getAllProducts();
