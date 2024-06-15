@@ -69,15 +69,6 @@
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = '/chat/createASChatRoom/' + afterServiceId;
-        /*
-        // CSRF 토큰을 추가하는 부분 (Spring Security를 사용하는 경우)
-        var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        var csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_csrf';
-        csrfInput.value = csrfToken;
-        form.appendChild(csrfInput);
-        */
 
         document.body.appendChild(form);
         form.submit();
