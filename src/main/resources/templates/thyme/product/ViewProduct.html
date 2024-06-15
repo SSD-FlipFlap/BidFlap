@@ -117,6 +117,40 @@
             slides[currentIndex].style.display = 'flex';
         }
 
+        const modal = document.querySelector('.modal');
+        const btnOpenModal=document.querySelector('#open-modal');
+
+        btnOpenModal.addEventListener('click', function() {
+            modal.style.display="flex";
+        });
+
+        modal.addEventListener('click', function() {
+            modal.style.display = "none";
+        });
+
+        document.getElementById("startChatBtn").addEventListener('click', function() {
+            var ProductId = [[${product.id}]];
+
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/chat/createChatRoom/' + ProductId;
+            /*
+            // CSRF 토큰을 추가하는 부분 (Spring Security를 사용하는 경우)
+            var csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            var csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_csrf';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+            */
+
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+        function goToChatRoom(roomId) {
+            window.location.href = '/chat/chatRoom/afterService/' + roomId;
+        }
     </script>
 </head>
 <body>
@@ -125,13 +159,13 @@
 <div class="image-slider">
     <div class="image-gray-box">
 
-        <div id="productPreviewContainer">
-            <!-- 각 이미지의 URL을 반복하여 화면에 출력 -->
-            <div th:each="image, index : ${product.productImageList}">
-                <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"
-                     onclick="removePreviewImage(event, ${index.index})">
-            </div>
-        </div>
+<!--        <div id="productPreviewContainer">-->
+<!--            &lt;!&ndash; 각 이미지의 URL을 반복하여 화면에 출력 &ndash;&gt;-->
+<!--            <div th:each="image, index : ${product.productImageList}">-->
+<!--                <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"-->
+<!--                     onclick="removePreviewImage(event, ${index.index})">-->
+<!--            </div>-->
+<!--        </div>-->
 
     <button class="prev-btn" onclick="prevImage()">＜</button>
         <div class="image-container">
@@ -143,8 +177,6 @@
 
     </div>
 </div>
-
-
 <div class="line"></div>
 
 <!-- 작성자인 경우, 아닌 경우에 따른 버튼 변경 구현 -->
@@ -198,6 +230,11 @@
         <input type="hidden" name="productId" th:value="${product.id}"/>
         <button type="submit" id="like-button-non-author" th:text="'좋아요 ' + ${product.likeCount}"></button>
     </form>
+
+<!--    <div>-->
+<!--        <inpu-->
+
+<!--    </div>-->
 </div>
 <!-- 작성자인 경우에만 수정 및 삭제 버튼 표시 -->
 <div th:if="${isAuthor}">
@@ -220,6 +257,26 @@
         <div class="profile-created-at" th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') + '에 작성하셨습니다.'}"></div>
     </div>
 </div>
+
+<!--<div class="modal">-->
+<!--    <div class="modal_body">-->
+<!--        <h1 th:text="${product.member.nickname}+' 채팅방 리스트'"></h1>-->
+<!--        <hr>-->
+<!--        <p th:text="${sizeOfList}==0? '개설된 채팅방이 없습니다.':${sizeOfList}+'개의 채팅방이 있습니다.'"></p>-->
+<!--        <button id="startChatBtn" th:if="${product.member.nickname} != ${session.loggedInMember} and ${sizeOfList}==0">새로운 채팅 시작하기</button>-->
+<!--        <hr>-->
+<!--        <div th:if="${sizeOfList}!=0">-->
+<!--            <div th:each="room : ${chatRoomList}">-->
+<!--                <div th:onclick="|goToChatRoom(${room.id})|">-->
+<!--                    <div>-->
+<!--                        <p th:text="${room.member.nickname}+'님'"></p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <hr>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div class="price" th:text="${product.price != null ? product.price + '원' : ''}"></div>
 <div class="product-title" th:text="${product.title}"></div>
