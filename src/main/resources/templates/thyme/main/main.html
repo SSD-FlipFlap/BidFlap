@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/main/main.css}">
     <title>메인페이지-로그인</title>
@@ -12,6 +11,23 @@
                 alert(memberNickname + '님, 로그인 되었습니다.');
             }
         });
+
+        function filterProductsByCategory(categoryName) {
+            // 선택한 카테고리에 따라 상품 필터링 및 표시
+            const productRows = document.querySelectorAll('.product_images .image_row');
+            productRows.forEach(row => {
+                const products = row.querySelectorAll('.image_container');
+                products.forEach(product => {
+                    const category = product.getAttribute('data-category');
+                    if (category === categoryName || categoryName === '전체') {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            });
+        }
+
     </script>
 </head>
 <body>
@@ -24,7 +40,8 @@
 </div>
 
 <div class="main-container">
-    <div class="main-frame">
+
+         <div class="main-frame">
         <img th:src="@{/resources/img/main_frame.png}" alt="Product 1">
     </div>
     <br/><br/>
@@ -35,12 +52,72 @@
             <button type="submit">검색</button>
         </form>
     </div>
-
-    <!-- 로그인 o -->
+        <br/>
+        <br/>
+        <br/>
     <div th:if="${session.loggedInMember != null}">
         <div class="recommendations-container" th:text="${session.loggedInMember + '님을 위한 추천 상품'}"></div>
-        <div class="recommendations-category">카메라 | 핸드폰</div>
+
+        <!-- 관심 카테고리가 있는 경우 -->
+        <div th:if="${interests != null and #lists.size(interests) > 0}">
+            <div class="recommendations-category">
+                <span th:each="category, iterStat : ${interests}">
+                    <button th:text="${category.name}" th:attr="onclick='filterProductsByCategory(\'' + ${category.name} + '\')'"></button>
+                    <span th:if="${!iterStat.last}"> | </span>
+                </span>
+            </div>
+
+            <!-- 선택한 카테고리에 따라 상품 이미지 노출 -->
+            <div class="product_images">
+                <div class="image_row" th:each="product : ${recommendedProducts}">
+                    <div class="image_container" th:attr="data-category=${product.category}">
+                        <a th:href="@{'/product/view?id=' + ${product.id}}">
+                            <div class="image_and_heart_container">
+                                <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
+                                <img th:src="@{/resources/img/heart.png}" alt="heart" class="heart_icon">
+                            </div>
+                            <p th:text="${product.price} + '원'"></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 로그인 유저 : 관심 카테고리가 없는 경우. 좋아요 순 정렬 -->
+        <div class="product_images" th:unless="${interests != null and #lists.size(interests) > 0}">
+            <div class="image_row" th:each="product : ${recommendedProducts}">
+
+                <div class="image_container">
+                    <a th:href="@{'/product/view?id=' + ${product.id}}">
+                    <div class="image_and_heart_container">
+                        <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
+                        <img th:src="@{/resources/img/heart.png}" alt="heart" class="heart_icon">
+                    </div>
+                    <p th:text="${product.price} + '원'"></p></a>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+<!--     <div th:if="${session.loggedInMember == null}"> <!--로그아웃 알고리즘 좋아요 순 추천-->
+        <div class="recommendations-container">요즘 뜨는 상품</div>
+
+        <div class="product_images">
+            <div class="image_row" th:each="product,iterStat : ${popularProducts}">
+                <!--상품 이미지 정보 -->
+                <div class="image_container">
+                    <a th:href="@{'/product/view?id=' + ${product.id}}">
+                    <div class="image_and_heart_container">
+                        <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
+                        <img th:src="@{/resources/img/heart.png}" alt="heart" class="heart_icon">
+                    </div>
+                        <p th:text="${product.price} + '원'"></p></a>
+                </div>
+                <div th:if="${iterStat.count % 4 == 0}"></div>
+            </div>
+        </div> -->
+ 
 
     <!-- 로그인 x -->
     <div th:if="${session.loggedInMember == null}">
@@ -79,7 +156,9 @@
         <a href=""> 좋아요한 목록</a><br/><br/><br/>
         <a href=""> AS 서비스</a> <br/><br/><br/>
         <a href="/product/register"> 판매글 등록</a><br/><br/><br/>
+
     </div>
+
 </div>
 
 </body>
