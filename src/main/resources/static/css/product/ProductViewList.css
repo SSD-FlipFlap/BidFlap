@@ -4,47 +4,41 @@
 
 .main-frame {
     position: relative;
-    width: 1920px;
     height: 298px;
     background: #323232;
     border-radius: 10px;
     margin-bottom: 20px;
     overflow: hidden;
 }
-
 .search-container {
     position: relative;
-    width: 700px;
-    height: 50px;
     margin: 0 auto;
-    border: 2px solid #495057;
-    border-radius: 15px;
+    width: 700px;
+    height: 100px;
 }
-
+.search-container img {
+    width: 100%; /* 이미지의 너비를 컨테이너에 맞춤 */
+    height: 100%; /* 이미지의 높이를 컨테이너에 맞춤 */
+    display: block;
+}
+.search-container input[type="text"] {
+    position: absolute;
+    top: 6px;
+    left: 50px;
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    outline: none; /* 포커스 시 생기는 테두리를 없앰 */
+    background-color: transparent; /* 배경을 투명하게 설정 */
+    color: black;
+}
 .search-container button[type="submit"] {
     position: absolute;
     left: -9999px;
     width: 1px;
     height: 1px;
     overflow: hidden;
-}
-
-.search-input {
-    width: 100%;
-    height: 100%;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    background-image: url('../resources/static/img/searchbar.png');
-    background-size: cover;
-    background-position: center;
-    color: #555;
-    font-size: 16px;
-    outline: none;
-}
-
-.search-input::placeholder {
-    color: #999;
 }
 
 .recommendations-container {
@@ -71,9 +65,10 @@
 .image_row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     margin-bottom: 1px;
+    margin-left: 115px;
 }
 
 .image_container {
@@ -132,3 +127,6 @@
     width: 20px;
 }
 
+.empty-text {
+    margin-left: 30%;
+}

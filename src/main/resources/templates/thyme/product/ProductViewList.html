@@ -12,31 +12,36 @@
     <br/>
     <div class="search-container">
         <form action="/product/list" method="get">
-            <input type="text" name="keyword" class="search-input" placeholder="원하는 제품을 검색해보세요">
+            <img th:src="@{/resources/img/searchbar.png}" alt="searchbar">
+            <input type="text" name="keyword" placeholder="원하는 제품을 검색해보세요">
             <button type="submit">검색</button>
         </form>
     </div>
-    <br/>
-    <br/>
-    <br/>
+    <br>
 
     <div class="product_images">
         <div class="image_row"> <!-- 새로운 행 시작 -->
-            <div th:each="product, iterStat : ${products}">
-                <!-- 상품 이미지와 정보 -->
-                <div class="image_container">
-                    <a th:href="@{'/product/view?id=' + ${product.id}}">
-                    <div class="image_and_heart_container">
-                        <div class="image_placeholder"></div>
-                        <img th:src="@{/resources/img/product_example.png}" alt="Product Image" class="product_img">
-                        <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                        <div class="heart"></div>
-                    </div>
-                    <p th:text="${product.price} + '원'"></p>
-                                        </a>
+            <div class="image_container" th:each="product : ${products}">
+                <div class="image_and_heart_container">
+                    <div class="image_placeholder"></div>
+                    <a th:href="@{/product/view(id=${product.id})}">
+                        <img th:if="${#lists.size(product.productImageList) > 0}"
+                             th:src="${product.productImageList.get(0).url}"
+                             class="product_img" alt="Product Image">
+                        <img th:if="${#lists.size(product.productImageList) == 0}"
+                             th:src="@{/resources/img/product_example.png}"
+                             class="product_img" alt="Default Image">
+                    </a>
+                    <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                    <div class="heart"></div>
                 </div>
-                <!-- 행 종료 -->
-                <div th:if="${iterStat.count % 4 == 0}"></div>
+                <a th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</a>
+                <a th:text="${product.price} + '원'" th:href="@{/product/view(id=${product.id})}">가격</a>
+            </div>
+
+            <!-- 검색 결과가 없는 경우 -->
+            <div th:if="${products == null or #lists.isEmpty(products)}" class="empty-text">
+                <p>검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</p>
             </div>
         </div>
     </div>
