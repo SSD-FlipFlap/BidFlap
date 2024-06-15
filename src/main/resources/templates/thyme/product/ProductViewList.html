@@ -13,7 +13,7 @@
     <div class="search-container">
         <form action="/product/list" method="get">
             <img th:src="@{/resources/img/searchbar.png}" alt="searchbar">
-            <input type="text" name="keyword" class="" placeholder="원하는 제품을 검색해보세요">
+            <input type="text" name="keyword" placeholder="원하는 제품을 검색해보세요">
             <button type="submit">검색</button>
         </form>
     </div>
@@ -40,7 +40,7 @@
             </div>
 
             <!-- 검색 결과가 없는 경우 -->
-            <div th:if="${products == null or #lists.isEmpty(products)}">
+            <div th:if="${products == null or #lists.isEmpty(products)}" class="empty-text">
                 <p>검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</p>
             </div>
         </div>
