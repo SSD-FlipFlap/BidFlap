@@ -3,7 +3,7 @@ h1 {
     font-size: 40px;
 }
 
-form {
+#paymentForm {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -103,7 +103,7 @@ form {
     text-align: center;
 }
 
-button {
+.purchase-btn {
     background-color: #215818;
     color: #ffffff;
     width: 500px;
@@ -113,4 +113,8 @@ button {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+}
+
+label {
+    font-weight: bold;
 }

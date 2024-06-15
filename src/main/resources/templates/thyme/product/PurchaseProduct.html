@@ -24,7 +24,7 @@
 <div th:include="thyme/HeaderWithCategory"></div>
 <form id="paymentForm" action="/product/purchase/confirm" method="post">
     <div id="productDetails">
-            <img th:src="${product.productImageList[0].url}" alt="Product Image" style="width: 150px; max-height: 150px; border-radius: 10px">
+            <img th:src="${product.productImageList[0].url}" alt="Product Image" style="width: 150px; height: 150px; border-radius: 10px">
         <div class="product-info">
             <div class="product-title" th:text="${product.title != null ?product.title: ''}"></div>
             <div class="product-price" th:text="${product.price != null ? product.price  : ''}"></div>
@@ -98,7 +98,7 @@
     <div class="button-container">
         <input type="hidden" name="productId" th:value="${product.id}" />
         <input type ="hidden" id = "phone" name="phone"/>
-        <button type="submit" >결제하기</button>
+        <button type="submit" class="purchase-btn" >결제하기</button>
     </div>
 </form>
 </body>

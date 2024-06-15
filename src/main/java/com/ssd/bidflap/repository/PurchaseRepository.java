@@ -10,8 +10,5 @@ import java.util.List;
 
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
-    Purchase findById(long purchaseId);
-    Product findProductById(long productId);
-
     List<Purchase> findByMember(Member member);
 }
