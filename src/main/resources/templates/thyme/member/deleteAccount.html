@@ -35,7 +35,9 @@
                 </label>
                 <br/><br/>
             </div>
-            <button type="submit" class="delete-button" id="deleteButton" disabled>탈퇴하기</button>
+            <form th:action="@{/members/delete}" method="post">
+                <button type="submit" class="delete-button" id="deleteButton" disabled>탈퇴하기</button>
+            </form>
         </section>
     </main>
 </div>

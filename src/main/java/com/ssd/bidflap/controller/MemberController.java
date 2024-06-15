@@ -157,4 +157,19 @@ public class MemberController {
 
         return "redirect:/members/edit-profile";
     }
+    
+    // 회원 탈퇴
+    @PostMapping("/delete")
+    public String deleteMember(HttpSession session, RedirectAttributes redirectAttributes) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        boolean isSuccess = memberService.deleteMember(nickname);
+        redirectAttributes.addFlashAttribute("deleteSuccess", isSuccess);
+        session.invalidate();
+        return "redirect:/";
+    }
 }
