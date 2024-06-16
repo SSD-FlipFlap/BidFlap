@@ -28,7 +28,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatRoom> findChatRoomByProductIdAndNickname(long productId, String nickname) {
+    public List<ChatRoom> findByProductIdAndNickname(long productId, String nickname) {
         return chatRoomRepository.findByProductIdAndNickname(productId, nickname);
     }
 
@@ -125,7 +125,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatRoom> findByAfterServiceId(long asId) {
-        return chatRoomRepository.findByAfterServiceId(asId);
+        List<ChatRoom> crList = chatRoomRepository.findByAfterServiceId(asId);
+        //Collections.sort(crList);
+
+        return crList;
     }
     /*
     @Override

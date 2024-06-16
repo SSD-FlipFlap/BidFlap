@@ -1,9 +1,12 @@
 package com.ssd.bidflap.controller;
 
+import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductImage;
 import com.ssd.bidflap.domain.enums.Category;
+import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductImageRepository;
+import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,6 +25,8 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductImageRepository productImageRepository;
+    private final MemberRepository memberRepository;
+    private final ChatService chatService;
 
     @GetMapping("/product/register")
     public String productRegisterForm(HttpSession session, Model model){
@@ -59,6 +65,20 @@ public class ProductController {
 
         Integer likeCount = product.getLikeCount();
         model.addAttribute("likeCount", likeCount);
+
+        //채팅
+        List<ChatRoom> chatRoomList = new ArrayList<>();
+
+        try {
+            if (!memberRepository.findByNickname(nickname).isEmpty() && product.getMember().getNickname().equals(nickname)){
+                chatRoomList = chatService.findByProductId(id);
+            }else if(!memberRepository.findByNickname(nickname).isEmpty())
+                chatRoomList = chatService.findByProductIdAndNickname(id, nickname);
+            model.addAttribute("sizeOfList", chatRoomList.size());
+        }catch(Exception e){
+            model.addAttribute("sizeOfList", "채팅방을 찾을 수 없습니다.");
+        }
+        model.addAttribute("chatRoomList", chatRoomList);
 
         return "thyme/product/ViewProduct";
     }

@@ -145,48 +145,23 @@ public class ChatController {
     //생성
     @PostMapping("/createChatRoom/{pId}")
     private RedirectView createChatRoom(@PathVariable long pId, HttpSession session) {
-        /*
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("chat/chatRoom");
-        modelAndView.addObject("crType", "product");
-        */
         String nickname = (String) session.getAttribute("loggedInMember");
         //product
         Optional<Product> optionalProduct = productRepository.findById(pId);
         if(optionalProduct.isEmpty())
             throw new NotFoundException("product를 찾을 수 없습니다.");
-        //modelAndView.addObject("product", optionalProduct.get());
 
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if(optionalMember.isEmpty()){
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        //modelAndView.addObject("sender", optionalMember.get());
 
         ChatRoom chatRoom = chatService.insertChatRoom("product", optionalProduct.get().getId(), optionalMember.get());
 
         long roomId = chatRoom.getId();
         RedirectView redirectView = new RedirectView("/chat/chatRoom/product/" + roomId);
         return redirectView;
-
-        /*
-        List<ChatMessage> chatRoomMessages = new ArrayList<>();
-        modelAndView.addObject("chatRoom", chatRoom);
-
-        //seller
-        Optional<Member> optionalSeller = memberRepository.findByNickname(optionalProduct.get().getMember().getNickname());
-        if(optionalSeller.isEmpty()){
-            throw new UsernameNotFoundException("판매자를 찾을 수 없습니다.");
-        }
-        modelAndView.addObject("seller", optionalSeller.get());
-
-        modelAndView.addObject("chatRoomMessages", chatRoomMessages);
-
-        modelAndView.addObject("message", "채팅가능");
-        return modelAndView;
-        */
-
     }
 
     @PostMapping("/createASChatRoom/{afterServiceId}")
@@ -230,15 +205,4 @@ public class ChatController {
                 .message(message.getMessage())
                 .build();
     }
-    /*
-    @DeleteMapping("/delete/{chatRoomId}")
-    public ModelAndView deleteMessage(@PathVariable int chatRoomId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        chatService.deleteMessages(chatRoomId);
-        modelAndView.addObject("message", "Messages deleted successfully");
-        modelAndView.setViewName("redirect:/chatRoom/" + chatRoomId);
-        return modelAndView;
-    }
-    */
 }

@@ -411,3 +411,31 @@
     color: white;
     cursor: pointer;
 }
+
+.chatmodal {
+    justify-content: center;
+    display:none;
+    align-items: center;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.chatmodal_body {
+    position:absolute;
+    width:400px;
+    height:600px;
+    padding:40px;
+
+    text-align: center;
+    max-height: 600px;
+    overflow-y: auto;
+
+    background-color: rgb(255,255,255);
+    border-radius:10px; //테두리
+    box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
+}
