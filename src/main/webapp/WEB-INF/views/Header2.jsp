@@ -34,7 +34,7 @@
     <div class="container">
         <div class="logo">
             <a href="#">
-                <img src="resources/img/Logo.png" alt="BID FLAP">
+                <img src="/resources/img/Logo.png" alt="BID FLAP">
             </a>
         </div>
         <div class="menu">

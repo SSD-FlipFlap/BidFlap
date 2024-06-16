@@ -3,14 +3,16 @@ package com.ssd.bidflap.service;
 import com.ssd.bidflap.domain.ChatMessage;
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Member;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public interface ChatService {
     Optional<ChatRoom> getChatRoomById(long chatRoomId);
 
-    List<ChatRoom> findChatRoomByProductIdAndNickname(long productId, String nickname);
+    List<ChatRoom> findByProductIdAndNickname(long productId, String nickname);
 
     List<ChatRoom> findByAfterServiceIdAndNickname(long afterServiceId, String nickname);
 

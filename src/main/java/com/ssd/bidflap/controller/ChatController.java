@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -54,7 +55,6 @@ public class ChatController {
         //product
         Optional<Product> optionalProduct = productRepository.findById(optionalChatRoom.get().getProduct().getId());
         if(optionalProduct.isEmpty()){
-            //throw new NotFoundException("product를 찾을 수 없습니다.");
             modelAndView.addObject("message", "사용할 수 없는 채팅방입니다.");
             return modelAndView;
         }
@@ -67,6 +67,9 @@ public class ChatController {
         }
         modelAndView.addObject("seller", optionalSeller.get());
 
+        if(!nickname.equals(optionalSeller.get().getNickname()) && !nickname.equals(optionalChatRoom.get().getMember().getNickname()))
+            throw new AccessDeniedException("접근 가능한 사용자가 아닙니다.");
+
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if(optionalMember.isEmpty()){
@@ -78,6 +81,10 @@ public class ChatController {
         //chatMessages
         List<ChatMessage> chatMessages = chatService.getChatMessagesByChatRoomId(optionalChatRoom.get().getId());
         modelAndView.addObject("chatMessages", chatMessages);
+
+        // 거래 내역
+        int soldCounts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SOLD);
+        modelAndView.addObject("soldCounts", soldCounts);
 
         modelAndView.addObject("message", "채팅가능");
 
@@ -115,6 +122,9 @@ public class ChatController {
         Member seller = optionalSeller.get();
         modelAndView.addObject("seller", seller);
 
+        if(!nickname.equals(optionalSeller.get().getNickname()) && !nickname.equals(optionalChatRoom.get().getMember().getNickname()))
+            throw new AccessDeniedException("접근 가능한 사용자가 아닙니다.");
+
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if(optionalMember.isEmpty()){
@@ -129,58 +139,29 @@ public class ChatController {
 
         modelAndView.addObject("message", "채팅가능");
 
-        // 거래 내역
-        int soldCounts = productService.countProductsByMemberAndStatus(nickname, ProductStatus.SOLD);
-        modelAndView.addObject("soldCounts", soldCounts);
-
         return modelAndView;
     }
 
     //생성
     @PostMapping("/createChatRoom/{pId}")
     private RedirectView createChatRoom(@PathVariable long pId, HttpSession session) {
-        /*
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("chat/chatRoom");
-        modelAndView.addObject("crType", "product");
-        */
         String nickname = (String) session.getAttribute("loggedInMember");
         //product
         Optional<Product> optionalProduct = productRepository.findById(pId);
         if(optionalProduct.isEmpty())
             throw new NotFoundException("product를 찾을 수 없습니다.");
-        //modelAndView.addObject("product", optionalProduct.get());
 
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
         if(optionalMember.isEmpty()){
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        //modelAndView.addObject("sender", optionalMember.get());
 
         ChatRoom chatRoom = chatService.insertChatRoom("product", optionalProduct.get().getId(), optionalMember.get());
 
         long roomId = chatRoom.getId();
         RedirectView redirectView = new RedirectView("/chat/chatRoom/product/" + roomId);
         return redirectView;
-
-        /*
-        List<ChatMessage> chatRoomMessages = new ArrayList<>();
-        modelAndView.addObject("chatRoom", chatRoom);
-
-        //seller
-        Optional<Member> optionalSeller = memberRepository.findByNickname(optionalProduct.get().getMember().getNickname());
-        if(optionalSeller.isEmpty()){
-            throw new UsernameNotFoundException("판매자를 찾을 수 없습니다.");
-        }
-        modelAndView.addObject("seller", optionalSeller.get());
-
-        modelAndView.addObject("chatRoomMessages", chatRoomMessages);
-
-        modelAndView.addObject("message", "채팅가능");
-        return modelAndView;
-        */
-
     }
 
     @PostMapping("/createASChatRoom/{afterServiceId}")
@@ -224,15 +205,4 @@ public class ChatController {
                 .message(message.getMessage())
                 .build();
     }
-    /*
-    @DeleteMapping("/delete/{chatRoomId}")
-    public ModelAndView deleteMessage(@PathVariable int chatRoomId) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        chatService.deleteMessages(chatRoomId);
-        modelAndView.addObject("message", "Messages deleted successfully");
-        modelAndView.setViewName("redirect:/chatRoom/" + chatRoomId);
-        return modelAndView;
-    }
-    */
 }

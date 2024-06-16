@@ -52,14 +52,15 @@ public class AfterServiceController {
         mv.addObject("asInfo", optionalAfterService.get());
 
         List<ChatRoom> chatRoomList = new ArrayList<>();
-        try{
+
+        try {
             if(!memberRepository.findByNickname(nickname).isEmpty() && optionalAfterService.get().getMember().getNickname().equals(nickname))
                 chatRoomList = chatService.findByAfterServiceId(afterServiceId);
             else if(!memberRepository.findByNickname(nickname).isEmpty())
                 chatRoomList = chatService.findByAfterServiceIdAndNickname(afterServiceId, nickname);
             mv.addObject("sizeOfList", chatRoomList.size());
         }catch(Exception e){
-            mv.addObject("sizeOfList", "생성된 채팅방이 없습니다.");
+            mv.addObject("sizeOfList", "채팅방을 찾을 수 없습니다.");
         }
         mv.addObject("chatRoomList", chatRoomList);
         mv.setViewName("thyme/afterService/asInfo");

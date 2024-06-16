@@ -22,7 +22,12 @@
 				<div class="info imgForm product">
 					<c:choose>
 						<c:when test="${seller.profile != null && !seller.profile.isEmpty()}">
-							<img class="chatImg" src="${seller.profile}" alt="Seller Profile"/>
+							<c:if test="${crType=='product'}">
+								<img class="chatImg" src="${product.productImageList.get(0).url}" alt="Seller Profile"/>
+							</c:if>
+							<c:if test="${crType=='afterService'}">
+								<img class="chatImg" src="${seller.profile}" alt="Seller Profile" />
+							</c:if>
 						</c:when>
 						<c:otherwise>
 							<img class="chatImg" src="/resources/img/Profile.png" alt="Default Profile"/>
@@ -37,7 +42,7 @@
 							<p>${seller.nickname} 거래내역 ${soldCounts}회</p>
 						</div>
 					</c:when>
-					<c:when test="${message == '채팅가능' && crType == 'afterService'}">
+					<c:when test="${crType == 'afterService'}">
 						<div class="info">
 							<h1>${seller.nickname}</h1>
 							<p>${seller.nickname} 문의 채팅방</p>
