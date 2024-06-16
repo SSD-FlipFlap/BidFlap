@@ -25,6 +25,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     int countByMemberAndStatus(Member member, ProductStatus productStatus);
 
+    @Query("SELECT p FROM Product p LEFT JOIN FETCH p.auction WHERE p.status = :status")
+    List<Product> findAllByStatus(@Param("status") ProductStatus status);
 
     List<Product> findByCategory(Category category);
 

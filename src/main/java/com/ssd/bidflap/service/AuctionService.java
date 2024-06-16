@@ -36,7 +36,7 @@ public class AuctionService {
     //경매시작
     @Transactional
     public void startAuction(Long id, int duePeriod){
-        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("올바르지 않은 상품 아이디"));
         //좋아요 10개 이하면, 경매 불가능
 //        if (product.getLikeCount() < 10) {
 //            throw new IllegalStateException("at least like 10 ");
@@ -107,13 +107,45 @@ public class AuctionService {
         bidderRepository.save(bidder);
         auction.getBidderList().add(bidder);
         auction.updateHighPrice(bidPrice);
+        auction.setSuccessfulBidder(member.getId());
         auctionRepository.save(auction);
 
         messagingTemplate.convertAndSend("/bid", bidPrice);
     }
-//    public List<Bidder> getBiddersByAuctionId(Long auctionId) {
-//        return bidderRepository.findByAuctionId(auctionId);
-//    }
+
+    
+    //경매종료
+    @Transactional  
+    public void endAuction(Long id){
+        Auction auction = auctionRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 아이디에 따른 경매가 없습니다."));
+
+        if(!auction.isAuctionEnded()){
+            throw new IllegalArgumentException("경매기간이 아직 남았습니다.");
+        }
+
+        Product product = productRepository.findById(auction.getProductId()).orElseThrow(() -> new IllegalArgumentException("올바르지 않은 상품 아이디"));
+
+        if (auction.getSuccessfulBidder()!= null){
+            product.setStatus(ProductStatus.AUCTION_WON);
+        }else{
+            //낙찰자 없거나, 경매 참여 인원 없을때
+            product.setStatus(ProductStatus.AUCTION_ENDED);
+        }
+
+        //보증금 반환
+        auction.getBidderList().stream()
+                .filter(bidder -> !bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+                .forEach(bidder ->{
+                    Member member = bidder.getMember();
+                    member.setDepositBalance(member.getDepositBalance()+bidder.getDeposit());
+                    bidder.setDeposit(0);
+                    bidderRepository.save(bidder);
+                    memberRepository.save(member);
+                });
+
+        auctionRepository.save(auction);
+        productRepository.save(product);
+    }
 
 
 

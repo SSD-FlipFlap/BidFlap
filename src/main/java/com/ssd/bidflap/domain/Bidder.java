@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,4 +33,6 @@ public class Bidder extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id")
     private Auction auction;
+
+
 }
