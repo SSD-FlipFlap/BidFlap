@@ -112,6 +112,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- 로그인 x -->
@@ -140,6 +141,29 @@
     </div>
     </div>
 
+    <div class="for_category" >
+        <div class="product_images">
+        <div class="image_row">
+            <div class="image_container" th:each="product : ${productList}">
+                <div class="image_and_heart_container">
+                    <div class="image_placeholder"></div>
+                    <a th:href="@{/product/view(id=${product.id})}">
+                        <img th:if="${#lists.size(product.productImageList) > 0}"
+                             th:src="${product.productImageList.get(0).url}"
+                             class="product_img" alt="Product Image">
+                        <img th:if="${#lists.size(product.productImageList) == 0}"
+                             th:src="@{/resources/img/product_example.png}"
+                             class="product_img" alt="Default Image">
+                    </a>
+                    <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
+                    <div class="heart"></div>
+                </div>
+                <a th:text="${product.title}" th:href="@{/product/view(id=${product.id})}">판매글 제목</a>
+                <a th:text="${product.price} + '원'" th:href="@{/product/view(id=${product.id})}">가격</a>
+            </div>
+        </div>
+        </div>
+    </div>
     <!-- 오른쪽 빈 공간 -->
     <div class="empty_space"></div>
     <!-- 선택 창 -->
@@ -149,6 +173,8 @@
         <a href=""> AS 서비스</a> <br/><br/><br/>
         <a href="/product/register"> 판매글 등록</a><br/><br/><br/>
     </div>
+
+
 </div>
 </body>
 </html>
