@@ -3,12 +3,28 @@
 <head>
     <title>구매 페이지</title>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/product/PurchaseProduct.css}">
+    <script>
+        function combinePhoneNum() {//휴대폰 번호 합차기
+            var phone1 = document.getElementById('phone1').value;
+            var phone2 = document.getElementById('phone2').value;
+            var phone3 = document.getElementById('phone3').value;
+            var fullPhoneNum = phone1 + '-' + phone2 + '-' + phone3;
+            document.getElementById('phone').value = fullPhoneNum;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('paymentForm');
+            form.addEventListener('submit', function () {
+                combinePhoneNum();
+            });
+        });
+    </script>
 </head>
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 <form id="paymentForm" action="/product/purchase/confirm" method="post">
     <div id="productDetails">
-        <img src="your-image-url.png" alt="Product Image" class="product-image">
+            <img th:src="${product.productImageList[0].url}" alt="Product Image" style="width: 150px; height: 150px; border-radius: 10px">
         <div class="product-info">
             <div class="product-title" th:text="${product.title != null ?product.title: ''}"></div>
             <div class="product-price" th:text="${product.price != null ? product.price  : ''}"></div>
@@ -28,19 +44,19 @@
             <input type="text" id="address" name="address" placeholder="주소">
         </div>
         <div class="input-group">
-            <input type="text" id="address_spec" name="address_spec" placeholder="상세주소">
+            <input type="text" id="addressSpec" name="addressSpec" placeholder="상세주소">
         </div>
         <div class="input-group">
             <div class="phone-group">
-                <input type="text" id="phone1" name="phone1" maxlength="3" placeholder="전화번호">
+                <input type="text" id="phone1" name="phone1" maxlength="3" placeholder="전화번호" oninput="combinePhoneNum()">
                 <span>-</span>
-                <input type="text" id="phone2" name="phone2" maxlength="4">
+                <input type="text" id="phone2" name="phone2" maxlength="4" oninput="combinePhoneNum()">
                 <span>-</span>
-                <input type="text" id="phone3" name="phone3" maxlength="4">
+                <input type="text" id="phone3" name="phone3" maxlength="4" oninput="combinePhoneNum()">
             </div>
         </div>
         <div class="input-group">
-            <input type="text" id="delivery_message" name="delivery_message" placeholder="배송메시지">
+            <input type="text" id="deliveryMessage" name="deliveryMessage" placeholder="배송메시지">
         </div>
     </div>
 
@@ -81,7 +97,8 @@
 
     <div class="button-container">
         <input type="hidden" name="productId" th:value="${product.id}" />
-        <button type="submit" >결제하기</button>
+        <input type ="hidden" id = "phone" name="phone"/>
+        <button type="submit" class="purchase-btn" >결제하기</button>
     </div>
 </form>
 </body>

@@ -2,6 +2,7 @@ package com.ssd.bidflap.service;
 
 import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
+import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -236,6 +237,20 @@ public class ProductService {
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         return productRepository.countByMemberAndStatus(member, status);
+    }
+
+    public List<Product> getProductsByCategory(Category category){
+        return productRepository.findByCategory(category);
+    }
+    
+    //요즘뜨는상품
+    @Transactional(readOnly = true)
+    public List<Product> getPopularProducts() {
+        return productRepository.findAllByOrderByLikeCountDesc();
+    }
+    @Transactional(readOnly = true)
+    public List<Product> getProductsByCategories(List<Category> categories) {
+        return productRepository.findByCategoryInOrderByLikeCountDesc(categories);
     }
 
 }

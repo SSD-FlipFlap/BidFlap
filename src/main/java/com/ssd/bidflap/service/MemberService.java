@@ -7,10 +7,7 @@ import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Uuid;
 import com.ssd.bidflap.domain.dto.MemberDto;
 import com.ssd.bidflap.domain.enums.Category;
-import com.ssd.bidflap.repository.AfterServiceRepository;
-import com.ssd.bidflap.repository.InterestRepository;
-import com.ssd.bidflap.repository.MemberRepository;
-import com.ssd.bidflap.repository.UuidRepository;
+import com.ssd.bidflap.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,10 +27,15 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
-    private final AfterServiceRepository afterServiceRepository;
-    private final InterestRepository interestRepository;
     private final UuidRepository uuidRepository;
     private final AmazonS3Manager s3Manager;
+
+    private final AfterServiceRepository afterServiceRepository;
+    private final InterestRepository interestRepository;
+    private final ProductRepository productRepository;
+    private final PurchaseRepository purchaseRepository;
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     @Transactional
     public void changePassword(String nickname, MemberDto.ChangePasswordDto changePasswordDto) {
@@ -233,4 +235,43 @@ public class MemberService {
         return optionalMember.get();
     }
 
+    @Transactional(readOnly = true)
+    public List<Category> getMemberByInterests(String nickname){
+        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+        if (optionalMember.isEmpty()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        }
+        Member member = optionalMember.get();
+
+        return member.getInterestList().stream()
+                .map(interest -> interest.getCategory())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public boolean deleteMember(String nickname) {
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        Member unknownMember = memberRepository.findByNickname("알수없음")
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        // member를 알수없음 사용자로 업데이트
+        try {
+            updateMemberReferences(member, unknownMember);
+        } catch(Exception e) {
+            throw new RuntimeException("탈퇴 전 멤버 업데이트 중 에러가 발생하였습니다.", e);
+        }
+
+        memberRepository.delete(member);
+        return true;
+    }
+
+    private void updateMemberReferences(Member member, Member unknownMember) {
+        productRepository.updateMemberToUnknown(member, unknownMember);
+        purchaseRepository.updateMemberToUnknown(member, unknownMember);
+        afterServiceRepository.updateMemberToUnknown(member, unknownMember);
+        chatRoomRepository.updateMemberToUnknown(member, unknownMember);
+        chatMessageRepository.updateMemberToUnknown(member, unknownMember);
+    }
 }
