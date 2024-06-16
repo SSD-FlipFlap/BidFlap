@@ -46,7 +46,7 @@ public class Product extends BaseEntity {
     private Member member;
 
     // 경매 정보
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "auction_id")
     private Auction auction;
 
