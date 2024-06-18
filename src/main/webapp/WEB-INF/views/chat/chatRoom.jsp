@@ -14,7 +14,6 @@
 		  href="/resources/css/chat/chatRoom.css">
 </head>
 <body>
-<%@ include file="../Header2.jsp" %>
 <div class="chat-container">
 	<div class="info-container">
 		<c:choose>
@@ -61,15 +60,22 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-		<button onclick="window.location.href='/deliveryInfo'">결제하기</button>
+		<c:if test="${crType=='product'}">
+			<div class="button-container">
+				<form action="/product/purchase" method="post">
+					<input type="hidden" name="id" value="${product.id}" />
+					<button type="submit">구매하기</button>
+				</form>
+			</div>
+		</c:if>
 	</div>
 	<div id="chat-scroll">
 		<div id="chat-history"></div>
 	</div>
 	<div class="send-container">
-		<img src="/resources/img/fileIcon.png" id="imageUpload">
+		<!--<img src="/resources/img/fileIcon.png" id="imageUpload">
 		<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
-		<input type="file" id="attachment" style="display: none;">
+		<input type="file" id="attachment" style="display: none;">-->
 		<input type="text" id="message" placeholder="Type your message...">
 		<img src="/resources/img/sendIcon.png" id="sendIcon">
 	</div>
