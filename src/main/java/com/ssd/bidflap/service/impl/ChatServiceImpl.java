@@ -4,10 +4,18 @@ import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +30,9 @@ public class ChatServiceImpl implements ChatService {
     private final ProductRepository productRepository;
     private final AfterServiceRepository afterServiceRepository;
     private final MemberRepository memberRepository;
+
+    @Value("${upload.directory}")
+    private String uploadDirectory;
 
     public Optional<ChatRoom> getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -111,9 +122,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatMessage createMessage(Long roomId, Member member, String message) {
+    public ChatMessage createMessage(Long roomId, Member member, String message, String attachmentUrl) {
         Optional<ChatRoom> room = getChatRoomById(roomId);
-        ChatMessage mm = new ChatMessage(room.get(), member, message);
+        ChatMessage mm;
+        if(attachmentUrl ==null)
+            mm = new ChatMessage(room.get(), member, message);
+        else
+            mm = new ChatMessage(room.get(), member, message, attachmentUrl);
         mm.getCreatedAt();
         return chatMessageRepository.save(mm);
     }
@@ -129,6 +144,14 @@ public class ChatServiceImpl implements ChatService {
         //Collections.sort(crList);
 
         return crList;
+    }
+
+    @Override
+    public String saveAttachment(MultipartFile file) throws IOException {
+        String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(uploadDirectory, filename);
+        Files.copy(file.getInputStream(), filePath);
+        return "/resources/uploads/" + filename;
     }
     /*
     @Override

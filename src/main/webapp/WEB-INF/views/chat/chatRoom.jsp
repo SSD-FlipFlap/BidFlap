@@ -73,9 +73,11 @@
 		<div id="chat-history"></div>
 	</div>
 	<div class="send-container">
-		<!--<img src="/resources/img/fileIcon.png" id="imageUpload">
+		<img src="/resources/img/fileIcon.png" id="imageUpload">
 		<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
-		<input type="file" id="attachment" style="display: none;">-->
+		<input type="file" id="attachment" style="display: none;">
+		<input type="file" id="attachment2">
+
 		<input type="text" id="message" placeholder="Type your message...">
 		<img src="/resources/img/sendIcon.png" id="sendIcon">
 	</div>
@@ -93,7 +95,8 @@
 		{
 			message: "<c:out value="${chatMessage.message}"/>",
 			date: "<c:out value="${chatMessage.createdAt}"/>",
-			type: "<c:out value="${chatMessage.member.nickname == sender.nickname ? 'member1' : 'member2'}"/>"
+			type: "<c:out value="${chatMessage.member.nickname == sender.nickname ? 'member1' : 'member2'}"/>",
+			attachmentUrl: "${chatMessage.attachmentUrl}"
 		},
 		</c:forEach>
 	];
@@ -103,7 +106,7 @@
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function (frame) {
 			setConnected(true);
-			console.log('연결됨: ' + frame);
+			//console.log('연결됨: ' + frame);
 			displayChatHistory();   // loadChat
 
 			// 채팅 룸 구독
@@ -113,17 +116,36 @@
 		});
 	}
 
-	function sendMessage(roomId, member, message) {
+	function sendMessage(roomId, member, message, attachment) {
 		if (!stompClient) {
 			console.error("WebSocket 연결이 설정되지 않았습니다.");
 			return;
 		}
+
+		/*
 		var messageToSend = {
 			roomId: roomId,
 			member: member,
 			message: message
 		};
 		stompClient.send("/send/" + roomId, {}, JSON.stringify(messageToSend));
+		*/
+		var formData = new FormData();
+		formData.append('roomId', roomId);
+		formData.append('member', JSON.stringify(member));
+		formData.append('message', message);
+		if (attachment) {
+			formData.append('attachment', attachment);
+		}
+
+		fetch('/chat/sendMessageWithAttachment', {
+			method: 'POST',
+			body: formData
+		}).then(response => response.json())
+				.then(data => {
+					stompClient.send("/send/" + roomId, {}, JSON.stringify(data));
+				})
+				.catch(error => console.error('Error:', error));
 	}
 
 	function setConnected(connected) {
@@ -152,12 +174,22 @@
 		parent.appendChild(chatMessage);
 	}
 
+	function makeAttachmentDiv(parent, attachmentUrl) {
+		const attachmentImage = document.createElement('img');
+		attachmentImage.src = attachmentUrl;
+		attachmentImage.classList.add('fileImg');
+		parent.appendChild(attachmentImage);
+	}
+
 	// 이전 채팅 기록
 	function displayChatHistory() {
 		const chatHistoryDiv = document.getElementById('chat-history');
 		let currentDate = null;
 
 		chatHistory.forEach(item => {
+			const fileSet = document.createElement('div');
+			fileSet.classList.add('fileSet');
+
 			const messageSet = document.createElement('div');
 			messageSet.classList.add('messageSet');
 
@@ -166,6 +198,7 @@
 
 			const message = item.message;
 			const type = item.type;
+			const attachmentUrl = item.attachmentUrl;
 
 			if (messageDate !== currentDate) {
 				const dateDiv = document.createElement('div');
@@ -174,6 +207,9 @@
 				chatHistoryDiv.appendChild(dateDiv);
 				currentDate = messageDate;
 			}
+
+			if (attachmentUrl)
+				makeAttachmentDiv(fileSet, attachmentUrl);
 
 			if (type === "member2")
 				makeProfileDiv(messageSet, type);
@@ -185,7 +221,9 @@
 
 			messageSet.classList.add(type);
 
-			chatHistoryDiv.appendChild(messageSet);
+			fileSet.appendChild(messageSet);
+			fileSet.classList.add(type);
+			chatHistoryDiv.appendChild(fileSet);
 		});
 
 		const chatDiv = document.getElementById('chat-scroll');
@@ -200,46 +238,65 @@
 		document.getElementById('attachment').click();
 	});
 
-	document.getElementById('sendIcon').addEventListener('click', function () {
+	document.getElementById('sendIcon').addEventListener('click', function (event) {
+		event.stopPropagation();
 		if("${sender.nickname!= '알수없음'}" && "${message != '채팅 가능'}"){
 			var member = {
 				id: ${sender.id},
 				account: "${sender.account}",
 				bank: "${sender.bank}",
 				email: "${sender.email}",
-				member_role: "${sender.memberRole}",
+				memberRole: "${sender.memberRole}",
 				nickname: "${sender.nickname}",
 				password: "${sender.password}",
 				profile: "${sender.profile}"
 			};
 			var message = document.getElementById('message').value;
+			var attachment = document.getElementById('attachment2').files[0];
+			if(attachment)
+				console.log(attachment.name);
+
 			if(message != "")
-				sendMessage(roomId, member, message);
+				sendMessage(roomId, member, message, attachment);
 		}else{
 			alert("판매자가 탈퇴했거나 삭제한 경우 채팅을 보낼 수 없습니다.");
 		}
 	});
 
 	function showChat(messageJson) {
-		//var attachmentFile = document.getElementById("attachment").files[0];
+		console.log(messageJson);
 		const messageInput = messageJson.message;
+		//const attachmentUrl = messageJson.files?.[0];
+		//const attachmentUrl = document.getElementById("attachment").files[0];
+		const attachmentUrl = messageJson.attachmentUrl;
 		//보낸 채팅
 		const chatHistoryDiv = document.getElementById('chat-history');
 		const messageSet = document.createElement('div');
 		messageSet.classList.add('messageSet');
-
+		/*
 		if(messageJson.member.nickname == loggedInMemberNickname)
 			type = "member1";
 		else
 			type = "member2";
+		*/
+		type = messageJson.member.nickname == loggedInMemberNickname?"member1":"member2";
+
+		console.log("url", attachmentUrl);
 
 		if(type == "member1"){
+			if (attachmentUrl) {
+				makeAttachmentDiv(messageSet, attachmentUrl);
+			}
 			makeMessageDiv(messageSet, messageInput);
 			makeProfileDiv(messageSet, "member1");
 		}else{
 			makeProfileDiv(messageSet, "member2");
 			makeMessageDiv(messageSet, messageInput);
+			if (attachmentUrl) {
+				makeAttachmentDiv(messageSet, attachmentUrl);
+			}
 		}
+
 		messageSet.classList.add(type);
 
 		chatHistoryDiv.appendChild(messageSet);
