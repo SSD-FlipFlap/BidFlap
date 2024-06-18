@@ -121,8 +121,10 @@
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 
+<div th:if="${product.member.nickname ne '알수없음'}">
+    <button id="open-modal">채팅하기</button>
+</div>
 
-<button id="open-modal">채팅하기</button>
 
 <div class="chatmodal">
     <div class="chatmodal_body">
@@ -244,26 +246,6 @@
         </div>
     </div>
 </div>
-
-<!--<div class="modal">-->
-<!--    <div class="modal_body">-->
-<!--        <h1 th:text="${product.member.nickname}+' 채팅방 리스트'"></h1>-->
-<!--        <hr>-->
-<!--        <p th:text="${sizeOfList}==0? '개설된 채팅방이 없습니다.':${sizeOfList}+'개의 채팅방이 있습니다.'"></p>-->
-<!--        <button id="startChatBtn" th:if="${product.member.nickname} != ${session.loggedInMember} and ${sizeOfList}==0">새로운 채팅 시작하기</button>-->
-<!--        <hr>-->
-<!--        <div th:if="${sizeOfList}!=0">-->
-<!--            <div th:each="room : ${chatRoomList}">-->
-<!--                <div th:onclick="|goToChatRoom(${room.id})|">-->
-<!--                    <div>-->
-<!--                        <p th:text="${room.member.nickname}+'님'"></p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <hr>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
 
 <div class="price" th:text="${product.price != null ? product.price + '원' : ''}"></div>
 <div class="product-title" th:text="${product.title}"></div>
