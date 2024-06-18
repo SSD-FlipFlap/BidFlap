@@ -1,10 +1,11 @@
 package com.ssd.bidflap.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
 import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.AfterServiceRepository;
-import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
@@ -18,11 +19,12 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.webjars.NotFoundException;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -198,11 +200,35 @@ public class ChatController {
     @MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
     @SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야 함
     public ChatMessageDto sendMessage(@DestinationVariable Long roomId, ChatMessageDto message) {
-        ChatMessage mm = chatService.createMessage(roomId, message.getMember(), message.getMessage());
+
+        //ChatMessage mm = chatService.createMessage(roomId, message.getMember(), message.getMessage(), message.getAttachmentUrl());
         return ChatMessageDto.builder()
                 .roomId(roomId)
                 .member(message.getMember())
                 .message(message.getMessage())
+                .attachmentUrl(message.getAttachmentUrl())
+                .build();
+    }
+
+    @PostMapping("/sendMessageWithAttachment")
+    public ChatMessageDto sendMessageWithAttachment(
+            @RequestParam("roomId") Long roomId,
+            @RequestParam("member") String memberJson,
+            @RequestParam("message") String message,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
+
+        Member member = new ObjectMapper().readValue(memberJson, Member.class);
+
+        String attachmentUrl = null;
+        if (attachment != null && !attachment.isEmpty()) {
+            attachmentUrl = chatService.saveAttachment(attachment);
+        }
+        ChatMessage chatMessage = chatService.createMessage(roomId, member, message, attachmentUrl);
+        return ChatMessageDto.builder()
+                .roomId(roomId)
+                .member(member)
+                .message(message)
+                .attachmentUrl(attachmentUrl)
                 .build();
     }
 }
