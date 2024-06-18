@@ -28,7 +28,7 @@ spring:
     view-names: thyme/*    # Thymeleaf 에 연결될 viewname 범위 설정
   servlet:
     multipart:
-      max-file-size: 100MB
+      max-file-size: 10MB
       max-request-size: 10MB
 cloud:
   aws:
