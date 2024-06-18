@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -45,16 +46,17 @@ public class Auction extends BaseEntity {
         this.highPrice = highPrice;
     }
 
-
     public LocalDateTime getEndTime() {
         return createdAt.plusDays(period);
     }
 
-
     public Duration getRemainingTime() {
         LocalDateTime endTime = this.getEndTime();
         return Duration.between(LocalDateTime.now(), endTime);
-
-
     }
+
+    public boolean isAuctionEnded(){
+        return LocalDateTime.now().isAfter(this.getEndTime());
+    }
+
 }

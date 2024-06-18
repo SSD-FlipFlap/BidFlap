@@ -150,3 +150,7 @@
     background: #f1f1f1;
     border-radius: 10px;
 }
+
+.for_category {
+    display: none; /* 요소를 숨깁니다 */
+}

@@ -213,6 +213,7 @@
     justify-content: center;
     align-items: center;
 }
+
 #modify-button {
     position: absolute;
     width: 100px;
@@ -234,6 +235,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#start-auction-button{
+
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #636363;
+    color: white;
+
 }
 /* 경매 시작 가능 | 10명 이상 좋아요 */
 .auction-notice {

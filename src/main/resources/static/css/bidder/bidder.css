@@ -30,43 +30,70 @@
     padding-left: 20px; /* 전체적인 왼쪽 간격 */
 }
 
-.image-frame {
+.image-gray-box {
     width: 500px;
     height: 500px;
-    background: #F5F5F5;
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-}
-
-.product-image {
-    width: 400px;
-    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 300px;
+    left: 350px;
     transform: translate(-50%, -50%);
+    background: #F5F5F5;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
-.product-image img {
-    width: auto;
+.image-slider {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 슬라이드 이미지를 감싸는 컨테이너 */
+.image-container {
+    width: 100%;
     height: 100%;
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    overflow: hidden;
 }
 
-.rotate-image {
-    position: absolute;
-    bottom: 10px;
+/* 각 이미지 슬라이드 */
+.image-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 제품 이미지 */
+.product-image {
+    width: 350px;
+    height: 350px;
+    border-radius: 10px;
+}
+.prev-btn, .next-btn {
+    background-color: #F5F5F5;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1;
+    position:absolute;
+    bottom:50%;
+    transform:translateY(50%);
+}
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
     right: 10px;
-}
-
-.rotate-image img {
-    width: 31.82px;
-    height: 31.82px;
-    transform: rotate(-45deg);
-    border: 2px black solid;
 }
 
 .profile-container {
@@ -267,7 +294,16 @@
     margin-bottom: 10px; /* 버튼 사이에 여유 공간 추가 */
 }
 
+.countdown-container {
+    margin-top: 20px;
+    font-size: 24px;
+    text-align: left;
+    margin-left: 30px;
+}
 
+.countdown-container p {
+    margin-bottom: 5px;
+}
 
 /**modal***/
 .modal-overlay {

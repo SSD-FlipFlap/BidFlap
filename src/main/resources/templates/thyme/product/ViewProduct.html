@@ -172,19 +172,7 @@
             <button type="button" th:text="'구매 불가능'" disabled></button>
         </div>
     </div>
-    <!--경매 시작 버튼 및 모달 -->
-    <div th:if="${product.likeCount >= 1}">
-        <div class="start-auction-container">
-            <button id="start-auction-button">경매 시작</button>
-        </div>
-    </div>
-    <div th:if="${product.likeCount < 1}">
-        <div class="auction-unavailable">
-            <div class="btn">
-                <button type="button" th:text="'경매 시작 불가능'" disabled></button>
-            </div>
-        </div>
-    </div>
+
     <button type="button" id="like-button-author" th:text="'좋아요 ' + ${product.likeCount}"></button>
 </div>
 
@@ -216,10 +204,7 @@
         <button type="submit" id="like-button-non-author" th:text="'좋아요 ' + ${product.likeCount}"></button>
     </form>
 
-<!--    <div>-->
-<!--        <inpu-->
 
-<!--    </div>-->
 </div>
 <!-- 작성자인 경우에만 수정 및 삭제 버튼 표시 -->
 <div th:if="${isAuthor}">
@@ -240,6 +225,23 @@
     <div>
         <div class="profile-nickname" th:text="${product.member.nickname} + '님'"></div>
         <div class="profile-created-at" th:text="${#temporals.format(product.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') + '에 작성하셨습니다.'}"></div>
+        <!--상품 상태 확인용 디버그 코드-->
+        <div th:text="'Product Status: ' + ${product.status}"></div>
+        <div th:if="${isAuthor}">
+            <!--경매 시작 버튼 및 모달 -->
+            <div th:if="${product.likeCount >= 1}">
+                <div class="start-auction-container">
+                    <button id="start-auction-button">경매 시작</button>
+                </div>
+            </div>
+            <div th:if="${product.likeCount < 1}">
+                <div class="auction-unavailable">
+                    <div class="btn">
+                        <button type="button" th:text="'경매 시작 불가능'" disabled></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -268,8 +270,7 @@
 <div class="product-description" th:text="${product.description}"></div>
 <div class="product-category" th:text="${product.category != null ? '#' + product.category : ''}"></div>
 <div class="writer-price">판매자 제시가</div>
-<!--상품 상태 확인용 디버그 코드-->
-<div th:text="'Product Status: ' + ${product.status}"></div>
+
 <!--경매 참여 모달 -->
 <div class="modal-overlay">
     <div class="modal">

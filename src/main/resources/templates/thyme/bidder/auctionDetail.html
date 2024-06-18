@@ -31,7 +31,8 @@
             background: #215818;
             color: white;
             margin-left: 50px;
-            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+            cursor: pointer;
+            margin-top: 100px;
         }
     </style>
 </head>
@@ -46,18 +47,25 @@
 <!--            <img class="rotate-image" src="https://via.placeholder.com/32x32" />-->
 <!--        </div>-->
         <div class="image-slider">
-            <button class="prev-btn">＜</button>
-            <div class="image-frame">
-                <div id="product-image">
-                    <!-- 각 이미지의 URL을 반복하여 화면에 출력 -->
-                    <div th:each="image, index : ${product.productImageList}">
-                        <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"
-                             onclick="removePreviewImage(event, ${index.index})">
+            <div class="image-gray-box">
+
+                <!--        <div id="productPreviewContainer">-->
+                <!--            &lt;!&ndash; 각 이미지의 URL을 반복하여 화면에 출력 &ndash;&gt;-->
+                <!--            <div th:each="image, index : ${product.productImageList}">-->
+                <!--                <img th:src="${image.url}" alt="Product Image" style="max-width: 191px; max-height: 191px;"-->
+                <!--                     onclick="removePreviewImage(event, ${index.index})">-->
+                <!--            </div>-->
+                <!--        </div>-->
+
+                <button class="prev-btn" onclick="prevImage()">＜</button>
+                <div class="image-container">
+                    <div class="image-slide" th:each="image, index : ${product.productImageList}">
+                        <img th:src="${image.url}" alt="Product Image" class="product-image">
                     </div>
                 </div>
-            </div>
+                <button class="next-btn" onclick="nextImage()">＞</button>
 
-            <!--        <span class="profile-name" th:text="${nickname} + 판매자 이름 여기"></span>-->
+            </div>
         </div>
         </div>
     <div class="right-container">
@@ -67,9 +75,20 @@
 <!--            <div class="product-description">설명: <span th:text="${product.description}">상품 설명</span></div>-->
             <div class="product-price"> <p>현재 최고가</p>
             <div class="price-value" th:text="${auction.highPrice}">0</div></div>
-        <p>남은 시간: <span th:text="${auction.period}">0</span> 일</p>
-            <p>남은 시간: <span th:text="${auction.getRemainingTime().toHours()}">0</span> 시간</p>
-
+<!--            <p>남은 시간: <span th:text="${auction.period}">0</span> 일</p>-->
+<!--            <p>남은 시간: <span th:text="${auction.getRemainingTime().toHours()}">0</span> 시간</p>-->
+            <div class="countdown-container">
+                <p>마감일: <span th:text="${auction.endTime.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy-MM-dd HH:mm:ss'))}">-</span></p>
+                <p>남은 시간:
+                    <span th:text="${auction.getRemainingTime().toDaysPart()}">00</span>일
+                    <span th:text="${auction.getRemainingTime().toHoursPart()}">00</span>시간
+                    <span th:text="${auction.getRemainingTime().toMinutesPart()}">00</span>분
+                    <span th:text="${auction.getRemainingTime().toSecondsPart()}">00</span>초
+                </p>
+            </div>
+            <div class ="now-user">
+                <p> <span id="loggedUser" th:text="${loggedUser}" hidden>사용자 없음</span></p>
+            </div>
         </div>
 
     <div class="bid-container">
@@ -89,7 +108,7 @@
         </form>
     </div>
 </div>
-<p>현재 로그인된 사용자: <span id="loggedUser" th:text="${loggedUser}">사용자 없음</span></p>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script>
