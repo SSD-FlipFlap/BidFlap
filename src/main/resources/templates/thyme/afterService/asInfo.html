@@ -37,7 +37,7 @@
         <div class="mainText">
             <p class="name" th:text="${asInfo.member.nickname}"></p>
         </div>
-        <div>
+        <div th:if="${asInfo.member.nickname ne '알수없음'}">
             <p th:text="${asInfo.description}"></p>
             <button id="open-modal">AS 서비스 문의하기</button>
         </div>
