@@ -41,7 +41,15 @@
 
             <!-- 검색 결과가 없는 경우 -->
             <div th:if="${products == null or #lists.isEmpty(products)}" class="empty-text">
-                <p>검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</p>
+                <div th:if="${type == 'search'}">
+                    <p>검색 결과가 없습니다. 다른 키워드로 검색해 보세요.</p>
+                </div>
+                <div th:if="${type == 'like'}">
+                    <p>좋아요한 글이 없습니다.</p>
+                </div>
+                <div th:if="${type == 'auction'}">
+                    <p>진행 중인 경매가 없습니다.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -49,11 +57,11 @@
 
     <div class="empty_space"></div>
     <!-- 선택 창 -->
-    <div class="selection-box">
-        <a href=""> 내 경매</a><br/><br/><br/>
-        <a href=""> 좋아요한 목록</a><br/><br/><br/>
-        <a href=""> AS 서비스</a><br/><br/><br/>
-        <a href=""> 판매글 목록</a><br/><br/><br/>
+    <div class="selection-box"><br/><br>
+        <a href="" th:href="@{/product/auction}"> 진행 중인 경매</a><br/><br/><br/>
+        <a href="" th:href="@{/members/my-page/like(type='main')}"> 좋아요한 목록</a><br/><br/><br/>
+        <a href="" th:href="@{/afterService/asList}"> AS 서비스</a> <br/><br/><br/>
+        <a href="" th:href="@{/product/register}"> 판매글 등록</a><br/><br/><br/>
     </div>
 </div>
 
