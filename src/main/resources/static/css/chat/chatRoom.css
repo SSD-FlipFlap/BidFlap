@@ -158,6 +158,7 @@ div#chat-scroll {
     border-radius: 5px;
     word-wrap: break-word;
     white-space: pre-wrap;
+    text-align: left;
 }
 .member1 {
     margin-left: auto;
@@ -186,6 +187,7 @@ div#chat-scroll {
 img.fileImg{
     width: 250px;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .fileSet.member1 {

@@ -71,7 +71,6 @@
 	</div>
 	<div id="chat-scroll">
 		<div id="chat-history">
-			<p></p>
 			<c:set var="prevDate" value="" />
 			<c:forEach var="chatMessage" items="${chatMessages}">
 				<c:set var="currentDate" value="${fn:substring(chatMessage.createdAt, 0, 10)}" />
@@ -124,13 +123,7 @@
 					</c:otherwise>
 				</c:choose>
 			</c:forEach>
-			<%--<div class="fileSet member1">
-				<img src="" id="messagePreview" class="fileImg member1">
-				<div class="messageSet member1">
-					<div class="message">메시지</div>
-					<img src="/resources/img/Profile.png" class="chat-profile">
-				</div>
-			</div>--%>
+
 		</div>
 	</div>
 	<div class="send-container">
@@ -150,15 +143,13 @@
 
 	let roomId = "${chatRoom.id}";
 
-	let lastImgUrl="";
-
 	function connect() {
 		var socket = new SockJS("/ws-stomp");
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function (frame) {
 			setConnected(true);
 			//console.log('연결됨: ' + frame);
-			//displayChatHistory();   // loadChat
+			moveChatScrollToBottom();
 
 			// 채팅 룸 구독
 			stompClient.subscribe('/room/' + roomId, function (chatMessage) {
@@ -193,12 +184,8 @@
 						attachmentUrl: data.attachmentUrl,
 						member: member
 					};
-					//stompClient.send("/send/" + roomId, {}, JSON.stringify(chatMessage));
-
-					setTimeout(() => {
-						stompClient.send("/send/" + roomId, {}, JSON.stringify(chatMessage));
-						//(chatMessage);
-					}, 100);
+					stompClient.send("/send/" + roomId, {}, JSON.stringify(chatMessage));
+					formData = new FormData();
 				})
 				.catch(error => console.error('Error:', error));
 	}
@@ -242,23 +229,10 @@
 	}
 
 	function makeAttachmentDiv(parent, attachmentUrl) {
-		console.log("makeAttachmentDiv", attachmentUrl);
 		const attachmentImage = document.createElement('img');
 		attachmentImage.src = attachmentUrl;
 		attachmentImage.classList.add('fileImg');
 		parent.appendChild(attachmentImage);
-		window.onload = function () {
-			connect();
-		};
-		/*attachmentImage.onload = function() {
-			parent.appendChild(attachmentImage);
-		};
-		attachmentImage.onerror = function() {
-			console.error('Image failed to load:', attachmentUrl);
-			// 로드 실패 시 대체 이미지 표시
-			attachmentImage.src = '/resources/img/loading.png';
-			parent.appendChild(attachmentImage);
-		};*/
 	}
 
 	window.onload = function () {
@@ -268,31 +242,27 @@
 	document.getElementById('imageUpload').addEventListener('click', function () {
 		document.getElementById('attachment').click();
 	});
-	/*document.getElementById('imagePreview').addEventListener('click', function () {
+
+	document.getElementById('imagePreview').addEventListener('click', function () {
 		const imagePreview = document.getElementById('imagePreview');
 		imagePreview.src = "";
 		imagePreview.style.display = 'none';
-	})*/
+		document.getElementById('attachment').value = '';
+	})
 
 	document.getElementById('attachment').addEventListener('change', function (event) {
 		const file = event.target.files[0];
-		/*resizeImage(file, 800, 600, function (resizedBlob) {
-			console.log("이미지 리사이즈");
-			/!*!// 리사이징된 이미지 blob을 서버로 전송하거나 화면에 표시할 수 있음
-			var formData = new FormData();
-			formData.append('resizedImage', resizedBlob, 'resized.jpg');
 
-			// 서버로 전송 예시
-			fetch('/upload', {
-				method: 'POST',
-				body: formData
-			}).then(response => {
-				console.log('Uploaded');
-			}).catch(error => {
-				console.error('Error uploading:', error);
-			});*!/
-		});*/
 		if (file) {
+			// 파일 확장자 검사
+			const allowedExtensions = ['png', 'jpg', 'jpeg'];
+			const fileExtension = file.name.split('.').pop().toLowerCase();
+			if (!allowedExtensions.includes(fileExtension)) {
+				alert("png, jpg, jpeg 파일만 가능합니다.");
+				event.target.value = ''; // 파일 선택 창 비우기
+				return;
+			}
+
 			const reader = new FileReader();
 			reader.onload = function (e) {
 				const imagePreview = document.getElementById('imagePreview');
@@ -300,63 +270,8 @@
 				imagePreview.style.display = 'block';
 			};
 			reader.readAsDataURL(file);
-
-			const formData = new FormData();
-			formData.append('file', file);
-
-			fetch('/chat/uploadImage', {
-				method: 'POST',
-				body: formData
-			}).then(response => response.json())
-				.then(data => {
-					lastImgUrl = data.imageUrl;
-					//console.log("lastImgUrl", data.imageUrl);
-						// 이미지를 채팅창에 추가하거나 필요한 작업을 수행합니다.
-						// 예를 들어, 이미지를 채팅창에 표시하는 함수 호출 등.
-				})
 		}
 	});
-
-	/*function resizeImage(file, maxWidth, maxHeight, callback) {
-		var img = document.createElement("img");
-		var reader = new FileReader();
-
-		reader.onload = function (e) {
-			img.src = e.target.result;
-
-			img.onload = function () {
-				var canvas = document.createElement('canvas');
-				var ctx = canvas.getContext('2d');
-
-				var width = img.width;
-				var height = img.height;
-
-				// 이미지 비율 유지하면서 리사이징
-				if (width > height) {
-					if (width > maxWidth) {
-						height *= maxWidth / width;
-						width = maxWidth;
-					}
-				} else {
-					if (height > maxHeight) {
-						width *= maxHeight / height;
-						height = maxHeight;
-					}
-				}
-
-				canvas.width = width;
-				canvas.height = height;
-
-				ctx.drawImage(img, 0, 0, width, height);
-
-				canvas.toBlob(function (blob) {
-					callback(blob); // 리사이징된 이미지 blob 전달
-				}, file.type);
-			};
-		};
-
-		reader.readAsDataURL(file);
-	}*/
 
 	document.getElementById('sendIcon').addEventListener('click', function (event) {
 		event.stopPropagation();
@@ -372,19 +287,15 @@
 				profile: "${sender.profile}"
 			};
 			let message = document.getElementById('message').value.trim();
-			//let attachmentInput = document.getElementById('attachment');
-			//let attachment = attachmentInput.files[0];
-			let attachment = lastImgUrl;
+			let attachmentInput = document.getElementById('attachment');
+			let attachment = attachmentInput.files[0];
 
-			//console.log("img", lastImgUrl);
-
-			if (message != "" || attachment!="") {
+			if (message != "" || attachment) {
 				sendMessage(roomId, member, message, attachment);
-				//attachmentInput.value = "";
+				attachmentInput.value = "";
 				const imagePreview = document.getElementById('imagePreview');
 				imagePreview.src = "";
 				imagePreview.style.display = 'none';
-				lastImgUrl="";
 			} else {
 				alert("메시지를 입력해주세요");
 				document.getElementById('message').value = "";
@@ -410,9 +321,7 @@
 
 		if (attachmentUrl) {
 			//convertImageToWebP(attachmentUrl);
-			setTimeout(() => {
-				makeAttachmentDiv(fileSet, attachmentUrl);
-			}, 100);
+			makeAttachmentDiv(fileSet, attachmentUrl);
 		}
 		if (type == "member1") {
 			if (messageInput != "") {
@@ -432,33 +341,13 @@
 		chatHistoryDiv.appendChild(fileSet);
 		document.getElementById("message").value = "";
 
-		//스크롤 아래로
+		moveChatScrollToBottom();
+	}
+
+	function moveChatScrollToBottom() {
 		const chatDiv = document.getElementById('chat-scroll');
 		chatDiv.scrollTop = chatDiv.scrollHeight;
 	}
-
-	/*function convertImageToWebP(imageUrl) {
-		const img = new Image();
-		img.onload = function () {
-			const canvas = document.createElement('canvas');
-			canvas.width = img.width;
-			canvas.height = img.height;
-			const ctx = canvas.getContext('2d');
-			ctx.drawImage(img, 0, 0);
-
-			canvas.toBlob(function (blob) {
-				const reader = new FileReader();
-				reader.readAsDataURL(blob);
-				reader.onloadend = function () {
-					const base64data = reader.result;
-					// base64data를 서버로 전송하거나 사용합니다.
-					//console.log('WebP 이미지 데이터:', base64data);
-					// 예를 들어, 서버에 전송하거나 이미지를 표시할 수 있습니다.
-				};
-			}, 'image/webp', 0.8); // 0.8은 WebP의 품질 설정입니다.
-		};
-		img.src = imageUrl;
-	}*/
 </script>
 </body>
 </html>
