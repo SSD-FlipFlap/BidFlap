@@ -230,11 +230,18 @@ public class ProductService {
         return productRepository.findByMemberAndStatus(member, productStatus);
     }
 
-    public List<ProductLike> getProductLikeByMember(String nickname) {
+    public List<Product> getProductsLikedByMember(String nickname) {
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        return productLikeRepository.findByMember(member);
+        List<ProductLike> productLikes = productLikeRepository.findByMember(member);
+
+        // ProductLike에서 Product 객체 추출
+        List<Product> likedProducts = productLikes.stream()
+                .map(ProductLike::getProduct)
+                .collect(Collectors.toList());
+
+        return likedProducts;
     }
 
     public int countProductsByMemberAndStatus(String nickname, ProductStatus status) {
