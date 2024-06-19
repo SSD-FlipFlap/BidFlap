@@ -74,9 +74,9 @@ public class MyPageController {
         model.addAttribute("purchaseList", recentPurchaseList);
 
         // 좋아요 내역 4개
-        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
-        List<ProductLike> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
-        model.addAttribute("likeList", recentProductLikeList);
+        List<Product> productLikeList = productService.getProductsLikedByMember(nickname);
+        List<Product> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("likedProductList", recentProductLikeList);
 
         return "thyme/member/myPage";
     }
@@ -173,7 +173,7 @@ public class MyPageController {
             return "redirect:/auth/login";
         }
 
-        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+        List<Product> productLikeList = productService.getProductsLikedByMember(nickname);
 
         if (type != null && type.equals("main")) {
             model.addAttribute("products", productLikeList);
@@ -181,7 +181,7 @@ public class MyPageController {
             return "thyme/product/ProductViewList";
         }
 
-        model.addAttribute("likeList", productLikeList);
+        model.addAttribute("likedProductList", productLikeList);
 
         return "thyme/member/myLike";
     }
