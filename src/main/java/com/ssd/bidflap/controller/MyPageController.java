@@ -167,13 +167,20 @@ public class MyPageController {
 
     // 좋아요 내역
     @GetMapping("/my-page/like")
-    public String myLike(HttpSession session, Model model) {
+    public String myLike(@RequestParam(required = false) String type, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
 
         List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
+
+        if (type != null && type.equals("main")) {
+            model.addAttribute("products", productLikeList);
+            model.addAttribute("type", "like");
+            return "thyme/product/ProductViewList";
+        }
+
         model.addAttribute("likeList", productLikeList);
 
         return "thyme/member/myLike";
