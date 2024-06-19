@@ -25,7 +25,9 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.webjars.NotFoundException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -70,7 +72,7 @@ public class ChatController {
         modelAndView.addObject("seller", optionalSeller.get());
 
         if(!nickname.equals(optionalSeller.get().getNickname()) && !nickname.equals(optionalChatRoom.get().getMember().getNickname()))
-            throw new AccessDeniedException("접근 가능한 사용자가 아닙니다.");
+            throw new AccessDeniedException("접근 불가능한 사용자입니다.");
 
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
@@ -210,25 +212,44 @@ public class ChatController {
                 .build();
     }
 
+    @PostMapping("/uploadImage")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Please select a file to upload");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try{
+            String attachmentUrl = chatService.saveAttachment(file);
+            System.out.println(attachmentUrl);
+            //return ResponseEntity.ok().body(attachmentUrl);
+            Map<String, String> response = new HashMap<>();
+            response.put("imageUrl", attachmentUrl);
+            return ResponseEntity.ok().body(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to upload image");
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
     @PostMapping("/sendMessageWithAttachment")
     public ChatMessageDto sendMessageWithAttachment(
             @RequestParam("roomId") Long roomId,
             @RequestParam("member") String memberJson,
             @RequestParam("message") String message,
-            @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
+            @RequestParam(value = "attachment", required = false) String imgUrl) throws IOException {
 
         Member member = new ObjectMapper().readValue(memberJson, Member.class);
 
-        String attachmentUrl = null;
-        if (attachment != null && !attachment.isEmpty()) {
-            attachmentUrl = chatService.saveAttachment(attachment);
-        }
-        ChatMessage chatMessage = chatService.createMessage(roomId, member, message, attachmentUrl);
+        ChatMessage chatMessage = chatService.createMessage(roomId, member, message, imgUrl);
         return ChatMessageDto.builder()
                 .roomId(roomId)
                 .member(member)
                 .message(message)
-                .attachmentUrl(attachmentUrl)
+                .attachmentUrl(imgUrl)
                 .build();
     }
 }

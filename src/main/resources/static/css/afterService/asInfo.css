@@ -61,7 +61,7 @@ img.asprofileImg {
 	border-radius: 10px;
 }
 
-button {
+button#open-modal {
 	width: 800px;
 	height: 100px;
 	color: #FFFFFF;
@@ -73,7 +73,7 @@ button {
 	margin-top: 180px;
 }
 
-p {
+p.description {
 	font-style: normal;
 	font-weight: 600;
 	font-size: 24px;
