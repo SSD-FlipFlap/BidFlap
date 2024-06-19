@@ -15,11 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.UUID;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -96,13 +94,14 @@ public class ChatServiceImpl implements ChatService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
 
-        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
-        List<ChatRoom> productChatRooms = chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getChatRoom().getProduct() != null)
-                .map(ChatMessage::getChatRoom)
+        List<ChatRoom> myChatRooms = chatRoomRepository.findByMemberAndProductIsNotNull(member.get());  // 내가 메시지를 보낸 채팅방
+        List<ChatRoom> productChatRooms = chatRoomRepository.findByProductMember(member.get()); // 내가 메시지를 받은 채팅방
+
+        List<ChatRoom> distinctChatRooms = Stream.concat(myChatRooms.stream(), productChatRooms.stream())
                 .distinct()
                 .collect(Collectors.toList());
-        return productChatRooms;
+
+        return distinctChatRooms;
     }
 
     @Override
@@ -112,13 +111,14 @@ public class ChatServiceImpl implements ChatService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
 
-        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
-        List<ChatRoom> asChatRooms = chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getChatRoom().getAfterService() != null)
-                .map(ChatMessage::getChatRoom)
+        List<ChatRoom> myChatRooms = chatRoomRepository.findByMemberAndAfterServiceIsNotNull(member.get()); // 내가 메시지를 보낸 채팅방
+        List<ChatRoom> asChatRooms = chatRoomRepository.findByAfterServiceMember(member.get()); // 내가 메시지를 받은 채팅방
+
+        List<ChatRoom> distinctChatRooms = Stream.concat(myChatRooms.stream(), asChatRooms.stream())
                 .distinct()
                 .collect(Collectors.toList());
-        return asChatRooms;
+
+        return distinctChatRooms;
     }
 
     @Override
