@@ -154,3 +154,10 @@
 .for_category {
     display: none; /* 요소를 숨깁니다 */
 }
+
+.category-btn {
+    display: inline-block;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}

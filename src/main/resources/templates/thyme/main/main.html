@@ -62,7 +62,7 @@
         <div th:if="${interests != null and #lists.size(interests) > 0}">
             <div class="recommendations-category">
                 <span th:each="category, iterStat : ${interests}">
-                    <button th:text="${category.name}" th:attr="onclick='filterProductsByCategory(\'' + ${category.name} + '\')'"></button>
+                    <button class="category-btn" th:text="${category.name}" th:attr="onclick='filterProductsByCategory(\'' + ${category.name} + '\')'"></button>
                     <span th:if="${!iterStat.last}"> | </span>
                 </span>
             </div>
