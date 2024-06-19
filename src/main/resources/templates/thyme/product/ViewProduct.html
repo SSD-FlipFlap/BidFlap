@@ -121,10 +121,9 @@
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 
-<div th:if="${product.member.nickname ne '알수없음'}">
+<div class="btn-container" th:if="${product.member.nickname ne '알수없음'}">
     <button id="open-modal">채팅하기</button>
 </div>
-
 
 <div class="chatmodal">
     <div class="chatmodal_body">

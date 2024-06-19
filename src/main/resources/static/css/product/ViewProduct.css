@@ -111,6 +111,7 @@
     color: #FFFFFF;
     padding: 0;
     margin: 0;
+    cursor: pointer;
 }
 
 .bid-available {
@@ -156,6 +157,7 @@
     color: #000000;
     padding: 0;
     margin: 0;
+    border-radius: 20px;
 }
 #like-button-non-author {
     position: absolute;
@@ -176,6 +178,7 @@
     padding: 0;
     margin: 0;
     cursor: pointer;
+    border-radius: 20px;
 }
 
 /* 좋아요 불가능 */
@@ -449,4 +452,23 @@
     background-color: rgb(255,255,255);
     border-radius:10px; //테두리
     box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
+}
+
+.btn-container {
+    position: absolute;
+    right: 195px;
+    top: 311px;
+    display: flex;
+    justify-content: right;
+}
+
+#open-modal {
+    font-weight: bold;
+    font-size: 30px;
+    color: #FFFFFF;
+    background-color: #215818;
+    border: none;
+    border-radius: 20px;
+    padding: 15px 30px;
+    cursor: pointer;
 }
