@@ -81,16 +81,15 @@
             </div>
 
             <!-- 채팅 내역이 비어있는 경우 -->
-            <div th:if="${(productChatRooms == null or #lists.isEmpty(productChatRooms)) and (asChatRooms == null or #lists.isEmpty(asChatRooms))}">
-                <br/>
+            <div th:if=" ${productChatRooms == null or #lists.isEmpty(productChatRooms)} and ${asChatRooms == null or #lists.isEmpty(asChatRooms)}">
                 해당 내역이 없습니다.
             </div>
 
             <!-- 상품 채팅 -->
-            <div class="chat-history" th:if="${not #lists.isEmpty(productChatRooms)}">
+            <div class="chat-history" th:if="${productChatRooms != null and not #lists.isEmpty(productChatRooms)}">
                 <div class="chat-item" th:each="chatRoom : ${productChatRooms}">
                     <div class="chat-image clickable">
-                        <a th:href="@{/product/view(id=${chatRoom.product.id})}">
+                        <a th:href="@{/chat/chatRoom/product/{roomId}(roomId=${chatRoom.id})}">
                             <img th:if="${#lists.size(chatRoom.product.productImageList) > 0}"
                                  th:src="${chatRoom.product.productImageList.get(0).url}"
                                  alt="Profile Image">
@@ -102,14 +101,20 @@
 
                     <div class="chat-info">
                         <a th:text="${chatRoom.product.title}" class="chat-title clickable"
-                              th:href="@{/product/view(id=${chatRoom.product.id})}">무선 이어폰(title)</a>
+                           th:href="@{/chat/chatRoom/product/{roomId}(roomId=${chatRoom.id})}">무선 이어폰(title)</a>
                         <div class="chat-details">
                             <span th:text="${chatRoom.product.member.nickname}" class="chat-seller">OOO(판매자)</span>
 
-                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
-                                  th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
-                                  th:href="@{/chat/chatRoom/product/{productId}(productId=${chatRoom.product.id})}"
-                                  class="chat-last-message clickable">마지막 채팅 메시지</a>
+                            <!-- 마지막 채팅 메시지가 null인 경우 -->
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0 and chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message == null}"
+                               th:href="@{/chat/chatRoom/product/{roomId}(roomId=${chatRoom.id})}"
+                               class="chat-last-message clickable">사진이 전송되었습니다</a>
+
+                            <!-- 마지막 채팅 메시지가 null이 아닌 경우 -->
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0 and chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message != null}"
+                               th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
+                               th:href="@{/chat/chatRoom/product/{roomId}(roomId=${chatRoom.id})}"
+                               class="chat-last-message clickable">마지막 채팅 메시지</a>
 
                             <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"
@@ -124,14 +129,14 @@
             </div>
 
             <!-- as 채팅 -->
-            <div class="chat-history" th:if="${not #lists.isEmpty(asChatRooms)}">
+            <div class="chat-history" th:if="${asChatRooms != null and not #lists.isEmpty(asChatRooms)}">
                 <div class="chat-item" th:each="chatRoom : ${asChatRooms}">
                     <div class="chat-image clickable">
-                        <a th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${chatRoom.afterService.id})}">
-                            <img th:if="${#lists.size(chatRoom.afterService.member.profile) > 0}"
+                        <a th:href="@{/chat/chatRoom/afterService/{roomId}(roomId=${chatRoom.id})}">
+                            <img th:if="${chatRoom.afterService.member.profile != null and #lists.size(chatRoom.afterService.member.profile) > 0}"
                                  th:src="${chatRoom.afterService.member.profile}"
                                  alt="Profile Image">
-                            <img th:if="${#lists.size(chatRoom.afterService.member.profile) == 0}"
+                            <img th:if="${chatRoom.afterService.member.profile == null or #lists.size(chatRoom.afterService.member.profile) == 0}"
                                  th:src="@{/resources/img/product_example.png}"
                                  alt="Default Image">
                         </a>
@@ -142,10 +147,16 @@
                         <div class="chat-details">
                             <span th:text="${chatRoom.afterService.member.nickname}" class="chat-seller">OOO(판매자)</span>
 
-                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
-                                  th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
-                                  th:href="@{/chat/chatRoom/afterService/{afterServiceId}(afterServiceId=${chatRoom.afterService.id})}"
-                                  class="chat-last-message clickable">마지막 채팅 메시지</a>
+                            <!-- 마지막 채팅 메시지가 null인 경우 -->
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0 and chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message == null}"
+                               th:href="@{/chat/chatRoom/afterService/{roomId}(roomId=${chatRoom.id})}"
+                               class="chat-last-message clickable">사진이 전송되었습니다</a>
+
+                            <!-- 마지막 채팅 메시지가 null이 아닌 경우 -->
+                            <a th:if="${#lists.size(chatRoom.chatMessageList) > 0 and chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message != null}"
+                               th:text="${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].message}"
+                               th:href="@{/chat/chatRoom/afterService/{roomId}(roomId=${chatRoom.id})}"
+                               class="chat-last-message clickable">마지막 채팅 메시지</a>
 
                             <span th:if="${#lists.size(chatRoom.chatMessageList) > 0}"
                                   th:attr="data-date-time=${chatRoom.chatMessageList[chatRoom.chatMessageList.size() - 1].createdAt}"

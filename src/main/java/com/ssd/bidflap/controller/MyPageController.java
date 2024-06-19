@@ -196,6 +196,7 @@ public class MyPageController {
 
         List<ChatRoom> chatRooms = chatService.getProductChatRoomListByNickname(nickname);
         model.addAttribute("productChatRooms", chatRooms);
+        model.addAttribute("asChatRooms", new ArrayList<>());
 
         return "thyme/member/myChat";
     }
@@ -210,6 +211,7 @@ public class MyPageController {
 
         List<ChatRoom> chatRooms = chatService.getAsChatRoomListByNickname(nickname);
         model.addAttribute("asChatRooms", chatRooms);
+        model.addAttribute("productChatRooms", new ArrayList<>());
 
         return "thyme/member/myChat";
     }
