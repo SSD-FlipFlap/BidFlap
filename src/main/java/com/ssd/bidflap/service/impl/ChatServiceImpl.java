@@ -1,5 +1,6 @@
 package com.ssd.bidflap.service.impl;
 
+import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
@@ -28,9 +29,8 @@ public class ChatServiceImpl implements ChatService {
     private final ProductRepository productRepository;
     private final AfterServiceRepository afterServiceRepository;
     private final MemberRepository memberRepository;
-
-    @Value("${upload.directory}")
-    private String uploadDirectory;
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
     public Optional<ChatRoom> getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -147,11 +147,17 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public String saveAttachment(MultipartFile file) throws IOException {
-        String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(uploadDirectory, filename);
-        Files.copy(file.getInputStream(), filePath);
-        return "/resources/uploads/" + filename;
+    public String saveAttachment(MultipartFile file) {
+        // 이미지 업로드
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                    .uuid(uuid).build());
+            imageUrl = s3Manager.uploadFile(s3Manager.generateChatKeyName(savedUuid), file);
+        }
+
+        return  imageUrl;
     }
     /*
     @Override
