@@ -37,6 +37,24 @@ ul {
     margin-right: 10px; /* 각 항목 사이의 간격 조절 */
 }
 
+.notification-bell {
+    position: relative;
+    display: inline-block;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+.notification-bell.active img {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.notification-bell img {
+    display: none;
+    width: 20px;
+    height: 20px;
+}
+
 .category li {
     display: inline-block; /* 요소를 인라인 블록 요소로 표시하여 옆으로 나란히 배치 */
     margin-right: 30px; /* 각 항목 사이의 간격 조절 */
