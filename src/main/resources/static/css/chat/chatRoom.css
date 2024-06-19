@@ -184,7 +184,8 @@ div#chat-scroll {
 }
 
 img.fileImg{
-    width: 180px;
+    width: 250px;
+    object-fit: cover;
 }
 
 .fileSet.member1 {

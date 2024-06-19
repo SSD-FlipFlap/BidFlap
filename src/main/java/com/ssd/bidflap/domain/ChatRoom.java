@@ -3,6 +3,7 @@ package com.ssd.bidflap.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,18 @@ public class ChatRoom {
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessageList = new ArrayList<>();
+
+    @PreRemove
+    public void deleteFiles(){
+        for(ChatMessage message : chatMessageList){
+            if(message.getAttachmentUrl() != null){
+                File file = new File(message.getAttachmentUrl());
+                if(file.exists()){
+                    file.delete();
+                }
+            }
+        }
+    }
 
     public static ChatRoom createRoom() {
         return ChatRoom.builder()
