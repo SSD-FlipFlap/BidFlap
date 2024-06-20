@@ -100,8 +100,8 @@ public class AuctionService {
         boolean alreadyBid = auction.getBidderList().stream()
                 .anyMatch(bidder -> bidder.getMember().equals(member));
 
-        //보증금 현재 50%
-        int depositAmount = alreadyBid ? 0: (int)(0.5*product.getPrice());
+        //보증금 5% 변경
+        int depositAmount = alreadyBid ? 0: (int)(0.05*product.getPrice());
 
         if (depositAmount > 0) {
             if (member.getDepositBalance() < depositAmount) {

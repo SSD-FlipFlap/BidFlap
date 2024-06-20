@@ -349,15 +349,65 @@
 }
 
 .participate-button2 {
-    width: 300px; /* 버튼 너비 조정 */
-    height: 50px; /* 버튼 높이 조정 */
+    width: 300px;
+    height: 50px;
     background: #215818;
-    border: none; /* 테두리 제거 */
+    border: none;
     border-radius: 20px;
-    font-size: 20px; /* 폰트 크기 조정 */
+    font-size: 20px;
     font-family: Inter;
     font-weight: 600;
     color: white;
-    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-    margin-top: 20px; /* 버튼 위쪽 여백 추가 */
+    cursor: pointer;
+    margin-top: 20px;
 }
+
+.status{
+    color:white;
+
+}
+/* 버튼 컨테이너를 플렉스 박스로 설정 */
+.button-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* 구매 확정 버튼 스타일 */
+.purchaseButton {
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #215818;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Inter;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+/* 구매 취소 버튼 스타일 */
+.cancelButton {
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #636363;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: Inter;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+
+.purchaseButton:hover {
+    background-color: #505050;
+}
+
+/* 구매 취소 버튼 호버 효과 */
+.cancelButton:hover {
+    background-color: #d32f2f;
+}
+

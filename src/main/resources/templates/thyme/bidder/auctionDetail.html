@@ -69,29 +69,42 @@
                     <span th:text="${auction.getRemainingTime().toMinutesPart()}">00</span>분
                     <span th:text="${auction.getRemainingTime().toSecondsPart()}">00</span>초
                 </p>
+
+            </div>
+            <div class="bidders-container">
+                <h3>입찰자 목록</h3>
+                <ul>
+                    <li th:each="bidder : ${bidders}">
+                        <p>
+                            <span th:text="'유저: ' + ${bidder.member.nickname} + ', 입찰금액: ' + ${bidder.price}"></span>
+                        </p>
+                    </li>
+                </ul>
             </div>
             <div class="now-user">
                 <p><span id="loggedUser" th:text="${loggedUser}" hidden>사용자 없음</span></p>
             </div>
         </div>
 
-        <div th:if="${product.status != null}">
+        <div class= "status" th:if="${product.status != null}">
             <div th:with="statusText=${'Product Status: ' + product.status}">
                 <div th:text="${statusText}"></div>
                 <div th:if="${#strings.startsWith(statusText, 'Product Status: AUCTION_WON')}">
                     <div th:if="${loggedUser == successfulBidderNickname}">
-                        <form action="/product/purchase" method="post"> <!-- GET 방식에서 POST 방식으로 변경 -->
-                            <input type="hidden" name="id" th:value="${product.id}" /> <!-- 상품 id를 hidden 필드로 전송 -->
-                            <button type="submit"id="purchaseButton">구매확정</button>
-                        </form>
-                        <!--구매 취소 버튼-->
-                        <form th:action="@{/auction/cancel/{productId}(productId=${product.id})}" method="post">
-                            <input type="hidden" name="nickname" th:value="${loggedUser}" />
-                            <button type="submit" id="cancelButton">구매 취소</button>
-                        </form>
-
+                        <div class="button-container">
+                            <form action="/product/purchase" method="post"> <!-- GET 방식에서 POST 방식으로 변경 -->
+                                <input type="hidden" name="id" th:value="${product.id}" /> <!-- 상품 id를 hidden 필드로 전송 -->
+                                <button type="submit" class="purchaseButton">구매확정</button>
+                            </form>
+                            <!--구매 취소 버튼-->
+                            <form th:action="@{/auction/cancel/{productId}(productId=${product.id})}" method="post">
+                                <input type="hidden" name="nickname" th:value="${loggedUser}" />
+                                <button type="submit" class="cancelButton">구매 취소</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
+
                 <div th:unless="${#strings.startsWith(statusText, 'Product Status: AUCTION_WON') or #strings.startsWith(statusText, 'Product Status: AUCTION_ENDED')}">
                     <div class="bid-container">
                         <button id="bidButton">입찰하기</button>
