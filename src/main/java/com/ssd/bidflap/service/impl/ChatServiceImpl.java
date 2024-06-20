@@ -83,11 +83,6 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatMessage insertMessage(ChatMessage message) {
-        return chatMessageRepository.save(message);
-    }
-
-    @Override
     public List<ChatRoom> getProductChatRoomListByNickname(String nickname) {
         Optional<Member> member = memberRepository.findByNickname(nickname);
         if (member.isEmpty()) {
@@ -141,7 +136,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public List<ChatRoom> findByAfterServiceId(long asId) {
         List<ChatRoom> crList = chatRoomRepository.findByAfterServiceId(asId);
-        //Collections.sort(crList);
+        Collections.sort(crList);
 
         return crList;
     }
