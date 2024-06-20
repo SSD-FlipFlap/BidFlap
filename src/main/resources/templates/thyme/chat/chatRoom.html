@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/chat/chatRoom.css}">
 </head>
 <body>
+<div th:include="thyme/HeaderWithCategory"></div>
 <div class="chat-container">
     <div class="info-container">
         <div th:if="${message == '채팅가능'}" class="info imgForm product">

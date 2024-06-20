@@ -220,46 +220,6 @@ public class ChatController {
                 .build();
     }
 
-    /*@PostMapping("/uploadImage")
-    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Please select a file to upload");
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        try{
-            String attachmentUrl = chatService.saveAttachment(file);
-            System.out.println(attachmentUrl);
-            Map<String, String> response = new HashMap<>();
-            response.put("imageUrl", attachmentUrl);
-            return ResponseEntity.ok().body(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Failed to upload image");
-            return ResponseEntity.status(500).body(response);
-        }
-    }
-
-    @PostMapping("/sendMessageWithAttachment")
-    public ChatMessageDto sendMessageWithAttachment(
-            @RequestParam("roomId") Long roomId,
-            @RequestParam("member") String memberJson,
-            @RequestParam("message") String message,
-            @RequestParam(value = "attachment", required = false) String attachmentUrl) throws IOException {
-
-        Member member = new ObjectMapper().readValue(memberJson, Member.class);
-
-        ChatMessage chatMessage = chatService.createMessage(roomId, member, message, attachmentUrl);
-        return ChatMessageDto.builder()
-                .roomId(roomId)
-                .member(member)
-                .message(message)
-                .attachmentUrl(attachmentUrl)
-                .build();
-    }*/
-
     @Auth(role = MemberRole.USER)
     @PostMapping("/sendMessageWithAttachment")
     public ChatMessageDto sendMessageWithAttachment(
