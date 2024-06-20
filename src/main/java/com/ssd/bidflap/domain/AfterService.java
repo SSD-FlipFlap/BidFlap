@@ -27,9 +27,6 @@ public class AfterService {
     private Member member;
 
     @OneToMany(mappedBy = "afterService", cascade = CascadeType.ALL)
-    private List<Purchase> purchaseList;
-
-    @OneToMany(mappedBy = "afterService", cascade = CascadeType.ALL)
     private List<ChatRoom> chatRoomList;
 
     public void updateAfterService(String description, String price) {

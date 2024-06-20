@@ -52,6 +52,7 @@ public class NotificationController {
 //        return notificationService.createChatNotification(chatMessage);
 //    }
 
+    @Auth(role = MemberRole.USER)
     @PutMapping("notification/{id}/read")
     @ResponseBody
     public ResponseEntity<Void> markAsRead(@PathVariable Long id) {
