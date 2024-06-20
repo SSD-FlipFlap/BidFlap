@@ -32,7 +32,7 @@
     <ul class="notification-list">
         <li th:each="notification : ${unreadNotifications}" th:classappend="${notification.readStatus == T(com.ssd.bidflap.domain.enums.ReadStatus).NOT_READ} ? 'unread' : ''" class="notification-item">
             <span class="message" th:text="${notification.message}"></span>
-            <span class="product-id" th:text="'product ID: ' + ${notification.product != null ? notification.product.id : 'N/A'}"></span>
+            <span class="product-id" th:text="'product ID: ' + (${notification.product != null} ? ${notification.product.id} : 'N/A')"></span>
             <button class="mark-read" th:onclick="'markAsRead(' + ${notification.id} + ')'">읽음처리</button>
             <button class="go-to-auction" th:if="${notification.product != null}" th:onclick="'redirectToAuction(' + ${notification.id} + ', ' + ${notification.product.id} + ')'">Go to Auction</button>
         </li>
