@@ -1,10 +1,10 @@
 package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.dto.*;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import com.ssd.bidflap.exception.MemberException;
-import com.ssd.bidflap.service.AuthService;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +41,7 @@ public class MemberController {
     }
 
     // 로그아웃
+    @Auth(role = MemberRole.USER)
     @PostMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         session.invalidate();
@@ -50,12 +50,10 @@ public class MemberController {
     }
 
     // 프로필 관리
+    @Auth(role = MemberRole.USER)
     @GetMapping("/edit-profile")
     public String editProfile(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         // 기존 회원 정보 가져오기
         MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
@@ -66,16 +64,13 @@ public class MemberController {
     }
 
     // 비밀번호 변경
+    @Auth(role = MemberRole.USER)
     @PostMapping("/change-password")
     public String changePassword(@Valid @ModelAttribute("changePasswordDto") MemberDto.ChangePasswordDto changePasswordDto,
                                  BindingResult result, HttpSession session, // bindingResilt는 @ModelAttribute 다음에 위치해야 한다.
                                  Model model, RedirectAttributes redirectAttributes) {
         // 로그인한 회원의 닉네임(세션에 저장된 값)
         String nickname = (String) session.getAttribute("loggedInMember");
-
-        if (nickname == null) {
-            return "redirect:/auth/login";  // 로그인 요청
-        }
 
         if (result.hasErrors()) {
             MemberDto.UpdateMemberDto memberInfo = memberService.getMemberInfoByNickname(nickname);
@@ -102,15 +97,12 @@ public class MemberController {
     }
 
     // 회원 정보 수정
+    @Auth(role = MemberRole.USER)
     @PostMapping("/update-member")
     public String updateMember(@Valid @ModelAttribute("updateMemberDto") MemberDto.UpdateMemberDto updateMemberDto,
                                  BindingResult result, HttpSession session,
                                  Model model, RedirectAttributes redirectAttributes) {
         String nickname = (String) session.getAttribute("loggedInMember");
-
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         if (result.hasErrors()) {
             model.addAttribute("changePasswordDto", new MemberDto.ChangePasswordDto());
@@ -140,13 +132,10 @@ public class MemberController {
     }
 
     // 프로필 사진 변경
+    @Auth(role = MemberRole.USER)
     @PostMapping("/change-profile")
     public String updateMember(@RequestParam MultipartFile profile,HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         try {
             memberService.changeProfile(nickname, profile);
@@ -159,13 +148,10 @@ public class MemberController {
     }
     
     // 회원 탈퇴
+    @Auth(role = MemberRole.USER)
     @PostMapping("/delete")
     public String deleteMember(HttpSession session, RedirectAttributes redirectAttributes) {
         String nickname = (String) session.getAttribute("loggedInMember");
-
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         boolean isSuccess = memberService.deleteMember(nickname);
         redirectAttributes.addFlashAttribute("deleteSuccess", isSuccess);

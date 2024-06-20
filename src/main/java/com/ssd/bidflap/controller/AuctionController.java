@@ -5,6 +5,8 @@ import com.ssd.bidflap.domain.Bidder;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.dto.BidderDto;
+import com.ssd.bidflap.domain.enums.MemberRole;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.repository.AuctionRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.service.AuctionService;
@@ -45,6 +47,7 @@ public class AuctionController {
     }
 
     // 경매 시작
+    @Auth(role = MemberRole.USER)
     @PostMapping("/auction/start")
     public ResponseEntity<String> startAuction(@RequestParam Long id, @RequestParam int duePeriod) {
         try {
@@ -56,12 +59,10 @@ public class AuctionController {
     }
 
     // 경매 상세페이지
+    @Auth(role = MemberRole.USER)
     @GetMapping("/auction/detail")
     public String auctionDetail(@RequestParam Long productId, Model model, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
-        }
 
         if (productId == null) {
             return "redirect:/error"; // productId가 null인 경우 에러 페이지로 리다이렉트
@@ -97,6 +98,7 @@ public class AuctionController {
     }
 
     // 입찰
+    @Auth(role = MemberRole.USER)
     @PostMapping("/send/bid/{productId}")
     public ResponseEntity<?> placeBid(@PathVariable Long productId, @RequestBody BidderDto bidRequest) {
         try {
@@ -108,6 +110,7 @@ public class AuctionController {
     }
 
     // 구매 취소
+    @Auth(role = MemberRole.USER)
     @PostMapping("/auction/cancel/{productId}")
     public String cancelPurchase(@PathVariable Long productId, @RequestParam String nickname, RedirectAttributes redirectAttributes) {
         try {

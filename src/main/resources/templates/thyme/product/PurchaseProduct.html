@@ -112,13 +112,13 @@
             <div class="total">
                 <span>최종 결제 금액</span>
                 <div class="product-price">
-                    <div class ="status" th:with="statusText=${'Product Status: ' + product.status}" >
+                    <div class = "status" th:with="statusText=${'Product Status: ' + product.status}">
                         <div th:text="${statusText}"></div>
                         <div th:if="${#strings.startsWith(statusText, 'Product Status: AUCTION_ENDED')}">
-                            <span class="status-price" th:text="${product.finalBidPrice  + 2500} + '원'"></span>
+                            <span class="status-price" th:text="${product.finalBidPrice != null ? (product.finalBidPrice + 2500) + '원' : ''}"></span>
                         </div>
                         <div th:if="${#strings.startsWith(statusText, 'Product Status: SELLING')}">
-                            <span class="status-price" th:text="${product.price  + 2500} + '원'"></span>
+                            <span class="status-price" th:text="${product.price != null ? (product.price + 2500) + '원' : ''}"></span>
                         </div>
                     </div>
                 </div>

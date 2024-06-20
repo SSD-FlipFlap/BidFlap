@@ -1,10 +1,11 @@
 package com.ssd.bidflap.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.repository.AfterServiceRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
@@ -27,9 +28,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.webjars.NotFoundException;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -43,6 +42,7 @@ public class ChatController {
     private final ProductService productService;
 
     //입장 - product
+    @Auth(role = MemberRole.USER)
     @GetMapping("/chatRoom/product/{roomId}")
     public ModelAndView getChatRoomById(@PathVariable long roomId,  HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
@@ -98,6 +98,7 @@ public class ChatController {
     }
 
     //입장 - afterService
+    @Auth(role = MemberRole.USER)
     @GetMapping("/chatRoom/afterService/{roomId}")
     public ModelAndView getChatRoomByAfterServiceId(@PathVariable long roomId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
@@ -149,9 +150,11 @@ public class ChatController {
     }
 
     //생성
+    @Auth(role = MemberRole.USER)
     @PostMapping("/createChatRoom/{pId}")
     private RedirectView createChatRoom(@PathVariable long pId, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
+
         //product
         Optional<Product> optionalProduct = productRepository.findById(pId);
         if(optionalProduct.isEmpty())
@@ -170,6 +173,7 @@ public class ChatController {
         return redirectView;
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/createASChatRoom/{afterServiceId}")
     private RedirectView createASChatRoom(@PathVariable long afterServiceId, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
@@ -194,6 +198,7 @@ public class ChatController {
     }
 
     //채팅방 삭제
+    @Auth(role = MemberRole.USER)
     @DeleteMapping("/deleteChatRoom/{chatRoomId}")
     @ResponseBody
     public ResponseEntity<String> deleteChatRoom(@PathVariable Long chatRoomId) {
@@ -201,6 +206,7 @@ public class ChatController {
         return ResponseEntity.ok("Chat room deleted successfully");
     }
 
+    @Auth(role = MemberRole.USER)
     @MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
     @SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야 함
     public ChatMessageDto sendMessage(@DestinationVariable Long roomId, ChatMessageDto message) {
@@ -254,6 +260,7 @@ public class ChatController {
                 .build();
     }*/
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/sendMessageWithAttachment")
     public ChatMessageDto sendMessageWithAttachment(
             @RequestParam("roomId") Long roomId,

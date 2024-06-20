@@ -4,7 +4,9 @@ import com.ssd.bidflap.domain.Auction;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.Purchase;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.repository.AuctionRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
@@ -13,10 +15,8 @@ import com.ssd.bidflap.service.ProductService;
 import com.ssd.bidflap.service.PurchaseService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,15 +30,11 @@ public class PurchaseController {
     private final ProductRepository productRepository;
     private final AuctionRepository auctionRepository;
     private final MemberRepository memberRepository;
+
     // 상품 구매 페이지 표시
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/purchase")
-    public String showPurchasePage(Model model, Long id, HttpSession session) {
-        String nickname = (String) session.getAttribute("loggedInMember");
-
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
+    public String showPurchasePage(Model model, Long id) {
         if (id == null) {
             return "redirect:/error";
         }
@@ -89,12 +85,10 @@ public class PurchaseController {
     }
 
     // 상품 구매 확인 처리
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/purchase/confirm")
-    public String purchaseProduct(HttpSession session, @ModelAttribute Purchase purchase, @RequestParam Long productId) {
+    public String purchaseProduct(@ModelAttribute Purchase purchase, @RequestParam Long productId, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
         Product product = productService.productView(productId);
         purchase.setProduct(product);
 

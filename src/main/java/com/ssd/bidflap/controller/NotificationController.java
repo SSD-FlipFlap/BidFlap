@@ -1,14 +1,12 @@
 package com.ssd.bidflap.controller;
 
-import com.ssd.bidflap.domain.ChatMessage;
 import com.ssd.bidflap.domain.Notification;
-import com.ssd.bidflap.domain.enums.NotificationType;
+import com.ssd.bidflap.domain.enums.MemberRole;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.service.NotificationService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,12 +32,10 @@ public class NotificationController {
         return ResponseEntity.ok(hasUnreadNotifications);
     }
 
+    @Auth(role = MemberRole.USER)
     @GetMapping("notification/unread")
     public String getUnreadNotifications(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         Long memberId = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid nickname: " + nickname))

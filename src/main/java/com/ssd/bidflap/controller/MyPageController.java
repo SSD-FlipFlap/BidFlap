@@ -2,10 +2,11 @@ package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.ProductLike;
 import com.ssd.bidflap.domain.Purchase;
 import com.ssd.bidflap.domain.dto.MemberDto;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import com.ssd.bidflap.domain.enums.ProductStatus;
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.repository.PurchaseRepository;
 import com.ssd.bidflap.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -35,12 +36,10 @@ public class MyPageController {
     private final PurchaseRepository purchaseRepository;
 
     // 마이페이지 홈
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page")
     public String myPage(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
 
         // 닉네임, 이메일 정보 가져오기
         MemberDto.SimpleInfoResponseDto memberInfo = memberService.getSimpleInfoByNickname(nickname);
@@ -81,26 +80,13 @@ public class MyPageController {
         return "thyme/member/myPage";
     }
 
-    // 회원 탈퇴
-    @GetMapping("/delete")
-    public String showDeletePage(HttpSession session) {
-        String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
-        return "thyme/member/deleteAccount";
-    }
-
     // 판매 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/product")
     public String myProduct(@RequestParam(required = false) String status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<Product> productList = new ArrayList<>();
+
         if (status != null) {
             productList = productService.getProductByMemberAndStatus(nickname, status);
         }
@@ -114,13 +100,10 @@ public class MyPageController {
     }
 
     // 구매 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/purchase")
     public String myPurchase(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<Purchase> purchaseList = purchaseService.getPurchaseByMember(nickname);
         model.addAttribute("purchaseList", purchaseList);
 
@@ -128,13 +111,9 @@ public class MyPageController {
     }
 
     // 구매 내역 상세
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/purchase/{id}")
-    public String myPurchase(@PathVariable Long id, HttpSession session, Model model) {
-        String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
+    public String myPurchase(@PathVariable Long id, Model model) {
         Purchase purchase = purchaseRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("구매 정보를 찾을 수 없습니다."));
         model.addAttribute("purchase", purchase);
@@ -143,13 +122,10 @@ public class MyPageController {
     }
 
     // 경매 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/auction")
     public String myAuction(@RequestParam(required = false) ProductStatus status, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<Product> auctionProductList = new ArrayList<>();
 
         if (status == null) {   // 전체
@@ -166,13 +142,10 @@ public class MyPageController {
     }
 
     // 좋아요 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/like")
     public String myLike(@RequestParam(required = false) String type, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<Product> productLikeList = productService.getProductsLikedByMember(nickname);
 
         if (type != null && type.equals("main")) {
@@ -187,13 +160,10 @@ public class MyPageController {
     }
 
     // 판매글 채팅 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/chat/product")
     public String myProductChat(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<ChatRoom> chatRooms = chatService.getProductChatRoomListByNickname(nickname);
         model.addAttribute("productChatRooms", chatRooms);
         model.addAttribute("asChatRooms", new ArrayList<>());
@@ -202,13 +172,10 @@ public class MyPageController {
     }
 
     // as 채팅 내역
+    @Auth(role = MemberRole.USER)
     @GetMapping("/my-page/chat/as")
     public String myAsChat(HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         List<ChatRoom> chatRooms = chatService.getAsChatRoomListByNickname(nickname);
         model.addAttribute("asChatRooms", chatRooms);
         model.addAttribute("productChatRooms", new ArrayList<>());
