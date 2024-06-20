@@ -16,16 +16,14 @@ spring:
     hibernate:
       ddl-auto: update
 
-  mvc:  # jsp 설정
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp
+  mvc:
     static-path-pattern: /resources/**
   thymeleaf:  # thymeleaf 설정
     cache: false
     prefix: classpath:/templates/    # Thymeleaf html 파일이 위치할 기본 위치 설정
     suffix: .html       # Thymeleaf html 확장자 설정
     view-names: thyme/*    # Thymeleaf 에 연결될 viewname 범위 설정
+
 cloud:
   aws:
     s3:
