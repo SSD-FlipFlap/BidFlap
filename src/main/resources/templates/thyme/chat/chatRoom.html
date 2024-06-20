@@ -162,10 +162,16 @@
 
         let profile = null;
 
-        if('[[${product.member != sender}]]')
+        console.log("test",[[${product.member.nickname != sender.nickname}]]);
+
+        if([[${product.member.nickname != sender.nickname}]]) {
+            console.log("여기");
             profile = '[[${product.member.profile}]]';	//afterService, product 모두 model명이 product
-        else
+        }else {
+            console.log("여기2");
             profile = '[[${chatRoom.member.profile}]]';
+        }
+        console.log("profile", profile);
 
         if (profile.startsWith('"') && profile.endsWith('"')) {
             profile = profile.substring(1, profile.length - 1);
