@@ -26,10 +26,6 @@ spring:
     prefix: classpath:/templates/    # Thymeleaf html 파일이 위치할 기본 위치 설정
     suffix: .html       # Thymeleaf html 확장자 설정
     view-names: thyme/*    # Thymeleaf 에 연결될 viewname 범위 설정
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
 cloud:
   aws:
     s3:
@@ -45,5 +41,3 @@ cloud:
     credentials:
       accessKey: ${AWS_ACCESS_KEY_ID}
       secretKey: ${AWS_SECRET_ACCESS_KEY}
-upload:
-  directory: src/main/resources/static/uploads/
