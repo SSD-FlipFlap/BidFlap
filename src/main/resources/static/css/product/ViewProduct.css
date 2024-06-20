@@ -325,7 +325,9 @@
     /*text-align: center;*/
     color: #000000;
 }
-
+.status{
+    color:white;
+}
 /* 상품 설명*/
 .product-description {
     position: absolute;
@@ -472,3 +474,17 @@
     padding: 15px 30px;
     cursor: pointer;
 }
+
+.purchaseButton{
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: #215818;
+    color: white;
+    padding: 10px 20px;
+    font-size: 30px;
+    font-family: Inter;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+

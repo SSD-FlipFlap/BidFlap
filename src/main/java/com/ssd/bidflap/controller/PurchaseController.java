@@ -36,19 +36,16 @@ public class PurchaseController {
         String nickname = (String) session.getAttribute("loggedInMember");
 
         if (nickname == null) {
-            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+            return "redirect:/auth/login";
         }
 
         if (id == null) {
-            return "redirect:/error"; // id가 null인 경우 에러 페이지로 리다이렉트
+            return "redirect:/error";
         }
-
         Product product = productService.productView(id);
-
         if (product == null) {
-            return "redirect:/error"; // 상품이 존재하지 않으면 에러 페이지로 리다이렉트
+            return "redirect:/error";
         }
-
         // 경매 정보 가져오기
         Auction auction = auctionRepository.findByProductId(id);
 
@@ -85,26 +82,19 @@ public class PurchaseController {
 
         Purchase purchase = Purchase.builder().product(product).build();
 
-
         model.addAttribute("product", product);
         model.addAttribute("loggedUser", nickname);
         model.addAttribute("purchase", purchase);
-
-
-
         return "thyme/product/PurchaseProduct";
     }
-
 
     // 상품 구매 확인 처리
     @PostMapping("/product/purchase/confirm")
     public String purchaseProduct(HttpSession session, @ModelAttribute Purchase purchase, @RequestParam Long productId) {
         String nickname = (String) session.getAttribute("loggedInMember");
-
         if (nickname == null) {
             return "redirect:/auth/login";
         }
-
         Product product = productService.productView(productId);
         purchase.setProduct(product);
 
@@ -112,6 +102,5 @@ public class PurchaseController {
 
         return "redirect:/";
     }
-
 }
 
