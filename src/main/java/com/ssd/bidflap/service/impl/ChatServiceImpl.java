@@ -4,6 +4,7 @@ import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
+import com.ssd.bidflap.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,7 +32,8 @@ public class ChatServiceImpl implements ChatService {
     private final MemberRepository memberRepository;
     private final UuidRepository uuidRepository;
     private final AmazonS3Manager s3Manager;
-
+    private final NotificationService notificationService;
+    
     public Optional<ChatRoom> getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
     }
@@ -125,7 +127,37 @@ public class ChatServiceImpl implements ChatService {
         else
             mm = new ChatMessage(room.get(), member, message, attachmentUrl);
         mm.getCreatedAt();
+
+        createNotificationForMessage(mm, member);
         return chatMessageRepository.save(mm);
+    }
+
+    private void createNotificationForMessage(ChatMessage chatMessage, Member sender) {
+        ChatRoom chatRoom = chatMessage.getChatRoom();
+        Member notificationMember=null;
+
+        System.out.println("Sender: " + sender + chatRoom.getMember());
+
+
+        // 메시지를 보내는 사람이 chatRoom의 member인 경우 -> 받는 사람은 product or as
+        if (chatRoom.getMember().equals(sender)) {
+            // 글 구매하기의 경우 (product가 있는 경우)
+            if (chatRoom.getProduct() != null) {
+                notificationMember = chatRoom.getProduct().getMember();
+            }
+            // AS의 경우 (afterService가 있는 경우)
+            else if (chatRoom.getAfterService() != null) {
+                notificationMember = chatRoom.getAfterService().getMember();
+            }
+        }
+        // 메시지를 보내는 사람이 chatRoom의 member가 아닌 경우
+        else {
+            // 알림을 받을 멤버를 chatRoom의 member로 설정
+            notificationMember = chatRoom.getMember();
+        }
+
+        // 알림 생성
+        notificationService.createChatNotification(chatMessage, notificationMember);
     }
 
     @Override
