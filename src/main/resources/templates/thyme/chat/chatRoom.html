@@ -11,7 +11,7 @@
 <div th:include="thyme/HeaderWithCategory"></div>
 <div class="chat-container">
     <div class="info-container">
-        <div th:if="${message == '채팅가능'}" class="info imgForm product">
+        <div th:if="${message == '채팅가능'}" class="info imgForm product" th:onclick="'redirectToProductView(' + ${product.id} + ')'" style="cursor: pointer;">
             <img th:if="${seller.nickname != '알수없음' && crType == 'product'}"
                  th:src="${product.productImageList[0].url} != null ? ${product.productImageList[0].url} : '/resources/img/Profile.png'"
                  th:class="chatImg"
@@ -332,6 +332,13 @@
     function moveChatScrollToBottom() {
         const chatDiv = document.getElementById('chat-scroll');
         chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function redirectToProductView(id){
+        if([[${crType}]] === "product")
+            window.location.href = `/product/view?id=${id}`;
+        else
+            window.location.href = '/afterService/asInfo/'+id;
     }
 </script>
 </body>
