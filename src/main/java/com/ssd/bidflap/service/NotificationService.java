@@ -39,13 +39,25 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-    public Notification createChatNotification(ChatMessage chatMessage, Member receiver) {
+    public Notification createProductChatNotification(ChatMessage chatMessage, Member receiver) {
         Notification notification = Notification.builder()
                 .message("새로운 채팅 메시지가 도착했습니다.")
                 .readStatus(ReadStatus.NOT_READ)
                 .notificationType(NotificationType.CHAT)
                 .member(receiver)
                 .product(chatMessage.getChatRoom().getProduct())
+                .chatRoom(chatMessage.getChatRoom())
+                .build();
+        return notificationRepository.save(notification);
+    }
+
+    public Notification createAsChatNotification(ChatMessage chatMessage, Member receiver) {
+        Notification notification = Notification.builder()
+                .message("새로운 채팅 메시지가 도착했습니다.")
+                .readStatus(ReadStatus.NOT_READ)
+                .notificationType(NotificationType.CHAT)
+                .member(receiver)
+                .afterService(chatMessage.getChatRoom().getAfterService())
                 .chatRoom(chatMessage.getChatRoom())
                 .build();
         return notificationRepository.save(notification);
