@@ -44,9 +44,9 @@ public class AuctionService {
     public void startAuction(Long id, int duePeriod){
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("올바르지 않은 상품 아이디"));
         //좋아요 10개 이하면, 경매 불가능
-//        if (product.getLikeCount() < 10) {
-//            throw new IllegalStateException("경매 시작 개수 도달 x");
-//        }
+        if (product.getLikeCount() < 10) {
+            throw new IllegalStateException("경매 시작 개수 도달 x");
+        }
         //경매종료날짜
         LocalDateTime dueDate = LocalDateTime.now().plusDays(duePeriod);
         //경매 객체 생성

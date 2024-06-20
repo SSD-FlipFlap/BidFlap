@@ -259,12 +259,12 @@
 <!--        <div th:text="'Product Status: ' + ${product.status}"></div>-->
         <div th:if="${isAuthor}">
             <!--경매 시작 버튼 및 모달 -->
-            <div th:if="${product.likeCount >= 1}">
+            <div th:if="${product.likeCount >= 10}">
                 <div class="start-auction-container">
                     <button id="start-auction-button">경매 시작</button>
                 </div>
             </div>
-            <div th:if="${product.likeCount < 1}">
+            <div th:if="${product.likeCount < 10}">
                 <div class="auction-unavailable">
                     <div class="btn">
                         <button type="button" th:text="'경매 시작 불가능'" disabled></button>
