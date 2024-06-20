@@ -100,8 +100,8 @@ public class AuctionService {
         boolean alreadyBid = auction.getBidderList().stream()
                 .anyMatch(bidder -> bidder.getMember().equals(member));
 
-        //보증금 현재 50%
-        int depositAmount = alreadyBid ? 0: (int)(0.5*product.getPrice());
+        //보증금 5% 변경
+        int depositAmount = alreadyBid ? 0: (int)(0.05*product.getPrice());
 
         if (depositAmount > 0) {
             if (member.getDepositBalance() < depositAmount) {
@@ -149,6 +149,14 @@ public class AuctionService {
 
         if (auction.getSuccessfulBidder()!= null){
             product.setStatus(ProductStatus.AUCTION_WON);
+
+            //낙찰자, 글 등록자 알림
+            Bidder successfulBidder = auction.getBidderList().stream()
+                    .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("낙찰자를 찾을 수 없습니다."));
+
+            notificationService.createAuctionWonNotification(auction, product, successfulBidder.getMember());
         }else{
             //낙찰자 없거나, 경매 참여 인원 없을때
             product.setStatus(ProductStatus.AUCTION_ENDED);

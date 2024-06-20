@@ -275,7 +275,7 @@
 
 	document.getElementById('sendIcon').addEventListener('click', function (event) {
 		event.stopPropagation();
-		if ("${sender.nickname!= '알수없음'}" && "${message != '채팅 가능'}") {
+		if ("${sender.nickname!= '알수없음'}" && "${message == '채팅가능'}") {
 			let member = {
 				id: ${sender.id},
 				account: "${sender.account}",

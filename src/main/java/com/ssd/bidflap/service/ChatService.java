@@ -24,8 +24,6 @@ public interface ChatService {
 
     void deleteChatRoom(Long chatRoomId);
 
-    ChatMessage insertMessage(ChatMessage message);
-
     List<ChatRoom> getProductChatRoomListByNickname(String nickname);
 
     List<ChatRoom> getAsChatRoomListByNickname(String nickname);
@@ -37,7 +35,5 @@ public interface ChatService {
     List<ChatRoom> findByAfterServiceId(long asId);
 
     String saveAttachment(MultipartFile attachment) throws IOException;
-
-    //void deleteMessages(int chatRoomId);
 
 }

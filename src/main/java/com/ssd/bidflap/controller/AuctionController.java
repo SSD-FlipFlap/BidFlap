@@ -1,6 +1,7 @@
 package com.ssd.bidflap.controller;
 
 import com.ssd.bidflap.domain.Auction;
+import com.ssd.bidflap.domain.Bidder;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.dto.BidderDto;
@@ -19,6 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -80,11 +84,15 @@ public class AuctionController {
                 successfulBidderNickname = successfulBidder.getNickname();
             }
         }
+        //입찰자 목록 추가
+        List<Bidder> bidders = auction.getBidderList();
+        bidders.sort(Comparator.comparing(Bidder::getPrice).reversed());
 
         model.addAttribute("product", product);
         model.addAttribute("auction", auction);
         model.addAttribute("loggedUser", nickname);
         model.addAttribute("successfulBidderNickname", successfulBidderNickname);
+        model.addAttribute("bidders", bidders);
 
         return "thyme/bidder/auctionDetail";
     }
