@@ -128,6 +128,18 @@
 <body>
 <div th:include="thyme/HeaderWithCategory"></div>
 
+<div th:if="${editDisabled}">
+    <script th:inline="javascript">
+        alert("경매 시작 전까지만 수정 가능합니다.");
+    </script>
+</div>
+
+<div th:if="${deleteDisabled}">
+    <script th:inline="javascript">
+        alert("경매 시작 전까지만 삭제 가능합니다.");
+    </script>
+</div>
+
 <div class="btn-container" th:if="${product.member.nickname ne '알수없음'}">
     <button id="open-modal">채팅하기</button>
 </div>
