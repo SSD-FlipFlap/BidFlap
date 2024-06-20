@@ -31,7 +31,7 @@
             <h1 th:if="${crType == 'product'}" th:text="${product.title}"></h1>
             <h1 th:if="${crType == 'afterService'}" th:text="${seller.nickname}"></h1>
             <p th:if="${crType == 'product'}" th:text="${seller.nickname + ' 거래내역 ' + soldCounts + '회'}"></p>
-            <p th:if="${crType == 'afterService'}" th:text="${seller.nickname + ' 문의 채팅방임'}"></p>
+            <p th:if="${crType == 'afterService'}" th:text="${seller.nickname + ' 문의 채팅방'}"></p>
         </div>
         <div th:if="${crType == 'product'}" class="button-container">
             <form th:action="@{/product/purchase}" method="post">
@@ -243,7 +243,7 @@
         if (memberRole.startsWith('"') && memberRole.endsWith('"')) {
             memberRole = memberRole.substring(1, memberRole.length - 1);
         }
-        if (name !== '알수없음' && chatPossible === '채팅가능') {
+        if (name !== '알수없음' && chatPossible !== '채팅가능') {
             let member = {
                 id: '[[${sender.id}]]',
                 account: '[[${sender.account}]]',
