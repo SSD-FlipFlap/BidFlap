@@ -45,6 +45,8 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private Integer finalBidPrice;
+
     // 경매 정보
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "auction_id")

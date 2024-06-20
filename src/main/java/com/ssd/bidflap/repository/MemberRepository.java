@@ -2,7 +2,10 @@ package com.ssd.bidflap.repository;
 
 import com.ssd.bidflap.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -13,4 +16,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findEmailByNicknameAndBankAndAccount(String nickname, String bank, String account);
 
     Optional<Member> findByEmailAndNickname(String email, String nickname);
+
+    @Query("SELECT pl.member FROM ProductLike pl WHERE pl.product.id = :productId")
+    List<Member> findMembersByLikeProduct(@Param("productId") Long productId);
 }

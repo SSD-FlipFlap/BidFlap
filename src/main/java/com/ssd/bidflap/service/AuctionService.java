@@ -4,6 +4,7 @@ import com.ssd.bidflap.domain.Auction;
 import com.ssd.bidflap.domain.Bidder;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.Member;
+import com.ssd.bidflap.domain.enums.NotificationType;
 import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.AuctionRepository;
 import com.ssd.bidflap.repository.BidderRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +35,14 @@ public class AuctionService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+
     //경매시작
     @Transactional
     public void startAuction(Long id, int duePeriod){
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("올바르지 않은 상품 아이디"));
         //좋아요 10개 이하면, 경매 불가능
 //        if (product.getLikeCount() < 10) {
-//            throw new IllegalStateException("at least like 10 ");
+//            throw new IllegalStateException("경매 시작 개수 도달 x");
 //        }
         //경매종료날짜
         LocalDateTime dueDate = LocalDateTime.now().plusDays(duePeriod);
@@ -51,11 +54,11 @@ public class AuctionService {
                 .highPrice(product.getPrice())
                 .build();
 
-
         product.setAuction(auction);
         product.setStatus(ProductStatus.AUCTION);
         auctionRepository.save(auction);
         productRepository.save(product);
+
     }
 
     //입찰
@@ -79,6 +82,7 @@ public class AuctionService {
         if (auction == null) {
             throw new IllegalArgumentException("해당 상품은 경매가 시작되지 않았습니다.");
         }
+
         //최고금액
         if (bidPrice <= auction.getHighPrice()) {
             throw new IllegalArgumentException("현재 최고 금액보다 높은 입찰 금액을 입력해야 합니다.");
@@ -87,6 +91,7 @@ public class AuctionService {
         //보증금 제도
         boolean alreadyBid = auction.getBidderList().stream()
                 .anyMatch(bidder -> bidder.getMember().equals(member));
+
         //보증금 현재 50%
         int depositAmount = alreadyBid ? 0: (int)(0.5*product.getPrice());
 
@@ -125,6 +130,15 @@ public class AuctionService {
 
         Product product = productRepository.findById(auction.getProductId()).orElseThrow(() -> new IllegalArgumentException("올바르지 않은 상품 아이디"));
 
+        List<Bidder> sortedBidders = auction.getBidderList().stream()
+                .sorted(Comparator.comparing(Bidder::getPrice).reversed())
+                .toList();
+
+        if (!sortedBidders.isEmpty()) {
+            Bidder highestBidder = sortedBidders.get(0);
+            product.setFinalBidPrice(highestBidder.getPrice());
+        }
+
         if (auction.getSuccessfulBidder()!= null){
             product.setStatus(ProductStatus.AUCTION_WON);
         }else{
@@ -132,22 +146,80 @@ public class AuctionService {
             product.setStatus(ProductStatus.AUCTION_ENDED);
         }
 
-        //보증금 반환
-        auction.getBidderList().stream()
-                .filter(bidder -> !bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
-                .forEach(bidder ->{
-                    Member member = bidder.getMember();
-                    member.setDepositBalance(member.getDepositBalance()+bidder.getDeposit());
-                    bidder.setDeposit(0);
-                    bidderRepository.save(bidder);
-                    memberRepository.save(member);
-                });
 
-        auctionRepository.save(auction);
-        productRepository.save(product);
     }
 
+    //구매 취소
+    @Transactional
+    public void cancelAuctionPurchase(Long id, String nickname) {
+        Auction auction = auctionRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 아이디에 따른 경매가 없습니다."));
 
+        Member member = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        if (!member.getId().equals(auction.getSuccessfulBidder())) {
+            throw new IllegalArgumentException("해당 사용자는 낙찰자가 아닙니다.");
+        }
+
+        List<Bidder> sortedBidders = auction.getBidderList().stream()
+                .sorted(Comparator.comparing(Bidder::getPrice).reversed())
+                .toList();
+
+        Optional<Bidder> nextBidderOptional = sortedBidders.stream()
+                .filter(bidder -> !bidder.getMember().getId().equals(member.getId()))
+                .findFirst();
+
+        if (nextBidderOptional.isPresent()) {
+            Bidder nextBidder = nextBidderOptional.get();
+            auction.setSuccessfulBidder(nextBidder.getMember().getId());
+        } else {
+            auction.setSuccessfulBidder(null);
+        }
+
+        auctionRepository.save(auction);
+    }
+
+    //구매 확정
+//    @Transactional
+//    public void confirmAuctionPurchase(Long auctionId, String nickname) {
+//        Auction auction = auctionRepository.findById(auctionId)
+//                .orElseThrow(() -> new IllegalArgumentException("해당 아이디에 따른 경매가 없습니다."));
+//
+//        Member member = memberRepository.findByNickname(nickname)
+//                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+//
+//        if (!member.getId().equals(auction.getSuccessfulBidder())) {
+//            throw new IllegalArgumentException("해당 사용자는 낙찰자가 아닙니다.");
+//        }
+//
+//        Product product = productRepository.findById(auction.getProductId())
+//                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+//
+//        product.setStatus(ProductStatus.AUCTION_ENDED);
+//
+//        // 보증금 반환
+//        auction.getBidderList().stream()
+//                .filter(bidder -> !bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+//                .forEach(bidder -> {
+//                    Member memberToRefund = bidder.getMember();
+//                    memberToRefund.setDepositBalance(memberToRefund.getDepositBalance() + bidder.getDeposit());
+//                    memberRepository.save(memberToRefund);
+//                });
+//
+//        // 낙찰자의 보증금 반환
+//        auction.getBidderList().stream()
+//                .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+//                .findFirst()
+//                .ifPresent(bidder -> {
+//                    Member winner = bidder.getMember();
+//                    winner.setDepositBalance(winner.getDepositBalance() + bidder.getDeposit());
+//                    memberRepository.save(winner);
+//                });
+//
+//        auctionRepository.save(auction);
+//        productRepository.save(product);
+//    }
 
     // 낙찰된 경매 내역 조회
     public List<Product> getProductsByMemberIdAndStatus(String nickname, ProductStatus status) {
