@@ -29,9 +29,6 @@ public class AuctionController {
     private AuctionRepository auctionRepository;
     @Autowired
     private ProductService productService;
-
-
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -104,34 +101,16 @@ public class AuctionController {
     }
 
     // 구매 취소
-    @PostMapping("/auction/cancel")
-    public ResponseEntity<String> cancelPurchase(@RequestParam Long id, @RequestParam String nickname) {
+    @PostMapping("/auction/cancel/{productId}")
+    public String cancelPurchase(@PathVariable Long productId, @RequestParam String nickname, RedirectAttributes redirectAttributes) {
         try {
-            auctionService.cancelAuctionPurchase(id, nickname);
-            return ResponseEntity.ok("낙찰자의 구매가 취소되었습니다!");
+            auctionService.cancelAuctionPurchase(productId, nickname);
+            redirectAttributes.addFlashAttribute("message", "낙찰자의 구매가 취소되었습니다!");
+            return "redirect:/auction/detail?productId=" + productId; // 경매 상세 페이지 경로로 리다이렉트
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/auction/detail?productId=" + productId; // 에러 발생 시 경매 상세 페이지 경로로 리다이렉트
         }
     }
-
-//    // 구매 확정
-//    @PostMapping("/auction/confirm")
-//    public String confirmPurchase(@RequestBody Map<String, Object> requestData, HttpSession session, RedirectAttributes redirectAttributes) {
-//        String nickname = (String) session.getAttribute("loggedInMember");
-//        if (nickname == null) {
-//            return "redirect:/auth/login";
-//        }
-//
-//        try {
-//            Long productId = Long.parseLong(requestData.get("productId").toString());
-//            auctionService.confirmAuctionPurchase(productId, nickname);
-//            redirectAttributes.addAttribute("productId", productId);
-//
-//            return "redirect:/product/purchase";
-//        } catch (IllegalArgumentException e) {
-//            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-//            return "redirect:/error";
-//        }
-//    }
 
 }

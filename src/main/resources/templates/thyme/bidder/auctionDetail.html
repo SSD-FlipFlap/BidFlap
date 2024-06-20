@@ -84,8 +84,12 @@
                             <input type="hidden" name="id" th:value="${product.id}" /> <!-- 상품 id를 hidden 필드로 전송 -->
                             <button type="submit"id="purchaseButton">구매확정</button>
                         </form>
+                        <!--구매 취소 버튼-->
+                        <form th:action="@{/auction/cancel/{productId}(productId=${product.id})}" method="post">
+                            <input type="hidden" name="nickname" th:value="${loggedUser}" />
+                            <button type="submit" id="cancelButton">구매 취소</button>
+                        </form>
 
-                        <button id="cancelButton" onclick="cancelAuctionPurchase()">구매 취소</button>
                     </div>
                 </div>
                 <div th:unless="${#strings.startsWith(statusText, 'Product Status: AUCTION_WON') or #strings.startsWith(statusText, 'Product Status: AUCTION_ENDED')}">
@@ -190,35 +194,6 @@
 
 
 
-    function cancelAuctionPurchase() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const auctionId = urlParams.get('auctionId');
-        const nickname = document.getElementById("loggedUser").innerText;
-
-        if (auctionId && nickname) {
-            const payload = JSON.stringify({ auctionId: auctionId, nickname: nickname });
-
-            fetch(`/auction/cancel`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: payload,
-                credentials: 'include'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert("구매가 취소되었습니다.");
-                        window.location.href = `/auction/detail?auctionId=${auctionId}`;
-                    } else {
-                        throw new Error("Failed to cancel purchase");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-        } else {
-            console.error("Invalid auction ID or nickname");
-        }
-    }
 </script>
 </body>
 </html>
