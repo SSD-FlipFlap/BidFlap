@@ -13,6 +13,12 @@
     </script>
 </div>
 
+<div th:if="${param.message}">
+    <script th:inline="javascript">
+        alert([[${param.message}]]);
+    </script>
+</div>
+
 <div class="login-container">
     <h2>Bid Flap</h2><br/>
     <form th:action="@{/auth/login}" th:object="${loginDto}" method="post">

@@ -1,12 +1,12 @@
 package com.ssd.bidflap.controller;
 
+import com.ssd.bidflap.interceptor.Auth;
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
-import com.ssd.bidflap.domain.ProductImage;
 import com.ssd.bidflap.domain.enums.Category;
+import com.ssd.bidflap.domain.enums.MemberRole;
 import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.MemberRepository;
-import com.ssd.bidflap.repository.ProductImageRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.ProductService;
@@ -26,25 +26,21 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductImageRepository productImageRepository;
     private final MemberRepository memberRepository;
     private final ChatService chatService;
     private final ProductRepository productRepository;
 
+    @Auth(role = MemberRole.USER)
     @GetMapping("/product/register")
-    public String productRegisterForm(HttpSession session, Model model){
-
+    public String productRegisterForm(HttpSession session, RedirectAttributes redirectAttributes){
         return "thyme/product/RegisterProduct";
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/register")
     public String productRegisterPro (HttpSession session, Product product, @RequestParam("files") List<MultipartFile> files,
                                       RedirectAttributes redirectAttributes) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로
-        }
-
         Product newProduct = productService.registerProduct(product, files, nickname);
 
         // 상품 등록하고 상품의 ID를 가져와서 상세 페이지로
@@ -76,10 +72,10 @@ public class ProductController {
         try {
             if (!memberRepository.findByNickname(nickname).isEmpty() && product.getMember().getNickname().equals(nickname)){
                 chatRoomList = chatService.findByProductId(id);
-            }else if(!memberRepository.findByNickname(nickname).isEmpty())
+            } else if(!memberRepository.findByNickname(nickname).isEmpty())
                 chatRoomList = chatService.findByProductIdAndNickname(id, nickname);
             model.addAttribute("sizeOfList", chatRoomList.size());
-        }catch(Exception e){
+        } catch(Exception e){
             model.addAttribute("sizeOfList", "채팅방을 찾을 수 없습니다.");
         }
         model.addAttribute("chatRoomList", chatRoomList);
@@ -87,56 +83,47 @@ public class ProductController {
         return "thyme/product/ViewProduct";
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/delete/{id}")
-    public String productDelete(@PathVariable Long id, HttpSession session){
+    public String productDelete(@PathVariable Long id, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
-
         productService.productDelete(id, nickname);
 
         return "redirect:/";
     }
 
+    @Auth(role = MemberRole.USER)
     @GetMapping("/product/modify/{id}")
-    public String productModify(@PathVariable Long id, Model model){
-
+    public String productModify(@PathVariable Long id, Model model, HttpSession session){
+        String nickname = (String) session.getAttribute("loggedInMember");
         model.addAttribute("product", productService.productView(id));
         return "thyme/product/ModifyProduct";
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/update/{id}")
     public String productUpdate(@PathVariable Long id, Product updatedProduct, HttpSession session,
                                 @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                 @RequestParam(value = "removedExistingImages", required = false) List<String> removedImageUrls) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login";
-        }
         productService.updateProduct(id, updatedProduct, files, removedImageUrls, nickname);
 
         return "redirect:/product/view?id=" + id;
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/like")
     public String likeProduct(@RequestParam("productId") Long productId, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        if (nickname == null) {
-            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로
-        }
-
         productService.toggleLike(productId, nickname);
 
         return "redirect:/product/view?id=" + productId;
     }
 
+    @Auth(role = MemberRole.USER)
     @PostMapping("/product/startAuction")
     public String startAuction(@RequestParam("productId") Long productId, HttpSession session){
         String nickname= (String) session.getAttribute("loggedInMember");
-        if (nickname==null){
-            return "redirect:/auth/login";
-        }
         productService.startAuction(productId, nickname);
 
         return "redirect:/product/view?id="+ productId;
