@@ -79,7 +79,6 @@ public class PurchaseController {
         Purchase purchase = Purchase.builder().product(product).build();
 
         model.addAttribute("product", product);
-        model.addAttribute("loggedUser", nickname);
         model.addAttribute("purchase", purchase);
         return "thyme/product/PurchaseProduct";
     }
