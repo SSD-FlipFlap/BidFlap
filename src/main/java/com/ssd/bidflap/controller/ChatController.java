@@ -1,16 +1,18 @@
 package com.ssd.bidflap.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.domain.dto.ChatMessageDto;
 import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.AfterServiceRepository;
-import com.ssd.bidflap.repository.ChatRoomRepository;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.ProductService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,12 +20,16 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.webjars.NotFoundException;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -40,7 +46,7 @@ public class ChatController {
     @GetMapping("/chatRoom/product/{roomId}")
     public ModelAndView getChatRoomById(@PathVariable long roomId,  HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.setViewName("thyme/chat/chatRoom");
         modelAndView.addObject("crType", "product");
         //product, seller, sender, chatRoom, chatRoomMessages
         String nickname = (String) session.getAttribute("loggedInMember");
@@ -68,7 +74,7 @@ public class ChatController {
         modelAndView.addObject("seller", optionalSeller.get());
 
         if(!nickname.equals(optionalSeller.get().getNickname()) && !nickname.equals(optionalChatRoom.get().getMember().getNickname()))
-            throw new AccessDeniedException("접근 가능한 사용자가 아닙니다.");
+            throw new AccessDeniedException("접근 불가능한 사용자입니다.");
 
         //sender
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
@@ -95,7 +101,7 @@ public class ChatController {
     @GetMapping("/chatRoom/afterService/{roomId}")
     public ModelAndView getChatRoomByAfterServiceId(@PathVariable long roomId, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("chat/chatRoom");
+        modelAndView.setViewName("thyme/chat/chatRoom");
         modelAndView.addObject("crType", "afterService");
 
         //afterService, seller, sender, chatRoom, chatRoomMessages
@@ -198,11 +204,89 @@ public class ChatController {
     @MessageMapping("/{roomId}") //여기로 전송되면 메서드 호출 -> WebSocketConfig prefixes 에서 적용한건 앞에 생략
     @SendTo("/room/{roomId}")   //구독하고 있는 장소로 메시지 전송 (목적지)  -> WebSocketConfig Broker 에서 적용한건 앞에 붙어줘야 함
     public ChatMessageDto sendMessage(@DestinationVariable Long roomId, ChatMessageDto message) {
-        ChatMessage mm = chatService.createMessage(roomId, message.getMember(), message.getMessage());
+
+        //ChatMessage mm = chatService.createMessage(roomId, message.getMember(), message.getMessage(), message.getAttachmentUrl());
         return ChatMessageDto.builder()
                 .roomId(roomId)
                 .member(message.getMember())
                 .message(message.getMessage())
+                .attachmentUrl(message.getAttachmentUrl())
                 .build();
+    }
+
+    /*@PostMapping("/uploadImage")
+    public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Please select a file to upload");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try{
+            String attachmentUrl = chatService.saveAttachment(file);
+            System.out.println(attachmentUrl);
+            Map<String, String> response = new HashMap<>();
+            response.put("imageUrl", attachmentUrl);
+            return ResponseEntity.ok().body(response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Failed to upload image");
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+
+    @PostMapping("/sendMessageWithAttachment")
+    public ChatMessageDto sendMessageWithAttachment(
+            @RequestParam("roomId") Long roomId,
+            @RequestParam("member") String memberJson,
+            @RequestParam("message") String message,
+            @RequestParam(value = "attachment", required = false) String attachmentUrl) throws IOException {
+
+        Member member = new ObjectMapper().readValue(memberJson, Member.class);
+
+        ChatMessage chatMessage = chatService.createMessage(roomId, member, message, attachmentUrl);
+        return ChatMessageDto.builder()
+                .roomId(roomId)
+                .member(member)
+                .message(message)
+                .attachmentUrl(attachmentUrl)
+                .build();
+    }*/
+
+    @PostMapping("/sendMessageWithAttachment")
+    public ChatMessageDto sendMessageWithAttachment(
+            @RequestParam("roomId") Long roomId,
+            @RequestParam("member") String memberJson,
+            @RequestParam("message") String message,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment) throws IOException {
+
+        try {
+            // JSON 파싱
+            Member member = new ObjectMapper().readValue(memberJson, Member.class);
+
+            // 첨부 파일 저장
+            String attachmentUrl = chatService.saveAttachment(attachment);
+
+            // 메시지 생성
+            ChatMessage chatMessage = chatService.createMessage(roomId, member, message, attachmentUrl);
+
+            // DTO 반환
+            return ChatMessageDto.builder()
+                    .roomId(roomId)
+                    .member(member)
+                    .message(message)
+                    .attachmentUrl(attachmentUrl)
+                    .build();
+
+        } catch (IOException e) {
+            // IOException 처리
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 오류 또는 파일 처리 오류 발생", e);
+        } catch (Exception e) {
+            // 기타 예외 처리
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류 발생", e);
+        }
     }
 }

@@ -74,9 +74,9 @@ public class MyPageController {
         model.addAttribute("purchaseList", recentPurchaseList);
 
         // 좋아요 내역 4개
-        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
-        List<ProductLike> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
-        model.addAttribute("likeList", recentProductLikeList);
+        List<Product> productLikeList = productService.getProductsLikedByMember(nickname);
+        List<Product> recentProductLikeList = productLikeList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("likedProductList", recentProductLikeList);
 
         return "thyme/member/myPage";
     }
@@ -167,14 +167,21 @@ public class MyPageController {
 
     // 좋아요 내역
     @GetMapping("/my-page/like")
-    public String myLike(HttpSession session, Model model) {
+    public String myLike(@RequestParam(required = false) String type, HttpSession session, Model model) {
         String nickname = (String) session.getAttribute("loggedInMember");
         if (nickname == null) {
             return "redirect:/auth/login";
         }
 
-        List<ProductLike> productLikeList = productService.getProductLikeByMember(nickname);
-        model.addAttribute("likeList", productLikeList);
+        List<Product> productLikeList = productService.getProductsLikedByMember(nickname);
+
+        if (type != null && type.equals("main")) {
+            model.addAttribute("products", productLikeList);
+            model.addAttribute("type", "like");
+            return "thyme/product/ProductViewList";
+        }
+
+        model.addAttribute("likedProductList", productLikeList);
 
         return "thyme/member/myLike";
     }
@@ -189,6 +196,7 @@ public class MyPageController {
 
         List<ChatRoom> chatRooms = chatService.getProductChatRoomListByNickname(nickname);
         model.addAttribute("productChatRooms", chatRooms);
+        model.addAttribute("asChatRooms", new ArrayList<>());
 
         return "thyme/member/myChat";
     }
@@ -203,6 +211,7 @@ public class MyPageController {
 
         List<ChatRoom> chatRooms = chatService.getAsChatRoomListByNickname(nickname);
         model.addAttribute("asChatRooms", chatRooms);
+        model.addAttribute("productChatRooms", new ArrayList<>());
 
         return "thyme/member/myChat";
     }

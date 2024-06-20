@@ -50,3 +50,7 @@
 .chat-delete {
     cursor: pointer;
 }
+
+.chat-item img {
+    border-radius: 10px;
+}

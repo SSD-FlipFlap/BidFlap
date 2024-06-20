@@ -32,12 +32,24 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 
+    @Lob
+    private String attachmentUrl;
+
     @Builder
     public ChatMessage(ChatRoom room, Member sender, String message) {
         super();
         this.chatRoom = room;
         this.member = sender;
         this.message = message;
+    }
+
+    @Builder
+    public ChatMessage(ChatRoom room, Member sender, String message, String attachmentUrl) {
+        super();
+        this.chatRoom = room;
+        this.member = sender;
+        this.message = message;
+        this.attachmentUrl = attachmentUrl;
     }
 
     public static ChatMessage createChatMessage(ChatRoom room, Member sender, String message) {
@@ -47,6 +59,15 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
                 .message(message)
                 .build();
     }
+    public static ChatMessage createChatAttatMessage(ChatRoom room, Member sender, String message, String attachmentUrl) {
+        return ChatMessage.builder()
+                .chatRoom(room)
+                .member(sender)
+                .message(message)
+                .attachmentUrl(attachmentUrl)
+                .build();
+    }
+
     @Override
     public int compareTo(ChatMessage o) {
         return this.getCreatedAt().compareTo(o.getCreatedAt());

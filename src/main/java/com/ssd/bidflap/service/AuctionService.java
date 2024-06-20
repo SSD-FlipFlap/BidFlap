@@ -1,15 +1,14 @@
 package com.ssd.bidflap.service;
 
+
 import com.ssd.bidflap.domain.Auction;
 import com.ssd.bidflap.domain.Bidder;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.enums.NotificationType;
 import com.ssd.bidflap.domain.enums.ProductStatus;
-import com.ssd.bidflap.repository.AuctionRepository;
-import com.ssd.bidflap.repository.BidderRepository;
-import com.ssd.bidflap.repository.ProductRepository;
-import com.ssd.bidflap.repository.MemberRepository;
+import com.ssd.bidflap.domain.*;
+import com.ssd.bidflap.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +33,10 @@ public class AuctionService {
     private MemberRepository memberRepository;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private ProductLikeRepository productLikeRepository;
+    @Autowired
+    private NotificationService notificationService;
 
 
     //경매시작
@@ -58,6 +61,11 @@ public class AuctionService {
         product.setStatus(ProductStatus.AUCTION);
         auctionRepository.save(auction);
         productRepository.save(product);
+
+
+        //경매 시작 -> 좋아요 누른 사람들에게 notification
+        List<ProductLike> productLikes = productLikeRepository.findByProduct(product);
+        notificationService.createAuctionNotifications(productLikes);
 
     }
 

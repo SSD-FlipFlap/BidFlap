@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/resources/css/notification.css}" rel="stylesheet" />
+    <title>Notification</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function markAsRead(notificationId) {
+            $.ajax({
+                url: '/notification/' + notificationId + '/read',
+                type: 'PUT',
+                success: function() {
+                    location.reload();
+                }
+            });
+        }
+
+        function redirectToAuction(notificationId, productId) {
+            $.ajax({
+                url: '/notification/' + notificationId + '/read',
+                type: 'PUT',
+                success: function() {
+                    window.location.href = '/product/view?id=' + productId;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="notification-container">
+    <div class="notification-header">읽지 않은 알림</div>
+    <ul class="notification-list">
+        <li th:each="notification : ${unreadNotifications}" th:classappend="${notification.readStatus == T(com.ssd.bidflap.domain.enums.ReadStatus).NOT_READ} ? 'unread' : ''" class="notification-item">
+            <span class="message" th:text="${notification.message}"></span>
+            <span class="product-id" th:text="'product ID: ' + ${notification.product != null ? notification.product.id : 'N/A'}"></span>
+            <button class="mark-read" th:onclick="'markAsRead(' + ${notification.id} + ')'">읽음처리</button>
+            <button class="go-to-auction" th:if="${notification.product != null}" th:onclick="'redirectToAuction(' + ${notification.id} + ', ' + ${notification.product.id} + ')'">Go to Auction</button>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

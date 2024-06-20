@@ -25,4 +25,12 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
     @Modifying
     @Query("UPDATE ChatRoom c SET c.member = :unknownMember WHERE c.member = :member")
     void updateMemberToUnknown(@Param("member") Member member, @Param("unknownMember") Member unknownMember);
+
+    List<ChatRoom> findByMemberAndAfterServiceIsNotNull(Member member);
+
+    List<ChatRoom> findByMemberAndProductIsNotNull(Member member);
+
+    List<ChatRoom> findByProductMember(Member member);
+
+    List<ChatRoom> findByAfterServiceMember(Member member);
 }

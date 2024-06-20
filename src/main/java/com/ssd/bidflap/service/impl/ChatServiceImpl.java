@@ -1,17 +1,24 @@
 package com.ssd.bidflap.service.impl;
 
+import com.ssd.bidflap.config.aws.AmazonS3Manager;
 import com.ssd.bidflap.domain.*;
 import com.ssd.bidflap.repository.*;
 import com.ssd.bidflap.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +29,8 @@ public class ChatServiceImpl implements ChatService {
     private final ProductRepository productRepository;
     private final AfterServiceRepository afterServiceRepository;
     private final MemberRepository memberRepository;
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
     public Optional<ChatRoom> getChatRoomById(long chatRoomId) {
         return chatRoomRepository.findById(chatRoomId);
@@ -85,13 +94,14 @@ public class ChatServiceImpl implements ChatService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
 
-        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
-        List<ChatRoom> productChatRooms = chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getChatRoom().getProduct() != null)
-                .map(ChatMessage::getChatRoom)
+        List<ChatRoom> myChatRooms = chatRoomRepository.findByMemberAndProductIsNotNull(member.get());  // 내가 메시지를 보낸 채팅방
+        List<ChatRoom> productChatRooms = chatRoomRepository.findByProductMember(member.get()); // 내가 메시지를 받은 채팅방
+
+        List<ChatRoom> distinctChatRooms = Stream.concat(myChatRooms.stream(), productChatRooms.stream())
                 .distinct()
                 .collect(Collectors.toList());
-        return productChatRooms;
+
+        return distinctChatRooms;
     }
 
     @Override
@@ -101,19 +111,24 @@ public class ChatServiceImpl implements ChatService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
 
-        List<ChatMessage> chatMessages = chatMessageRepository.findByMember(member.get());
-        List<ChatRoom> asChatRooms = chatMessages.stream()
-                .filter(chatMessage -> chatMessage.getChatRoom().getAfterService() != null)
-                .map(ChatMessage::getChatRoom)
+        List<ChatRoom> myChatRooms = chatRoomRepository.findByMemberAndAfterServiceIsNotNull(member.get()); // 내가 메시지를 보낸 채팅방
+        List<ChatRoom> asChatRooms = chatRoomRepository.findByAfterServiceMember(member.get()); // 내가 메시지를 받은 채팅방
+
+        List<ChatRoom> distinctChatRooms = Stream.concat(myChatRooms.stream(), asChatRooms.stream())
                 .distinct()
                 .collect(Collectors.toList());
-        return asChatRooms;
+
+        return distinctChatRooms;
     }
 
     @Override
-    public ChatMessage createMessage(Long roomId, Member member, String message) {
+    public ChatMessage createMessage(Long roomId, Member member, String message, String attachmentUrl) {
         Optional<ChatRoom> room = getChatRoomById(roomId);
-        ChatMessage mm = new ChatMessage(room.get(), member, message);
+        ChatMessage mm;
+        if(attachmentUrl ==null)
+            mm = new ChatMessage(room.get(), member, message);
+        else
+            mm = new ChatMessage(room.get(), member, message, attachmentUrl);
         mm.getCreatedAt();
         return chatMessageRepository.save(mm);
     }
@@ -129,6 +144,20 @@ public class ChatServiceImpl implements ChatService {
         //Collections.sort(crList);
 
         return crList;
+    }
+
+    @Override
+    public String saveAttachment(MultipartFile file) {
+        // 이미지 업로드
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            String uuid = UUID.randomUUID().toString();
+            Uuid savedUuid = uuidRepository.save(Uuid.builder()
+                    .uuid(uuid).build());
+            imageUrl = s3Manager.uploadFile(s3Manager.generateChatKeyName(savedUuid), file);
+        }
+
+        return  imageUrl;
     }
     /*
     @Override

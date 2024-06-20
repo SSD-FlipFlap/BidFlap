@@ -4,8 +4,10 @@ import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.ProductImage;
 import com.ssd.bidflap.domain.enums.Category;
+import com.ssd.bidflap.domain.enums.ProductStatus;
 import com.ssd.bidflap.repository.MemberRepository;
 import com.ssd.bidflap.repository.ProductImageRepository;
+import com.ssd.bidflap.repository.ProductRepository;
 import com.ssd.bidflap.service.ChatService;
 import com.ssd.bidflap.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ProductController {
     private final ProductImageRepository productImageRepository;
     private final MemberRepository memberRepository;
     private final ChatService chatService;
+    private final ProductRepository productRepository;
 
     @GetMapping("/product/register")
     public String productRegisterForm(HttpSession session, Model model){
@@ -49,6 +52,7 @@ public class ProductController {
         redirectAttributes.addAttribute("id", productId);
         return "redirect:/product/view";
     }
+
     @GetMapping("/product/view")
     public String productView(Model model, Long id, HttpSession session) {
         Product product = productService.productView(id);
@@ -102,7 +106,7 @@ public class ProductController {
         return "thyme/product/ModifyProduct";
     }
 
-    @PostMapping("product/update/{id}")
+    @PostMapping("/product/update/{id}")
     public String productUpdate(@PathVariable Long id, Product updatedProduct, HttpSession session,
                                 @RequestParam(value = "files", required = false) List<MultipartFile> files,
                                 @RequestParam(value = "removedExistingImages", required = false) List<String> removedImageUrls) {
@@ -126,6 +130,7 @@ public class ProductController {
 
         return "redirect:/product/view?id=" + productId;
     }
+
     @PostMapping("/product/startAuction")
     public String startAuction(@RequestParam("productId") Long productId, HttpSession session){
         String nickname= (String) session.getAttribute("loggedInMember");
@@ -152,6 +157,15 @@ public class ProductController {
             products = productService.getAllProducts();
         }
         model.addAttribute("products", products);
+        model.addAttribute("type", "search");
+        return "thyme/product/ProductViewList";
+    }
+
+    @GetMapping("/product/auction")
+    public String getOngoingAuction(Model model) {
+        List<Product> ongoingAuctions = productRepository.findAllByStatus(ProductStatus.AUCTION);
+        model.addAttribute("products", ongoingAuctions);
+        model.addAttribute("type", "auction");
         return "thyme/product/ProductViewList";
     }
 }

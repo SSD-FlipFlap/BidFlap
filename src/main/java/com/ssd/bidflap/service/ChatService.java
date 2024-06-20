@@ -4,7 +4,9 @@ import com.ssd.bidflap.domain.ChatMessage;
 import com.ssd.bidflap.domain.ChatRoom;
 import com.ssd.bidflap.domain.Member;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,11 +30,13 @@ public interface ChatService {
 
     List<ChatRoom> getAsChatRoomListByNickname(String nickname);
 
-    ChatMessage createMessage(Long roomId, Member member, String message);
+    ChatMessage createMessage(Long roomId, Member member, String message, String attachmentUrl);
 
     List<ChatRoom> findByProductId(long pId);
 
     List<ChatRoom> findByAfterServiceId(long asId);
+
+    String saveAttachment(MultipartFile attachment) throws IOException;
 
     //void deleteMessages(int chatRoomId);
 

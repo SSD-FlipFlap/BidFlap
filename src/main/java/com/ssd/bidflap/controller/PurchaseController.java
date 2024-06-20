@@ -33,6 +33,12 @@ public class PurchaseController {
     // 상품 구매 페이지 표시
     @PostMapping("/product/purchase")
     public String showPurchasePage(Model model, Long id, HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
         if (id == null) {
             // id가 null인 경우 에러 페이지로 리다이렉트
             return "redirect:/error";

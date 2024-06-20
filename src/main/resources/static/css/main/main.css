@@ -115,7 +115,7 @@
 
 .selection-box {
     position: fixed;
-    top: 50%; /* 기본 위치를 50%로 설정 */
+    top: 55%; /* 기본 위치를 55%로 설정 */
     right: 20px;
     width: 120px; /* 가로 크기 줄이기 */
     background-color: #f2f2f2;
@@ -153,4 +153,11 @@
 
 .for_category {
     display: none; /* 요소를 숨깁니다 */
+}
+
+.category-btn {
+    display: inline-block;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
 }

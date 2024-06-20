@@ -28,6 +28,7 @@ public class ProductService {
     private final UuidRepository uuidRepository;
     private final AmazonS3Manager s3Manager;
     private final ProductImageRepository productImageRepository;
+    private final NotificationService notificationService;
 
     public Product registerProduct(Product product, List<MultipartFile> files, String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
@@ -106,8 +107,12 @@ public class ProductService {
 
     public void startAuction(Long productId, String nickname) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID"));
-//        product.setStatus(AuctionStatus.ACTIVE); // 경매 상태로 변경
+//        product.setStatus(ProductStatus.AUCTION); // 경매 상태로 변경
+
         productRepository.save(product);
+
+//        List<ProductLike> productLikes = productLikeRepository.findByProduct(product);
+//        notificationService.createAuctionNotifications(productLikes);
     }
     public boolean isProductLikedByMember(Long productId, String nickname) {
         Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
@@ -225,11 +230,18 @@ public class ProductService {
         return productRepository.findByMemberAndStatus(member, productStatus);
     }
 
-    public List<ProductLike> getProductLikeByMember(String nickname) {
+    public List<Product> getProductsLikedByMember(String nickname) {
         Member member = memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
-        return productLikeRepository.findByMember(member);
+        List<ProductLike> productLikes = productLikeRepository.findByMember(member);
+
+        // ProductLike에서 Product 객체 추출
+        List<Product> likedProducts = productLikes.stream()
+                .map(ProductLike::getProduct)
+                .collect(Collectors.toList());
+
+        return likedProducts;
     }
 
     public int countProductsByMemberAndStatus(String nickname, ProductStatus status) {

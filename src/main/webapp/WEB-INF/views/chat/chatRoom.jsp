@@ -1,10 +1,10 @@
-<%@ page import="com.ssd.bidflap.domain.ChatMessage" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%
-	String loggedInMemberNickname = (String) session.getAttribute("loggedInMember");
-%>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<% String loggedInMemberNickname = (String) session.getAttribute("loggedInMember");%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -70,12 +70,67 @@
 		</c:if>
 	</div>
 	<div id="chat-scroll">
-		<div id="chat-history"></div>
+		<div id="chat-history">
+			<c:set var="prevDate" value="" />
+			<c:forEach var="chatMessage" items="${chatMessages}">
+				<c:set var="currentDate" value="${fn:substring(chatMessage.createdAt, 0, 10)}" />
+				<c:if test="${!currentDate.equals(prevDate)}">
+					<div class="chatDate">
+						<p>${currentDate}</p>
+					</div>
+					<c:set var="prevDate" value="${currentDate}" />
+				</c:if>
+				<c:choose>
+					<c:when test="${chatMessage.member.nickname eq sender.nickname}">
+						<div class="fileSet member1">
+							<c:if test="${chatMessage.attachmentUrl !=null}">
+								<img src="${chatMessage.attachmentUrl}" class="fileImg member1">
+							</c:if>
+							<c:if test="${chatMessage.message.trim() != '' && chatMessage.message!=null}">
+								<div class="messageSet member1">
+									<div class="message">${chatMessage.message}</div>
+									<c:choose>
+										<c:when test="${sender.profile != null && not empty sender.profile}">
+											<img src="${sender.profile}" class="chat-profile">
+										</c:when>
+										<c:otherwise>
+											<img src="/resources/img/Profile.png" class="chat-profile">
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</c:if>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<div class="fileSet member2">
+							<c:if test="${chatMessage.attachmentUrl !=null}">
+								<img src="${chatMessage.attachmentUrl}" class="fileImg member2">
+							</c:if>
+							<c:if test="${chatMessage.message.trim() != '' && chatMessage.message!=null}">
+								<div class="messageSet member2">
+									<c:choose>
+										<c:when test="${chatMessage.member.profile != null && not empty chatMessage.member.profile}">
+											<img src="${chatMessage.member.profile}" class="chat-profile">
+										</c:when>
+										<c:otherwise>
+											<img src="/resources/img/Profile.png" class="chat-profile">
+										</c:otherwise>
+									</c:choose>
+									<div class="message">${chatMessage.message}</div>
+								</div>
+							</c:if>
+						</div>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+
+		</div>
 	</div>
 	<div class="send-container">
-		<!--<img src="/resources/img/fileIcon.png" id="imageUpload">
+		<img src="/resources/img/fileIcon.png" id="imageUpload">
 		<img src="" id="imagePreview" style="display: none; max-width: 100px; max-height: 100px;">
-		<input type="file" id="attachment" style="display: none;">-->
+		<input type="file" id="attachment" style="display: none;">
+
 		<input type="text" id="message" placeholder="Type your message...">
 		<img src="/resources/img/sendIcon.png" id="sendIcon">
 	</div>
@@ -83,61 +138,82 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script type="text/javascript">
-	var stompClient = null;
-	var loggedInMemberNickname = "<%= loggedInMemberNickname %>";
+	let stompClient = null;
+	let loggedInMemberNickname = "<%= loggedInMemberNickname %>";
 
-	var roomId = "${chatRoom.id}";
-
-	var chatHistory = [
-		<c:forEach var="chatMessage" items="${chatMessages}">
-		{
-			message: "<c:out value="${chatMessage.message}"/>",
-			date: "<c:out value="${chatMessage.createdAt}"/>",
-			type: "<c:out value="${chatMessage.member.nickname == sender.nickname ? 'member1' : 'member2'}"/>"
-		},
-		</c:forEach>
-	];
+	let roomId = "${chatRoom.id}";
 
 	function connect() {
 		var socket = new SockJS("/ws-stomp");
 		stompClient = Stomp.over(socket);
 		stompClient.connect({}, function (frame) {
 			setConnected(true);
-			console.log('연결됨: ' + frame);
-			displayChatHistory();   // loadChat
+			//console.log('연결됨: ' + frame);
+			moveChatScrollToBottom();
 
 			// 채팅 룸 구독
-			stompClient.subscribe('/room/'+roomId, function (chatMessage) {
+			stompClient.subscribe('/room/' + roomId, function (chatMessage) {
 				showChat(JSON.parse(chatMessage.body));
 			});
+		}, function (error) {
+			console.error('Connection error:', error);
+			setTimeout(connect, 1000); // 5초 후에 재연결 시도
 		});
 	}
 
-	function sendMessage(roomId, member, message) {
+	function sendMessage(roomId, member, message, attachment) {
 		if (!stompClient) {
 			console.error("WebSocket 연결이 설정되지 않았습니다.");
 			return;
 		}
-		var messageToSend = {
-			roomId: roomId,
-			member: member,
-			message: message
-		};
-		stompClient.send("/send/" + roomId, {}, JSON.stringify(messageToSend));
+		var formData = new FormData();
+		formData.append('roomId', roomId);
+		formData.append('member', JSON.stringify(member));
+		formData.append('message', message);
+		if (attachment) {
+			formData.append('attachment', attachment);
+		}
+
+		fetch('/chat/sendMessageWithAttachment', {
+			method: 'POST',
+			body: formData
+		}).then(response => response.json())
+				.then(data => {
+					const chatMessage = {
+						message: message,
+						attachmentUrl: data.attachmentUrl,
+						member: member
+					};
+					stompClient.send("/send/" + roomId, {}, JSON.stringify(chatMessage));
+					formData = new FormData();
+				})
+				.catch(error => console.error('Error:', error));
 	}
 
+
 	function setConnected(connected) {
-		if(connected) console.log("연결 성공");
-		else console.log("연결 실패");
+		if (connected) console.log("연결 성공");
+		else {
+			console.log("연결 실패");
+			window.onload();
+		}
 	}
 
 	function makeProfileDiv(parent, type) {
 		const profileImage = document.createElement('img');
-		var imgSrc = "/resources/img/Profile.png";
-		if(type==='member1' && ${send.profile!=null})
+		const imgSrc = "/resources/img/Profile.png";
+
+		let profile = null;
+
+		if(${product.member != sender})
+			profile = "${product.member.profile}";	//afterService, product 모두 model명이 product
+		else
+			profile = "${chatRoom.member.profile}";
+
+		if (type === 'member1' && ${sender.profile.trim() != ""} && ${sender.profile != null})
 			profileImage.src = "${sender.profile}";
-		else if(type==='member2' && ${send.profile!=null})	//판매자 프로필로 변경 필요
-			profileImage.src = "${sender.profile}";
+		else if (type === 'member2' && profile.trim() != "" && profile != null)
+			profileImage.src = profile;
 		else
 			profileImage.src = imgSrc;
 
@@ -152,47 +228,14 @@
 		parent.appendChild(chatMessage);
 	}
 
-	// 이전 채팅 기록
-	function displayChatHistory() {
-		const chatHistoryDiv = document.getElementById('chat-history');
-		let currentDate = null;
-
-		chatHistory.forEach(item => {
-			const messageSet = document.createElement('div');
-			messageSet.classList.add('messageSet');
-
-			var messageDate = item.date;
-			messageDate = messageDate.substring(0, 10);
-
-			const message = item.message;
-			const type = item.type;
-
-			if (messageDate !== currentDate) {
-				const dateDiv = document.createElement('div');
-				dateDiv.textContent = messageDate;
-				dateDiv.classList.add('chatDate');
-				chatHistoryDiv.appendChild(dateDiv);
-				currentDate = messageDate;
-			}
-
-			if (type === "member2")
-				makeProfileDiv(messageSet, type);
-
-			makeMessageDiv(messageSet, message);
-
-			if (type === "member1")
-				makeProfileDiv(messageSet, type);
-
-			messageSet.classList.add(type);
-
-			chatHistoryDiv.appendChild(messageSet);
-		});
-
-		const chatDiv = document.getElementById('chat-scroll');
-		chatDiv.scrollTop = chatDiv.scrollHeight;
+	function makeAttachmentDiv(parent, attachmentUrl) {
+		const attachmentImage = document.createElement('img');
+		attachmentImage.src = attachmentUrl;
+		attachmentImage.classList.add('fileImg');
+		parent.appendChild(attachmentImage);
 	}
 
-	window.onload = function() {
+	window.onload = function () {
 		connect();
 	};
 
@@ -200,52 +243,108 @@
 		document.getElementById('attachment').click();
 	});
 
-	document.getElementById('sendIcon').addEventListener('click', function () {
-		if("${sender.nickname!= '알수없음'}" && "${message != '채팅 가능'}"){
-			var member = {
+	document.getElementById('imagePreview').addEventListener('click', function () {
+		const imagePreview = document.getElementById('imagePreview');
+		imagePreview.src = "";
+		imagePreview.style.display = 'none';
+		document.getElementById('attachment').value = '';
+	})
+
+	document.getElementById('attachment').addEventListener('change', function (event) {
+		const file = event.target.files[0];
+
+		if (file) {
+			// 파일 확장자 검사
+			const allowedExtensions = ['png', 'jpg', 'jpeg'];
+			const fileExtension = file.name.split('.').pop().toLowerCase();
+			if (!allowedExtensions.includes(fileExtension)) {
+				alert("png, jpg, jpeg 파일만 가능합니다.");
+				event.target.value = ''; // 파일 선택 창 비우기
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onload = function (e) {
+				const imagePreview = document.getElementById('imagePreview');
+				imagePreview.src = e.target.result;
+				imagePreview.style.display = 'block';
+			};
+			reader.readAsDataURL(file);
+		}
+	});
+
+	document.getElementById('sendIcon').addEventListener('click', function (event) {
+		event.stopPropagation();
+		if ("${sender.nickname!= '알수없음'}" && "${message != '채팅 가능'}") {
+			let member = {
 				id: ${sender.id},
 				account: "${sender.account}",
 				bank: "${sender.bank}",
 				email: "${sender.email}",
-				member_role: "${sender.memberRole}",
+				memberRole: "${sender.memberRole}",
 				nickname: "${sender.nickname}",
 				password: "${sender.password}",
 				profile: "${sender.profile}"
 			};
-			var message = document.getElementById('message').value;
-			if(message != "")
-				sendMessage(roomId, member, message);
-		}else{
+			let message = document.getElementById('message').value.trim();
+			let attachmentInput = document.getElementById('attachment');
+			let attachment = attachmentInput.files[0];
+
+			if (message != "" || attachment) {
+				sendMessage(roomId, member, message, attachment);
+				attachmentInput.value = "";
+				const imagePreview = document.getElementById('imagePreview');
+				imagePreview.src = "";
+				imagePreview.style.display = 'none';
+			} else {
+				alert("메시지를 입력해주세요");
+				document.getElementById('message').value = "";
+			}
+		} else {
 			alert("판매자가 탈퇴했거나 삭제한 경우 채팅을 보낼 수 없습니다.");
 		}
 	});
 
 	function showChat(messageJson) {
-		//var attachmentFile = document.getElementById("attachment").files[0];
 		const messageInput = messageJson.message;
+		const attachmentUrl = messageJson.attachmentUrl;
+		//console.log("url", attachmentUrl);
 		//보낸 채팅
 		const chatHistoryDiv = document.getElementById('chat-history');
+
+		const fileSet = document.createElement('div');
+		fileSet.classList.add('fileSet');
 		const messageSet = document.createElement('div');
 		messageSet.classList.add('messageSet');
 
-		if(messageJson.member.nickname == loggedInMemberNickname)
-			type = "member1";
-		else
-			type = "member2";
+		type = messageJson.member.nickname == loggedInMemberNickname ? "member1" : "member2";
 
-		if(type == "member1"){
-			makeMessageDiv(messageSet, messageInput);
-			makeProfileDiv(messageSet, "member1");
-		}else{
-			makeProfileDiv(messageSet, "member2");
-			makeMessageDiv(messageSet, messageInput);
+		if (attachmentUrl) {
+			//convertImageToWebP(attachmentUrl);
+			makeAttachmentDiv(fileSet, attachmentUrl);
 		}
-		messageSet.classList.add(type);
+		if (type == "member1") {
+			if (messageInput != "") {
+				makeMessageDiv(messageSet, messageInput);
+				makeProfileDiv(messageSet, "member1");
+			}
+		} else {
+			if (messageInput != "") {
+				makeProfileDiv(messageSet, "member2");
+				makeMessageDiv(messageSet, messageInput);
+			}
+		}
 
-		chatHistoryDiv.appendChild(messageSet);
+		messageSet.classList.add(type);
+		fileSet.appendChild(messageSet);
+		fileSet.classList.add(type);
+		chatHistoryDiv.appendChild(fileSet);
 		document.getElementById("message").value = "";
 
-		//스크롤 아래로
+		moveChatScrollToBottom();
+	}
+
+	function moveChatScrollToBottom() {
 		const chatDiv = document.getElementById('chat-scroll');
 		chatDiv.scrollTop = chatDiv.scrollHeight;
 	}

@@ -5,6 +5,7 @@ import com.ssd.bidflap.domain.Member;
 import com.ssd.bidflap.domain.Product;
 import com.ssd.bidflap.domain.enums.Category;
 import com.ssd.bidflap.service.MemberService;
+import com.ssd.bidflap.service.NotificationService;
 import com.ssd.bidflap.service.ProductService;
 import com.ssd.bidflap.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,13 +26,20 @@ public class MainController {
     private  ProductService productService;
     @Autowired
     private  MemberService memberService;
+    @Autowired
+    private NotificationService notificationService;
+
     private final ProductRepository productRepository;
 
     @GetMapping("/")
     public String home(Model model, HttpSession session) {
         String nickname = (String) session.getAttribute("loggedInMember");
+        boolean hasUnreadNotifications=false;
+
         if (nickname != null) {
             // 로그인된 경우
+            hasUnreadNotifications = notificationService.hasUnreadNotifications(nickname);
+
             List<Category> interests = memberService.getMemberByInterests(nickname);
             model.addAttribute("interests", interests); // 관심 카테고리..
 
@@ -49,7 +57,8 @@ public class MainController {
         }
         List<Product> productList = productRepository.findAllByOrderByCreatedAtDesc();
         model.addAttribute("productList", productList);
-      
+        model.addAttribute("hasUnreadNotifications", hasUnreadNotifications); // hasUnreadNotifications 값을 모델에 추가
+
         return "thyme/main/main";
     }
 
