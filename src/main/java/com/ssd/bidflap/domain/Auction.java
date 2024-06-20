@@ -34,6 +34,7 @@ public class Auction extends BaseEntity {
 
     private Integer highPrice;
 
+
     private Long successfulBidder;    // 낙찰자(Bidder의 pk)
 
     @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

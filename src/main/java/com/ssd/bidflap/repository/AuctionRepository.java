@@ -10,4 +10,7 @@ import java.util.List;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
+    Auction findAuctionById(Long id);
+
+    Auction findByProductId(Long productId);
 }
