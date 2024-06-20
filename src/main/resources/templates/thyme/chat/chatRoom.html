@@ -168,7 +168,7 @@
             profile = '[[${chatRoom.member.profile}]]';
 
         if (profile.startsWith('"') && profile.endsWith('"')) {
-            profile = senderProfile.substring(1, profile.length - 1);
+            profile = profile.substring(1, profile.length - 1);
         }
 
         if (type === 'member1' && senderProfile!== "" && senderProfile !== null)
@@ -237,13 +237,26 @@
 
     document.getElementById('sendIcon').addEventListener('click', function (event) {
         event.stopPropagation();
-        const name = '[[${sender.nickname}]]';
-        const chatPossible = '[[${message}]]';
+        let name = '[[${product.member.nickname}]]';
+        let chatPossible = '[[${message}]]';
         let memberRole = '[[${sender.memberRole}]]';
         if (memberRole.startsWith('"') && memberRole.endsWith('"')) {
             memberRole = memberRole.substring(1, memberRole.length - 1);
         }
-        if (name !== '알수없음' && chatPossible !== '채팅가능') {
+        if (chatPossible.startsWith('"') && chatPossible.endsWith('"')) {
+            chatPossible = chatPossible.substring(1, chatPossible.length - 1);
+        }
+
+        if (name.startsWith('"') && name.endsWith('"')) {
+            name = name.substring(1, name.length - 1);
+        }
+
+        console.log("name", name);
+        console.log("chatPossible", chatPossible);
+        console.log("name2", name === "알수없음");
+        console.log("chatPossible2", chatPossible==="채팅가능");
+
+        if (name !== "알수없음" && chatPossible === "채팅가능") {
             let member = {
                 id: '[[${sender.id}]]',
                 account: '[[${sender.account}]]',
