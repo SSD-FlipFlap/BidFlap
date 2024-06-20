@@ -65,14 +65,24 @@ public class NotificationService {
     }
 
 
-    public Notification createAuctionWonNotification(Auction auction, Bidder bidder) {
+    @Transactional
+    public void createAuctionWonNotification(Auction auction, Product product, Member successfulBidder) {
         Notification notification = Notification.builder()
-                .message("낙찰되셨습니다.")
+                .member(successfulBidder)
+                .message("축하합니다! " + product.getTitle() + " 경매에 낙찰되었습니다.")
                 .readStatus(ReadStatus.NOT_READ)
                 .notificationType(NotificationType.AUCTION_WON)
-                .member(bidder.getMember()) /*list로 받아와야하나..*/
-//                .product(auction.getProductId())
+                .product(product)
                 .build();
-        return notificationRepository.save(notification);
+        notificationRepository.save(notification);
+
+        Notification sellerNotification = Notification.builder()
+                .member(product.getMember())
+                .message("상품 " + product.getTitle() + "가 경매에 낙찰되었습니다.")
+                .readStatus(ReadStatus.NOT_READ)
+                .notificationType(NotificationType.AUCTION_WON)
+                .product(product)
+                .build();
+        notificationRepository.save(sellerNotification);
     }
 }

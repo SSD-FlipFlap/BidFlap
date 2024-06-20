@@ -129,6 +129,14 @@ public class AuctionService {
 
         if (auction.getSuccessfulBidder()!= null){
             product.setStatus(ProductStatus.AUCTION_WON);
+
+            //낙찰자, 글 등록자 알림
+            Bidder successfulBidder = auction.getBidderList().stream()
+                    .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("낙찰자를 찾을 수 없습니다."));
+
+            notificationService.createAuctionWonNotification(auction, product, successfulBidder.getMember());
         }else{
             //낙찰자 없거나, 경매 참여 인원 없을때
             product.setStatus(ProductStatus.AUCTION_ENDED);
