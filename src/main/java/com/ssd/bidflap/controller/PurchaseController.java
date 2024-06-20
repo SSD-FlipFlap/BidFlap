@@ -60,17 +60,6 @@ public class PurchaseController {
                         memberToRefund.setDepositBalance(memberToRefund.getDepositBalance() + bidder.getDeposit());
                         memberRepository.save(memberToRefund);
                     });
-
-            // 낙찰자의 보증금 반환
-            auction.getBidderList().stream()
-                    .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
-                    .findFirst()
-                    .ifPresent(bidder -> {
-                        Member winner = bidder.getMember();
-                        winner.setDepositBalance(winner.getDepositBalance() + bidder.getDeposit());
-                        memberRepository.save(winner);
-                    });
-
             auctionRepository.save(auction);
         }
 
