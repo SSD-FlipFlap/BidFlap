@@ -146,7 +146,19 @@ public class MemberController {
 
         return "redirect:/members/edit-profile";
     }
-    
+
+    // 회원 탈퇴
+    @Auth(role = MemberRole.USER)
+    @GetMapping("/delete")
+    public String showDeletePage(HttpSession session) {
+        String nickname = (String) session.getAttribute("loggedInMember");
+        if (nickname == null) {
+            return "redirect:/auth/login";
+        }
+
+        return "thyme/member/deleteAccount";
+    }
+
     // 회원 탈퇴
     @Auth(role = MemberRole.USER)
     @PostMapping("/delete")
