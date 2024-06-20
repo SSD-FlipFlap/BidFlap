@@ -62,6 +62,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<ChatMessage> chatMessageList;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Notification> notificationList;
+
     public void changePassword(String newEncodedPassword) {
         this.password = newEncodedPassword;
     }
