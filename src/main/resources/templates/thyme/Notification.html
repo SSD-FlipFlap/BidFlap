@@ -14,16 +14,6 @@
                 }
             });
         }
-
-        function redirectToAuction(notificationId, productId) {
-            $.ajax({
-                url: '/notification/' + notificationId + '/read',
-                type: 'PUT',
-                success: function() {
-                    window.location.href = '/product/view?id=' + productId;
-                }
-            });
-        }
     </script>
 </head>
 <body>
@@ -32,9 +22,11 @@
     <ul class="notification-list">
         <li th:each="notification : ${unreadNotifications}" th:classappend="${notification.readStatus == T(com.ssd.bidflap.domain.enums.ReadStatus).NOT_READ} ? 'unread' : ''" class="notification-item">
             <span class="message" th:text="${notification.message}"></span>
-            <span class="product-id" th:text="'product ID: ' + (${notification.product != null} ? ${notification.product.id} : 'N/A')"></span>
             <button class="mark-read" th:onclick="'markAsRead(' + ${notification.id} + ')'">읽음처리</button>
-            <button class="go-to-auction" th:if="${notification.product != null}" th:onclick="'redirectToAuction(' + ${notification.id} + ', ' + ${notification.product.id} + ')'">Go to Auction</button>
+            <a th:if="${notification.product != null && #strings.equals(notification.notificationType.toString(), 'AUCTION')}" th:href="@{/product/view(id=${notification.product.id})}" class="go-to-auction" onclick="markAsRead(${notification.id})">경매페이지로</a>
+            <a th:if="${notification.product != null && #strings.equals(notification.notificationType.toString(), 'AUCTION_WON')}" th:href="@{/auction/detail(productId=${notification.product.id})}" class="go-to-auction-start" onclick="markAsRead(${notification.id})">낙찰페이지로</a>
+            <a th:if="${notification.product != null && #strings.equals(notification.notificationType.toString(), 'CHAT')}" th:href="@{/product/view(id=${notification.product.id})}" class="go-to-purchase" onclick="markAsRead(${notification.id})">구매페이지로</a>
+            <a th:if="${notification.afterService != null && #strings.equals(notification.notificationType.toString(), 'CHAT')}" th:href="@{/afterService/asInfo/{afterServiceId}(afterServiceId=${notification.afterService.id})}" class="go-to-as" onclick="markAsRead(${notification.id})">AS 페이지로</a>
         </li>
     </ul>
 </div>

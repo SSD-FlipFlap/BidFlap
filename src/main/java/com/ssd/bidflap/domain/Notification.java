@@ -36,6 +36,10 @@ public class Notification extends BaseEntity{
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "after_service_id")
+    private AfterService afterService;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 }

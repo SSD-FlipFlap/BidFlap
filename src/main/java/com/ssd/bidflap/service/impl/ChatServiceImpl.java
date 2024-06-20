@@ -135,19 +135,23 @@ public class ChatServiceImpl implements ChatService {
     private void createNotificationForMessage(ChatMessage chatMessage, Member sender) {
         ChatRoom chatRoom = chatMessage.getChatRoom();
         Member notificationMember=null;
-
-        System.out.println("Sender: " + sender + chatRoom.getMember());
-
+        String type = null;
 
         // 메시지를 보내는 사람이 chatRoom의 member인 경우 -> 받는 사람은 product or as
-        if (chatRoom.getMember().equals(sender)) {
+        if (isSameMember(chatRoom.getMember(), sender)) {
             // 글 구매하기의 경우 (product가 있는 경우)
             if (chatRoom.getProduct() != null) {
                 notificationMember = chatRoom.getProduct().getMember();
+                type = "product";
+
             }
             // AS의 경우 (afterService가 있는 경우)
             else if (chatRoom.getAfterService() != null) {
                 notificationMember = chatRoom.getAfterService().getMember();
+                type = "as";
+
+            } else {
+                notificationMember = chatRoom.getMember();
             }
         }
         // 메시지를 보내는 사람이 chatRoom의 member가 아닌 경우
@@ -157,8 +161,21 @@ public class ChatServiceImpl implements ChatService {
         }
 
         // 알림 생성
-        notificationService.createChatNotification(chatMessage, notificationMember);
+        if (type.equals("product")) {
+            notificationService.createProductChatNotification(chatMessage, notificationMember);
+        } else {
+            notificationService.createAsChatNotification(chatMessage, notificationMember);
+        }
     }
+
+    // 동일한 멤버인지 확인
+    private boolean isSameMember(Member member1, Member member2) {
+        if (member1 == null || member2 == null) {
+            return false;
+        }
+        return member1.getId().equals(member2.getId());
+    }
+
 
     @Override
     public List<ChatRoom> findByProductId(long pId) {
