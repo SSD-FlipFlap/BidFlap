@@ -136,11 +136,11 @@ public class ProductService {
     }
 
     public List<Product> searchByTitle(String title) {
-        return productRepository.findByTitleContaining(title);
+        return productRepository.findByTitleContainingOrderByCreatedAtDesc(title);
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllByOrderByCreatedAtDesc();
     }
 
     public void updateProduct(Long id, Product updatedProduct, List<MultipartFile> files, List<String> removedImageUrls, String nickname) {
@@ -257,7 +257,7 @@ public class ProductService {
     }
 
     public List<Product> getProductsByCategory(Category category){
-        return productRepository.findByCategory(category);
+        return productRepository.findByCategoryOrderByCreatedAtDesc(category);
     }
     
     //요즘뜨는상품
