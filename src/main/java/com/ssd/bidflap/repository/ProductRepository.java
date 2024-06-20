@@ -14,10 +14,7 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    //Optional<Product> findById(Long aLong);
-
-    //Optional<Product> findById(long productId);
-    List<Product> findByTitleContaining(String keyword);
+    List<Product> findByTitleContainingOrderByCreatedAtDesc(String keyword);
 
     List<Product> findByMember(Member member);
 
@@ -28,7 +25,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.auction WHERE p.status = :status")
     List<Product> findAllByStatus(@Param("status") ProductStatus status);
 
-    List<Product> findByCategory(Category category);
+    List<Product> findByCategoryOrderByCreatedAtDesc(Category category);
 
     List<Product> findAllByOrderByLikeCountDesc();
 
