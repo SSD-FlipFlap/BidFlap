@@ -69,6 +69,19 @@
                     <span th:text="${auction.getRemainingTime().toMinutesPart()}">00</span>분
                     <span th:text="${auction.getRemainingTime().toSecondsPart()}">00</span>초
                 </p>
+
+            </div>
+            <div class="bidders-container">
+                <h3>입찰자 목록</h3>
+                <ul>
+                    <li th:each="bidder : ${bidders}">
+                        <p>
+                            <span th:text="'유저: ' + ${bidder.member.nickname} + ', 입찰금액: ' + ${bidder.price}"></span>
+                        </p>
+
+
+                    </li>
+                </ul>
             </div>
             <div class="now-user">
                 <p><span id="loggedUser" th:text="${loggedUser}" hidden>사용자 없음</span></p>
