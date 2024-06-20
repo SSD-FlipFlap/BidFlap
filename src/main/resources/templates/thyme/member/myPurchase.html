@@ -51,25 +51,6 @@
                         <a th:text="${purchase.product.price} + '원'" th:href="@{/members/my-page/purchase/{id}(id=${purchase.id})}">가격</a>
                     </div>
 
-                    <!-- as -->
-                    <div class="image_container" th:each="purchase : ${purchaseList}" th:if="${purchase.afterService != null}">
-                        <div class="image_and_heart_container">
-                            <div class="image_placeholder"></div>
-                            <a th:href="@{/members/my-page/purchase/{id}(id=${purchase.id})}">
-                                <img th:if="${#lists.size(purchase.afterService.member.profile) > 0}"
-                                     th:src="${purchase.afterService.member.profile}"
-                                     alt="Profile Image">
-                                <img th:if="${#lists.size(purchase.afterService.member.profile) == 0}"
-                                     th:src="@{/resources/img/product_example.png}"
-                                     alt="Default Image">
-
-                            </a>
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
-                        </div>
-                        <a th:text="${purchase.afterService.description}" th:href="@{/members/my-page/purchase/{id}(id=${purchase.id})}">판매글 제목</a>
-                        <a th:text="${purchase.afterService.price} + '원'" th:href="@{/members/my-page/purchase/{id}(id=${purchase.id})}">가격</a>
-                    </div>
                 </div>
             </div>
 
