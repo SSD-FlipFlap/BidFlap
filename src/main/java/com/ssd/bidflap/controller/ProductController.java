@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -85,17 +86,27 @@ public class ProductController {
 
     @Auth(role = MemberRole.USER)
     @PostMapping("/product/delete/{id}")
-    public String productDelete(@PathVariable Long id, HttpSession session) {
+    public String productDelete(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
         String nickname = (String) session.getAttribute("loggedInMember");
-        productService.productDelete(id, nickname);
 
+        try {
+            productService.productDelete(id, nickname);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("deleteDisabled", true);
+            return "redirect:/product/view?id=" + id;
+        }
         return "redirect:/";
     }
 
     @Auth(role = MemberRole.USER)
     @GetMapping("/product/modify/{id}")
-    public String productModify(@PathVariable Long id, Model model, HttpSession session){
+    public String productModify(@PathVariable Long id, Model model, HttpSession session, RedirectAttributes redirectAttributes){
         String nickname = (String) session.getAttribute("loggedInMember");
+        Optional<Product> product = productRepository.findById(id);
+        if (product.get().getStatus() != ProductStatus.SELLING) {
+            redirectAttributes.addFlashAttribute("editDisabled", true);
+            return "redirect:/product/view?id=" + id;
+        }
         model.addAttribute("product", productService.productView(id));
         return "thyme/product/ModifyProduct";
     }

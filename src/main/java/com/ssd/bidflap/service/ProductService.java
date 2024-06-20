@@ -61,9 +61,14 @@ public class ProductService {
         }
         Product product = optionalProduct.get();
 
+        // 경매 시작 전까지 삭제 가능
+        if (product.getStatus() != ProductStatus.SELLING) {
+            throw new IllegalStateException("경매 시작 전까지만 삭제 가능합니다.");
+        }
+
         // 글 작성자인지 확인
         if (!(optionalMember.get().equals(product.getMember()))) {
-            throw new IllegalStateException("본인이 작성한 글만 삭제할 수 있습니다.");
+            throw new IllegalArgumentException("본인이 작성한 글만 삭제할 수 있습니다.");
         }
 
         // S3에서 이미지 삭제
