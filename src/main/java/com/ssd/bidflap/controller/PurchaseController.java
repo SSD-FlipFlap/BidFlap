@@ -36,57 +36,62 @@ public class PurchaseController {
         String nickname = (String) session.getAttribute("loggedInMember");
 
         if (nickname == null) {
-            return "redirect:/auth/login";
+            return "redirect:/auth/login"; // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
         }
 
         if (id == null) {
-            // id가 null인 경우 에러 페이지로 리다이렉트
-            return "redirect:/error";
+            return "redirect:/error"; // id가 null인 경우 에러 페이지로 리다이렉트
         }
 
         Product product = productService.productView(id);
 
         if (product == null) {
-            // 상품이 존재하지 않으면 에러 페이지로 리다이렉트
-            return "redirect:/error";
+            return "redirect:/error"; // 상품이 존재하지 않으면 에러 페이지로 리다이렉트
         }
-        //경매 정보 가져오기
+
+        // 경매 정보 가져오기
         Auction auction = auctionRepository.findByProductId(id);
 
+        if (auction != null) {
+            if (auction.getSuccessfulBidder() != null) {
+                product.setFinalBidPrice(auction.getHighPrice());
+            }
+            // 상품 상태를 AUCTION_ENDED로 변경
+            product.setStatus(ProductStatus.AUCTION_ENDED);
 
-        if (auction != null && auction.getSuccessfulBidder() != null) {
-            product.setFinalBidPrice(auction.getHighPrice());
+            // 보증금 반환
+            auction.getBidderList().stream()
+                    .filter(bidder -> !bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+                    .forEach(bidder -> {
+                        Member memberToRefund = bidder.getMember();
+                        memberToRefund.setDepositBalance(memberToRefund.getDepositBalance() + bidder.getDeposit());
+                        memberRepository.save(memberToRefund);
+                    });
+
+            // 낙찰자의 보증금 반환
+            auction.getBidderList().stream()
+                    .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
+                    .findFirst()
+                    .ifPresent(bidder -> {
+                        Member winner = bidder.getMember();
+                        winner.setDepositBalance(winner.getDepositBalance() + bidder.getDeposit());
+                        memberRepository.save(winner);
+                    });
+
+            auctionRepository.save(auction);
         }
-        // 상품 상태를 AUCTION_ENDED로 변경
-        product.setStatus(ProductStatus.AUCTION_ENDED);
 
-        // 보증금 반환
-        auction.getBidderList().stream()
-                .filter(bidder -> !bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
-                .forEach(bidder -> {
-                    Member memberToRefund = bidder.getMember();
-                    memberToRefund.setDepositBalance(memberToRefund.getDepositBalance() + bidder.getDeposit());
-                    memberRepository.save(memberToRefund);
-                });
-
-        // 낙찰자의 보증금 반환
-        auction.getBidderList().stream()
-                .filter(bidder -> bidder.getMember().getId().equals(auction.getSuccessfulBidder()))
-                .findFirst()
-                .ifPresent(bidder -> {
-                    Member winner = bidder.getMember();
-                    winner.setDepositBalance(winner.getDepositBalance() + bidder.getDeposit());
-                    memberRepository.save(winner);
-                });
-        auctionRepository.save(auction);
         productRepository.save(product);
 
-        Purchase purchase= Purchase.builder().product(product).build();
+        Purchase purchase = Purchase.builder().product(product).build();
 
-        // 모델에 상품 정보 추가
+
         model.addAttribute("product", product);
+        model.addAttribute("loggedUser", nickname);
         model.addAttribute("purchase", purchase);
-        // 구매 페이지로 이동
+
+
+
         return "thyme/product/PurchaseProduct";
     }
 
