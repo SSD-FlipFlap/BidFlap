@@ -21,9 +21,6 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
     @Lob
     private String message;
 
-    @Enumerated(EnumType.STRING)
-    private ReadStatus isRead = ReadStatus.NOT_READ;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -73,7 +70,4 @@ public class ChatMessage extends BaseEntity implements Comparable<ChatMessage> {
         return this.getCreatedAt().compareTo(o.getCreatedAt());
     }
 
-    public void updateReadStatus(ReadStatus readStatus) {
-        this.isRead = readStatus;
-    }
 }
