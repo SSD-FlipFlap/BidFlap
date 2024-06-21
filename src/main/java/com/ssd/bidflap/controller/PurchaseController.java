@@ -79,6 +79,7 @@ public class PurchaseController {
         String nickname = (String) session.getAttribute("loggedInMember");
         Product product = productService.productView(productId);
         purchase.setProduct(product);
+        product.setStatus(ProductStatus.SOLD);
 
         purchaseService.registerPurchase(purchase, nickname);
 

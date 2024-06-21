@@ -30,6 +30,8 @@ public class Purchase extends BaseEntity {
     @Nullable
     private String deliveryMessage;
 
+    private String paymentMethod;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
