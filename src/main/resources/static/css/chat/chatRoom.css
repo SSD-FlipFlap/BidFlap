@@ -123,6 +123,7 @@ hr {
     height: 35px;
     font-weight: bold;
     color: #FFFFFF;
+    cursor: pointer;
 }
 
 div#chat-scroll {
