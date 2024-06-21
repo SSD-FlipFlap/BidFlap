@@ -58,8 +58,6 @@
                                      th:src="@{/resources/img/product_example.png}"
                                      class="product_img" alt="Default Image">
                             </a>
-                            <img th:src="@{/resources/img/heart.png}" alt="heart 1" class="heart_icon">
-                            <div class="heart"></div>
                         </div>
                         <a th:text="${product.title}" th:href="@{/auction/detail(productId=${product.id})}">판매글 제목</a>
                         <a th:text="${product.price} + '원'" th:href="@{/auction/detail(productId=${product.id})}">가격</a>
