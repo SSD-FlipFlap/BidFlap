@@ -3,6 +3,7 @@ package com.ssd.bidflap.domain;
 import com.ssd.bidflap.domain.enums.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Member {
 
     private String account; // 계좌 번호
 
+    @ColumnDefault("0")
     private Integer depositBalance; //보증금잔고
     
     @Enumerated(EnumType.STRING)
