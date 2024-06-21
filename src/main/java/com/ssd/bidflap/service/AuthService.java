@@ -69,6 +69,7 @@ public class AuthService {
                 .bank(signUpDto.getBank())
                 .account(signUpDto.getAccountNumber())
                 .profile(profileUrl)
+                .depositBalance(300000)
                 .memberRole(MemberRole.USER)
                 .build();
 
